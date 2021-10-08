@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaitech.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="首发于个人公众号：小白debug原文地址：硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？ 你女神爱不爱你，你问她，她可能不会告诉你。 但网通不通，你 ping 一下就知道了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？">
+<meta property="og:url" content="https://xiaobaitech.github.io/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="首发于个人公众号：小白debug原文地址：硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？ 你女神爱不爱你，你问她，她可能不会告诉你。 但网通不通，你 ping 一下就知道了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/cache_1623425479_3538.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006WD51tly1fxvyqnfervj308c08c3yo.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ipv6%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/IP%E5%92%8CICMP%E5%92%8CPing%E6%89%80%E5%9C%A8%E5%88%86%E5%B1%82.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ip%E5%92%8Cicmp%E7%9A%84%E5%85%B3%E7%B3%BB.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%B7%A5%E5%85%B7%E4%BA%BAksoftirqd.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225434437.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225140197.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190253656.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190335350.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190410662.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530191958500.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-03-19-0.gif">
+<meta property="article:published_time" content="2021-06-25T14:57:55.000Z">
+<meta property="article:modified_time" content="2021-10-08T01:37:47.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/cache_1623425479_3538.gif">
+
+<link rel="canonical" href="https://xiaobaitech.github.io/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？ | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaitech.github.io/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-06-25T22:57:55+08:00">2021-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>首发于个人公众号：小白debug<br>原文地址：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XsZYiLxZ0AXjVMBgWCnmzw">硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？</a></p>
+<p>你<strong>女神爱不爱你</strong>，你问她，她可能不会告诉你。</p>
+<p>但<strong>网通不通</strong>，你 <code>ping</code> 一下就知道了。 </p>
+<span id="more"></span>
+
+<p>可能看到标题，你就知道答案了，但是你了解背后的原因吗？那如果把 <code>127.0.0.1</code> 换成 <code>0.0.0.0</code> 或 <code>localhost</code> 会怎么样呢？ 你知道这几个<code>IP</code>有什么区别吗？</p>
+<p>以前面试的时候就遇到过这个问题，大家看个动图了解下面试官和我当时的场景，求当时小白的心里阴影面积。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/cache_1623425479_3538.gif"></p>
+<p>话不多说，我们直接开车。</p>
+<p>拔掉网线，断网。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006WD51tly1fxvyqnfervj308c08c3yo.jpg"></p>
+<p>然后在控制台输入<code> ping 127.0.0.1</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping 127.0.0.1</span></span><br><span class="line">PING 127.0.0.1 (127.0.0.1): 56 data bytes</span><br><span class="line">64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.080 ms</span><br><span class="line">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.093 ms</span><br><span class="line">64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.074 ms</span><br><span class="line">64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.079 ms</span><br><span class="line">64 bytes from 127.0.0.1: icmp_seq=4 ttl=64 time=0.079 ms</span><br><span class="line">^C</span><br><span class="line">--- 127.0.0.1 ping statistics ---</span><br><span class="line">5 packets transmitted, 5 packets received, 0.0% packet loss</span><br><span class="line">round-trip min/avg/max/stddev = 0.074/0.081/0.093/0.006 ms</span><br></pre></td></tr></table></figure>
+
+<p>说明，拔了网线，<code>ping 127.0.0.1</code>  是<strong>能ping通的</strong>。</p>
+<p>其实这篇文章看到这里，标题前半个问题已经被回答了。但是我们可以再想深一点。</p>
+<p>为什么断网了还能 <code>ping</code> 通 <code> 127.0.0.1</code> 呢？</p>
+<p><strong>这能说明你不用交网费就能上网吗？</strong></p>
+<p><strong>不能。</strong></p>
+<p>首先我们需要进入基础科普环节。</p>
+<p>不懂的同学看了就懂了，懂的看了就当查漏补缺吧。</p>
+<h3 id="什么是127-0-0-1"><a href="#什么是127-0-0-1" class="headerlink" title="什么是127.0.0.1"></a>什么是127.0.0.1</h3><p>首先，这是个 <code>IPV4</code> 地址。</p>
+<p><code>IPV4</code> 地址有 <code>32</code> 位，一个字节有 <code>8</code> 位，共 <code>4</code> 个字节。</p>
+<p>其中<strong>127 开头的都属于回环地址</strong>，也是 <code>IPV4</code> 的特殊地址，没什么道理，就是人为规定的。</p>
+<p>而<code>127.0.0.1</code>是<strong>众多</strong>回环地址中的一个。之所以不是 <code>127.0.0.2</code> ，而是 <code>127.0.0.1</code>，是因为源码里就是这么定义的，也没什么道理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Address to loopback in software to local host.  */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	INADDR_LOOPBACK		0x7f000001	<span class="comment">/* 127.0.0.1   */</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png" alt="回环地址"></p>
+<p><code>IPv4</code> 的地址是 <code>32</code> 位的，2的32次方，大概是<code>40+亿</code>。地球光人口就76亿了，40亿IP这点量，<strong>塞牙缝都不够</strong>，实际上<strong>IP也确实用完</strong>了。</p>
+<p>所以就有了<code>IPV6</code>， <code>IPv6</code> 的地址是 <code>128</code> 位的，大概是2的128次方≈<strong>10的38次方</strong>。据说地球的沙子数量大概是 <strong>10的23次方</strong>，所以IPV6的IP可以认为用不完。</p>
+<p>IPV4以8位一组，每组之间用 <strong>.</strong> 号隔开。</p>
+<p>IPV6就以16位为一组，每组之间用 <strong>:</strong> 号隔开。如果全是0，那么可以省略不写。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ipv6%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png" alt="ipv6回环地址"></p>
+<p>在IPV4下的回环地址是 <code>127.0.0.1</code>，在<code>IPV6</code>下，表达为 <code>::1</code> 。中间把<strong>连续的0</strong>给省略了，之所以不是<strong>7个 冒号</strong>，而是<strong>2个冒号:</strong> ， 是因为一个 IPV6 地址中<strong>只允许出现⼀次两个连续的冒号</strong>。</p>
+<blockquote>
+<p>多说一句： 在IPV4下用的是 <strong>ping 127.0.0.1</strong> 命令。 在IPV6下用的是 <strong>ping6  ::1</strong> 命令。</p>
+</blockquote>
+<h3 id="什么是-ping"><a href="#什么是-ping" class="headerlink" title="什么是 ping"></a>什么是 ping</h3><p>ping 是应用层命令，可以理解为它跟游戏或者聊天软件属于同一层。只不过聊天软件可以收发消息，还能点个赞什么的，有很多复杂的功能。而 ping 作为一个小软件，它的功能比较简单，就是<strong>尝试</strong>发送一个小小的消息到目标机器上，判断目的机器是否<strong>可达</strong>，其实也就是判断目标机器网络是否能连通。</p>
+<p>ping应用的底层，用的是网络层的<strong>ICMP协议</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/IP%E5%92%8CICMP%E5%92%8CPing%E6%89%80%E5%9C%A8%E5%88%86%E5%B1%82.png" alt="IP和ICMP和Ping所在分层"></p>
+<p>虽然ICMP协议和IP协议<strong>都属于网络层协议</strong>，但其实<strong>ICMP也是利用了IP协议进行消息的传输</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ip%E5%92%8Cicmp%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="ip和icmp的关系"></p>
+<p>所以，大家在这里完全可以简单的理解为 ping 某个IP 就是往某个IP地址发个消息。</p>
+<h3 id="TCP发数据和ping的区别"><a href="#TCP发数据和ping的区别" class="headerlink" title="TCP发数据和ping的区别"></a>TCP发数据和ping的区别</h3><p>一般情况下，我们会使用 TCP 进行网络数据传输，那么我们可以看下它和 ping 的区别。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB2.png" alt="ping和普通发消息的关系"></p>
+<p>ping和其他应用层软件都属于<strong>应用层</strong>。</p>
+<p>那么我们横向对比一下，比方说聊天软件，如果用的是TCP的方式去发送消息。</p>
+<p>为了发送消息，那就得先知道往哪发。linux里万物皆文件，那你要发消息的目的地，也是个文件，这里就引出了socket 的概念。</p>
+<p>要使用 <code>socket</code> , 那么首先需要创建它。</p>
+<p>在 TCP 传输中创建的方式是  <code>socket(AF_INET, SOCK_STREAM, 0);</code>，其中 <code>AF_INET</code> 表示将使用 IPV4 里 <strong>host:port</strong> 的方式去解析待会你输入的网络地址。<code>SOCK_STREAM</code> 是指使用面向字节流的 TCP 协议，<strong>工作在传输层</strong>。</p>
+<p>创建好了 <code>socket</code> 之后，就可以愉快的把要传输的数据写到这个文件里。调用 socket 的<code>sendto</code>接口的过程中进程会从<strong>用户态进入到内核态</strong>，最后会调用到 <code>sock_sendmsg</code> 方法。</p>
+<p>然后进入传输层，带上<code>TCP</code>头。网络层带上<code>IP</code>头，数据链路层带上 <code>MAC</code>头等一系列操作后。进入网卡的<strong>发送队列 ring buffer</strong> ，顺着网卡就发出去了。</p>
+<p>回到 <code>ping</code> ， 整个过程也基本跟 <code>TCP</code> 发数据类似，差异的地方主要在于，创建 <code>socket</code> 的时候用的是  <code>socket(AF_INET,SOCK_RAW,IPPROTO_ICMP)</code>，<code>SOCK_RAW</code> 是原始套接字 ，<strong>工作在网络层</strong>， 所以构建<code>ICMP</code>（网络层协议）的数据，是再合适不过了。ping 在进入内核态后最后也是调用的  <code>sock_sendmsg</code> 方法，进入到网络层后加上<strong>ICMP和IP头</strong>后，数据链路层加上<strong>MAC头</strong>，也是顺着网卡发出。因此 本质上ping 跟 普通应用发消息 在程序流程上没太大差别。</p>
+<p>这也解释了<strong>为什么当你发现怀疑网络有问题的时候，别人第一时间是问你能ping通吗？</strong>因为可以简单理解为ping就是自己组了个数据包，让系统按着其他软件发送数据的路径往外发一遍，能通的话说明其他软件发的数据也能通。</p>
+<h3 id="为什么断网了还能-ping-通-127-0-0-1"><a href="#为什么断网了还能-ping-通-127-0-0-1" class="headerlink" title="为什么断网了还能 ping 通 127.0.0.1"></a>为什么断网了还能 ping 通 127.0.0.1</h3><p>前面提到，有网的情况下，ping 最后是<strong>通过网卡</strong>将数据发送出去的。</p>
+<p>那么断网的情况下，网卡已经不工作了，ping 回环地址却一切正常，我们可以看下这种情况下的工作原理。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png" alt="ping回环地址"></p>
+<p>从应用层到传输层再到网络层。这段路径跟ping外网的时候是几乎是一样的。到了网络层，系统会根据目的IP，在路由表中获取对应的<strong>路由信息</strong>，而这其中就包含选择<strong>哪个网卡</strong>把消息发出。</p>
+<p>当发现<strong>目标IP是外网IP</strong>时，会从”真网卡”发出。</p>
+<p>当发现<strong>目标IP是回环地址</strong>时，就会选择<strong>本地网卡</strong>。</p>
+<p>本地网卡，其实就是个**”假网卡”<strong>，它不像”真网卡”那样有个<code>ring buffer</code>什么的，”假网卡”会把数据推到一个叫 <code> input_pkt_queue</code> 的 <strong>链表</strong> 中。这个链表，其实是所有网卡共享的，上面挂着发给本机的各种消息。消息被发送到这个链表后，会再触发一个</strong>软中断**。</p>
+<p>专门处理软中断的工具人**”ksoftirqd”** （这是个<strong>内核线程</strong>），它在收到软中断后就会立马去链表里把消息取出，然后顺着数据链路层、网络层等层层往上传递最后给到应用程序。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%B7%A5%E5%85%B7%E4%BA%BAksoftirqd.png" alt="工具人ksoftirqd"></p>
+<p>ping 回环地址和<strong>通过TCP等各种协议发送数据到回环地址</strong>都是走这条路径。整条路径从发到收，都没有经过”真网卡”。<strong>之所以127.0.0.1叫本地回环地址，可以理解为，消息发出到这个地址上的话，就不会出网络，在本机打个转就又回来了。</strong>所以断网，依然能 <code>ping</code> 通 <code>127.0.0.1</code>。</p>
+<h3 id="ping回环地址和ping本机地址有什么区别"><a href="#ping回环地址和ping本机地址有什么区别" class="headerlink" title="ping回环地址和ping本机地址有什么区别"></a>ping回环地址和ping本机地址有什么区别</h3><p>我们在mac里执行 <code>ifconfig</code> 。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ifconfig</span></span><br><span class="line">lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu 16384</span><br><span class="line">	inet 127.0.0.1 netmask 0xff000000</span><br><span class="line">	...</span><br><span class="line">en0: flags=8863&lt;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500</span><br><span class="line">	inet 192.168.31.6 netmask 0xffffff00 broadcast 192.168.31.255</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p>能看到 <strong>lo0</strong>，表示本地回环接口，对应的地址，就是我们前面提到的 <strong>127.0.0.1</strong> ，也就是<strong>回环地址</strong>。</p>
+<p>和 <strong>eth0</strong>，表示本机第一块网卡，对应的IP地址是<strong>192.168.31.6</strong>，管它叫<strong>本机IP</strong>。</p>
+<p>之前一直认为ping本机IP的话会通过”真网卡”出去，然后遇到第一个路由器，再发回来到本机。</p>
+<p>为了验证这个说法，可以进行抓包，但结果跟上面的说法并不相同。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225434437.png" alt="ping 127.0.0.1"></p>
+<br>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225140197.png" alt="ping 本机地址"></p>
+<p>可以看到 ping 本机IP 跟 ping 回环地址一样，相关的网络数据，都是走的  <strong>lo0</strong>，本地回环接口，也就是前面提到的**”假网卡”**。</p>
+<p>只要走了本地回环接口，那数据都不会发送到网络中，在本机网络协议栈中兜一圈，就发回来了。因此 <strong>ping回环地址和ping本机地址没有区别</strong>。</p>
+<h3 id="127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗"><a href="#127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗" class="headerlink" title="127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗"></a>127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</h3><p>回到文章开头动图里的提问，算是面试八股文里的老常客了。</p>
+<p>以前第一次用 <code>nginx</code> 的时候，发现用这几个 <code>IP</code>，都能正常访问到 <code>nginx</code> 的欢迎网页。一度认为这几个 <code>IP</code> 都是一样的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190253656.png" alt="访问127.0.0.1:80"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190335350.png" alt="访问localhost:80"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190410662.png" alt="访问0.0.0.0:80"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530191958500.png" alt="访问本机的IP地址"></p>
+<p>但本质上还是有些区别的。</p>
+<p>首先 <code>localhost</code> 就不叫 <code>IP</code>，它是一个域名，就跟 <code>&quot;baidu.com&quot;</code>,是一个形式的东西，只不过默认会把它解析为 <code>127.0.0.1</code> ，当然这可以在 <code>/etc/hosts</code> 文件下进行修改。</p>
+<p>所以默认情况下，使用 <code>localhost</code>  跟使用  <code>127.0.0.1</code>  确实是没区别的。</p>
+<p>其次就是 <code>0.0.0.0</code>，执行 ping 0.0.0.0  ，是会失败的，因为它在<code>IPV4</code>中表示的是无效的<strong>目标地址</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping 0.0.0.0</span></span><br><span class="line">PING 0.0.0.0 (0.0.0.0): 56 data bytes</span><br><span class="line">ping: sendto: No route to host</span><br><span class="line">ping: sendto: No route to host</span><br></pre></td></tr></table></figure>
+
+<p>但它还是很有用处的，回想下，我们启动服务器的时候，一般会 <code>listen</code> 一个 IP 和端口，等待客户端的连接。</p>
+<p>如果此时 <code>listen</code> 的是本机的 <code>0.0.0.0</code> , 那么它表示本机上的<strong>所有IPV4地址</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/* Address to accept any incoming messages. */</span><br><span class="line"><span class="meta">#</span><span class="bash">define	INADDR_ANY		((unsigned long int) 0x00000000) /* 0.0.0.0   */</span></span><br></pre></td></tr></table></figure>
+
+<p>举个例子。刚刚提到的 <code>127.0.0.1</code> 和 <code>192.168.31.6</code> ，都是本机的IPV4地址，如果监听 <code>0.0.0.0</code>  ，那么用上面两个地址，都能访问到这个服务器。</p>
+<p> 当然， 客户端 <code>connect</code> 时，不能使用 <code>0.0.0.0</code> 。必须指明要连接哪个服务器IP。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><p><code>127.0.0.1</code> 是<strong>回环地址</strong>。<code>localhost</code>是<strong>域名</strong>，但默认等于 <code>127.0.0.1</code>。</p>
+</li>
+<li><p><code>ping</code> 回环地址和 <code>ping</code> 本机地址，是一样的，走的是<strong>lo0 “假网卡”<strong>，都会经过网络层和数据链路层等逻辑，最后在快要出网卡前</strong>狠狠拐了个弯</strong>， 将数据插入到一个<strong>链表</strong>后就<strong>软中断</strong>通知 <strong>ksoftirqd</strong> 来进行<strong>收数据</strong>的逻辑，<strong>压根就不出网络</strong>。所以断网了也能 <code>ping</code> 通回环地址。</p>
+</li>
+<li><p>如果服务器 <code>listen</code> 的是 <code>0.0.0.0</code>，那么此时用<code>127.0.0.1</code>和本机地址<strong>都可以</strong>访问到服务。</p>
+</li>
+</ul>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近工作上的事情太忙，本来就黑的黑眼圈，就更黑了，鸽了大家这么久实在不好意思哈。</p>
+<p>这篇文章里，有几张大图本来都是动图，但是发现动起来之后发现字太小，点开来放大之后图又不会动了。有些影响体验，我就先改成静态图吧。</p>
+<p>欢迎大家加我微信（公众号里右下角“联系我”），互相围观朋友圈砍一刀啥的哈哈。</p>
+<p>如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（<strong>点两下</strong>）支持一下。（<strong>疯狂暗示，拜托拜托，这对我真的很重要！</strong>）</p>
+<p>我是小白，我们下期见。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《127.0.0.1 之本机网络通信过程知多少 ?！》—— 推荐关注飞哥的《开发内功修炼》</p>
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VLHCu6b5Anx8HEj_gQZfOg">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ">动图图解！GMP模型里为什么要有P？背后的原因让人暖心</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q">i/o timeout，希望你不要踩到这个net/http包的坑</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ">妙啊! 程序猿的第一本互联网黑话指南</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA">我感觉，我可能要拿图灵奖了。。。</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解HTTP知识点+面试题</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a> </p>
+</li>
+</ul>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白debug】<br><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-03-19-0.gif"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/11/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%8CGMP%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89P/" rel="prev" title="动图图解！GMP模型里为什么要有P？背后的原因让人暖心">
+      <i class="fa fa-chevron-left"></i> 动图图解！GMP模型里为什么要有P？背后的原因让人暖心
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%BF%9E%E6%8E%A5%E4%B8%80%E4%B8%AAIP%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84/" rel="next" title="连接一个 IP 不存在的主机时，握手过程是怎样的？">
+      连接一个 IP 不存在的主机时，握手过程是怎样的？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF127-0-0-1"><span class="nav-number">1.</span> <span class="nav-text">什么是127.0.0.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-ping"><span class="nav-number">2.</span> <span class="nav-text">什么是 ping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP%E5%8F%91%E6%95%B0%E6%8D%AE%E5%92%8Cping%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">TCP发数据和ping的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%96%AD%E7%BD%91%E4%BA%86%E8%BF%98%E8%83%BD-ping-%E9%80%9A-127-0-0-1"><span class="nav-number">4.</span> <span class="nav-text">为什么断网了还能 ping 通 127.0.0.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%92%8Cping%E6%9C%AC%E6%9C%BA%E5%9C%B0%E5%9D%80%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">ping回环地址和ping本机地址有什么区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#127-0-0-1-%E5%92%8C-localhost-%E4%BB%A5%E5%8F%8A-0-0-0-0-%E6%9C%89%E5%8C%BA%E5%88%AB%E5%90%97"><span class="nav-number">6.</span> <span class="nav-text">127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">10.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9e966cbffd502f60f88d',
+      clientSecret: 'edc2f958eb9405e24a41f38c041dc3cdfc24d095',
+      repo        : 'xiaobaiTech.github.io',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : '35f0532b6b9aab01d86b9a1ec15a39aa',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: 小白debug
+subtitle: '一起在知识的海洋里呛水'
+description: 有时骚话连篇，有时硬核图解
+keywords: 
+author: 
+timezone: ''
+
+# URL
+## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
+url: https://xiaobaitech.github.io/
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
+  trailing_html: true # Set to false to remove trailing '.html' from permalinks
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# Writing
+new_post_name: :title.md # File name of new posts
+default_layout: post
+titlecase: false # Transform title into titlecase
+external_link:
+  enable: true # Open external links in new tab
+  field: site # Apply to the whole site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: false
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# Home page setting
+# path: Root path for your blogs index page. (default = '')
+# per_page: Posts displayed per page. (0 = disable pagination)
+# order_by: Posts order. (Order by date descending by default)
+index_generator:
+  path: './'
+  per_page: 10
+  order_by: -date
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Metadata elements
+## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
+meta_generator: true
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+## updated_option supports 'mtime', 'date', 'empty'
+updated_option: 'mtime'
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 10
+pagination_dir: page
+
+# Include / Exclude file(s)
+## include:/exclude: options only apply to the 'source/' folder
+include:
+exclude:
+ignore:
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next
+
+#scheme: Muse
+#scheme: Mist
+# scheme: Pisces
+# scheme: Gemini
+language: zh-CN
+
+# symbols_count_time:
+#   symbols: true
+#   time: true
+#   total_symbols: true
+#   total_time: true
+#   exclude_codeblock: true
+
+# search:
+#     path: search.json
+#     field: all
+#     format: html
+#     limit: 10000
+
+# local_search:
+#     enable: true
+#     trigger: auto
+#     top_n_per_article: 1
+#     unescape: false
+#     preload: true
+
+       
+
+# Deployment
+## Docs: https://hexo.io/docs/one-command-deployment
+deploy:
+  type: git
+  repo: https://github.com/xiaobaiTech/xiaobaiTech.github.io.git
+  branch: gh-pages
+
+plugins:
+  readmore:
+  blogId: 26611-1632556057073-469
+  name:  小白debug
+  qrcode: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E4%BB%85%E4%BA%8C%E7%BB%B4%E5%90%971.png
+  keyword: vip  
+  
+
+
+
+# avatar: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaa%E5%A4%B4%E5%83%8F.png
+
+
+
+# #5、Gitment
+# gitment_owner: xiaobaiTech      #你的 GitHub ID
+# gitment_repo: xiaobaiTech.github.io          #存储评论的 repo
+# gitment_oauth: 
+# client_id: 9e966cbffd502f60f88d           #client ID
+# client_secret: edc2f958eb9405e24a41f38c041dc3cdfc24d095       #client secret
+
+# # 样式定制 - 一般不需要修改，除非有很强的定制欲望…
+# style:
+#   # 头像上面的背景颜色
+#   header: '#4d4d4d'
+#   # 右滑板块背景
+#   slider: 'linear-gradient(200deg,#a0cfe4,#e8c37e)'
+
+# # slider的设置
+# slider:
+#   # 是否默认展开tags板块
+#   showTags: false
+
+# # 智能菜单
+# # 如不需要，将该对应项置为false
+# # 比如
+# #smart_menu:
+# #  friends: false
+# smart_menu:
+#   innerArchive: '所有文章'
+#   friends: '友链'
+#   aboutme: false
+
+ 
+# friends:
+#   友情链接1: https://eddycjy.com/
+#   友情链接2: https://xargin.com/

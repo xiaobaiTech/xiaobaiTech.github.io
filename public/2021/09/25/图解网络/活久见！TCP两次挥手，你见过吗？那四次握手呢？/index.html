@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaitech.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="我们都知道，TCP是个面向连接的、可靠的、基于字节流的传输层通信协议。  那这里面提到的”面向连接“，意味着需要 建立连接，使用连接，释放连接。 建立连接是指我们熟知的TCP三次握手。 而使用连接，则是通过一发送、一确认的形式，进行数据传输。 还有就是释放连接，也就是我们常见的TCP四次挥手。 TCP四次挥手大家应该比较了解了，但大家见过三次挥手吗？还有两次挥手呢？ 都见过？ 那四次握手呢？ 今天">
+<meta property="og:type" content="article">
+<meta property="og:title" content="活久见！TCP两次挥手，你见过吗？那四次握手呢？">
+<meta property="og:url" content="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="我们都知道，TCP是个面向连接的、可靠的、基于字节流的传输层通信协议。  那这里面提到的”面向连接“，意味着需要 建立连接，使用连接，释放连接。 建立连接是指我们熟知的TCP三次握手。 而使用连接，则是通过一发送、一确认的形式，进行数据传输。 还有就是释放连接，也就是我们常见的TCP四次挥手。 TCP四次挥手大家应该比较了解了，但大家见过三次挥手吗？还有两次挥手呢？ 都见过？ 那四次握手呢？ 今天">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/FIN-WAIT-2%E7%89%B9%E5%88%AB%E5%A4%9A%E7%9A%84%E5%8E%9F%E5%9B%A0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/close()%E8%A7%A6%E5%8F%91TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/shutdown%E8%A7%A6%E5%8F%91%E7%9A%84TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/e18d20c94006dfe0-feec70b0eb485633-f0e01cf6d9cce2bccba34029f1ca10e0-20210808141929988.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp_sendmsg%E9%80%BB%E8%BE%912.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E4%B8%80%E7%9B%B4%E4%B8%8D%E5%8F%91%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E6%83%85%E5%86%B53.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%BB%B6%E8%BF%9F%E7%A1%AE%E8%AE%A4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210810093309117.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E8%87%AA%E8%BF%9E%E6%8E%A52.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E5%90%8C%E6%97%B6%E6%89%93%E5%BC%802.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210815090301418.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210814073504558.png">
+<meta property="article:published_time" content="2021-09-25T14:57:55.000Z">
+<meta property="article:modified_time" content="2021-10-08T01:37:47.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png">
+
+<link rel="canonical" href="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>活久见！TCP两次挥手，你见过吗？那四次握手呢？ | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          活久见！TCP两次挥手，你见过吗？那四次握手呢？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-09-25T22:57:55+08:00">2021-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们都知道，TCP是个<strong>面向连接的、可靠的、基于字节流的传输层</strong>通信协议。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png" alt="TCP是什么"></p>
+<p>那这里面提到的”<strong>面向连接</strong>“，意味着需要 建立连接，使用连接，释放连接。</p>
+<p><strong>建立连接</strong>是指我们熟知的<strong>TCP三次握手</strong>。</p>
+<p>而<strong>使用连接</strong>，则是通过一发送、一确认的形式，进行<strong>数据传输</strong>。</p>
+<p>还有就是<strong>释放连接</strong>，也就是我们常见的<strong>TCP四次挥手</strong>。</p>
+<p><strong>TCP四次挥手</strong>大家应该比较了解了，但大家见过<strong>三次挥手</strong>吗？还有<strong>两次挥手</strong>呢？</p>
+<p>都见过？ 那<strong>四次握手</strong>呢？</p>
+<p>今天这个话题，不想只是猎奇，也不想搞冷知识。</p>
+<p>我们从四次挥手开始说起，搞点实用的知识点。</p>
+<span id="more"></span>
+<br>
+
+<h2 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h2><p>简单回顾下TCP四次挥手。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B7.png" alt="TCP四次挥手"></p>
+<p>正常情况下。只要数据传输完了，<strong>不管是客户端还是服务端，都可以主动发起四次挥手</strong>，释放连接。</p>
+<p>就跟上图画的一样，假设，这次四次挥手是由客户端主动发起的，那它就是<strong>主动方</strong>。服务器是被动接收客户端的挥手请求的，叫<strong>被动方</strong>。</p>
+<p>客户端和服务器，一开始，都是处于<code>ESTABLISHED</code>状态。</p>
+<p><strong>第一次挥手</strong>：一般情况下，主动方执行<code>close()</code>或 <code>shutdown()</code>方法，会发个<code>FIN报文</code>出来，表示”<strong>我不再发送数据了</strong>“。</p>
+<p><strong>第二次挥手</strong>：在收到主动方的<code>FIN</code>报文后，被动方立马回应一个<code>ACK</code>，意思是”我收到你的FIN了，也知道你不再发数据了”。</p>
+<p>上面提到的是<strong>主动方</strong>不再发送数据了。但如果这时候，<strong>被动方</strong>还有数据要发，那就继续发。注意，虽然第二次和第三次挥手之间，被动方是能发数据到主动方的，但主动方能不能正常收就不一定了，这个待会说。</p>
+<p><strong>第三次挥手</strong>：在被动方在感知到第二次挥手之后，会做了一系列的收尾工作，最后也调用一个 <code>close()</code>, 这时候就会发出第三次挥手的 <code>FIN-ACK</code>。</p>
+<p><strong>第四次挥手</strong>：主动方回一个<code>ACK</code>，意思是收到了。</p>
+<p>其中第一次挥手和第三次挥手，都是我们在应用程序中主动触发的（比如调用<code>close()</code>方法），也就是我们平时写代码需要关注的地方。</p>
+<p>第二和第四次挥手，都是内核协议栈自动帮我们完成的，我们写代码的时候碰不到这地方，因此也不需要太关心。</p>
+<p>另外不管是主动还是被动，每方发出了一个 <code>FIN</code> 和一个<code>ACK</code> 。也收到了一个 <code>FIN</code> 和一个<code>ACK</code> 。<strong>这一点大家关注下，待会还会提到。</strong></p>
+<h3 id="FIN一定要程序执行close-或shutdown-才能发出吗？"><a href="#FIN一定要程序执行close-或shutdown-才能发出吗？" class="headerlink" title="FIN一定要程序执行close()或shutdown()才能发出吗？"></a>FIN一定要程序执行close()或shutdown()才能发出吗？</h3><p><strong>不一定</strong>。一般情况下，通过对<code>socket</code>执行 <code>close()</code> 或 <code>shutdown()</code> 方法会发出<code>FIN</code>。但实际上，只要应用程序退出，不管是<strong>主动</strong>退出，还是<strong>被动</strong>退出（因为一些莫名其妙的原因被<code>kill</code>了）, <strong>都会</strong>发出 <code>FIN</code>。</p>
+<blockquote>
+<p>FIN 是指”我不再发送数据”，因此<code>shutdown()</code> 关闭读不会给对方发FIN, 关闭写才会发FIN。</p>
+</blockquote>
+<br>
+
+<h3 id="如果机器上FIN-WAIT-2状态特别多，是为什么"><a href="#如果机器上FIN-WAIT-2状态特别多，是为什么" class="headerlink" title="如果机器上FIN-WAIT-2状态特别多，是为什么"></a>如果机器上FIN-WAIT-2状态特别多，是为什么</h3><p>根据上面的四次挥手图，可以看出，<code>FIN-WAIT-2</code>是<strong>主动方</strong>那边的状态。</p>
+<p>处于这个状态的程序，一直在等<strong>第三次挥手</strong>的<code>FIN</code>。而第三次挥手需要由被动方在代码里执行<code>close()</code> 发出。</p>
+<p>因此当机器上<code>FIN-WAIT-2</code>状态特别多，那一般来说，另外一台机器上会有大量的 <code>CLOSE_WAIT</code>。需要检查有大量的 <code>CLOSE_WAIT</code>的那台机器，为什么迟迟不愿调用<code>close()</code>关闭连接。</p>
+<p>所以，如果机器上<code>FIN-WAIT-2</code>状态特别多，一般是因为对端一直不执行<code>close()</code>方法发出第三次挥手。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/FIN-WAIT-2%E7%89%B9%E5%88%AB%E5%A4%9A%E7%9A%84%E5%8E%9F%E5%9B%A0.png" alt="FIN-WAIT-2特别多的原因"></p>
+<br>
+
+<h3 id="主动方在close之后收到的数据，会怎么处理"><a href="#主动方在close之后收到的数据，会怎么处理" class="headerlink" title="主动方在close之后收到的数据，会怎么处理"></a>主动方在close之后收到的数据，会怎么处理</h3><p>之前写的一篇文章《代码执行send成功后，数据就发出去了吗？》中，从源码的角度提到了，<strong>一般情况下</strong>，程序主动执行<code>close()</code>的时候；</p>
+<ul>
+<li>如果当前连接对应的<code>socket</code>的<strong>接收缓冲区</strong>有数据，会发<code>RST</code>。</li>
+<li>如果<strong>发送缓冲区</strong>有数据，那会等待发送完，再发第一次挥手的<code>FIN</code>。</li>
+</ul>
+<p>大家知道，TCP是<strong>全双工通信</strong>，意思是发送数据的同时，还可以接收数据。</p>
+<p><code>Close()</code>的含义是，此时要同时<strong>关闭发送和接收</strong>消息的功能。</p>
+<p>也就是说，虽然<strong>理论上</strong>，第二次和第三次挥手之间，被动方是可以传数据给主动方的。</p>
+<p>但如果 主动方的四次挥手是通过 <code>close()</code> 触发的，那主动方是不会去收这个消息的。而且还会回一个 <code>RST</code>。直接结束掉这次连接。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/close()%E8%A7%A6%E5%8F%91TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B5.png" alt="close()触发TCP四次挥手"></p>
+<br>
+
+<h3 id="第二第三次挥手之间，不能传输数据吗？"><a href="#第二第三次挥手之间，不能传输数据吗？" class="headerlink" title="第二第三次挥手之间，不能传输数据吗？"></a>第二第三次挥手之间，不能传输数据吗？</h3><p>也不是。前面提到<code>Close()</code>的含义是，要同时<strong>关闭发送和接收</strong>消息的功能。</p>
+<p>那如果能做到<strong>只关闭发送消息</strong>，<strong>不关闭接收消息</strong>的功能，那就能继续收消息了。这种 <code>half-close</code> 的功能，通过调用<code>shutdown()</code> 方法就能做到。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">shutdown</span><span class="params">(<span class="keyword">int</span> sock, <span class="keyword">int</span> howto)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其中 howto 为断开方式。有以下取值：</p>
+<ul>
+<li>SHUT_RD：关闭读。这时应用层不应该再尝试接收数据，内核协议栈中就算接收缓冲区收到数据也会被丢弃。</li>
+<li>SHUT_WR：关闭写。如果发送缓冲区中还有数据没发，会将将数据传递到目标主机。</li>
+<li>SHUT_RDWR：关闭读和写。相当于<code>close()</code>了。</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/shutdown%E8%A7%A6%E5%8F%91%E7%9A%84TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="shutdown触发的TCP四次挥手"></p>
+<br>
+
+<h3 id="怎么知道对端socket执行了close还是shutdown"><a href="#怎么知道对端socket执行了close还是shutdown" class="headerlink" title="怎么知道对端socket执行了close还是shutdown"></a>怎么知道对端socket执行了close还是shutdown</h3><p>不管<strong>主动</strong>关闭方调用的是<code>close()</code>还是<code>shutdown()</code>，对于被动方来说，收到的就只有一个<code>FIN</code>。</p>
+<p><strong>被动</strong>关闭方<strong>就懵了</strong>，”我怎么知道对方让不让我继续发数据？”</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/e18d20c94006dfe0-feec70b0eb485633-f0e01cf6d9cce2bccba34029f1ca10e0-20210808141929988.jpg"></p>
+<p>其实，大可不必纠结，该发就发。</p>
+<p>第二次挥手和第三次挥手之间，如果<strong>被动</strong>关闭方想发数据，那么在代码层面上，就是执行了 <code>send()</code> 方法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">send</span><span class="params">( SOCKET s,<span class="keyword">const</span> <span class="keyword">char</span>* buf,<span class="keyword">int</span> len,<span class="keyword">int</span> flags)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>send()</code> 会把数据拷贝到本机的<strong>发送缓冲区</strong>。如果发送缓冲区没出问题，都能拷贝进去，所以正常情况下，<code>send()</code><strong>一般</strong>都会返回成功。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp_sendmsg%E9%80%BB%E8%BE%912.png" alt="tcp_sendmsg逻辑"></p>
+<p>然后<strong>被动方</strong>内核协议栈会把数据发给<strong>主动</strong>关闭方。</p>
+<ul>
+<li><p>如果上一次<strong>主动</strong>关闭方调用的是<code>shutdown(socket_fd, SHUT_WR)</code>。那此时，<strong>主动关闭方</strong>不再发送消息，但能接收<strong>被动方</strong>的消息，一切如常，皆大欢喜。</p>
+</li>
+<li><p>如果上一次<strong>主动</strong>关闭方调用的是<code>close()</code>。那<strong>主动方</strong>在收到<strong>被动方</strong>的数据后会直接<strong>丢弃</strong>，然后回一个<code>RST</code>。</p>
+</li>
+</ul>
+<p>针对第二种情况。</p>
+<p>被动方<strong>内核协议栈</strong>收到了<code>RST</code>，会把连接关闭。但内核连接关闭了，应用层也不知道（除非被通知）。</p>
+<p>此时被动方<strong>应用层</strong>接下来的操作，无非就是<strong>读或写</strong>。</p>
+<ul>
+<li><p>如果是读，则会返回<code>RST</code>的报错，也就是我们常见的<code>Connection reset by peer</code>。</p>
+</li>
+<li><p>如果是写，那么程序会产生<code>SIGPIPE</code>信号，应用层代码可以捕获并处理信号，如果不处理，则默认情况下进程会终止，异常退出。</p>
+</li>
+</ul>
+<br>
+
+<p><strong>总结一下</strong>，当被动关闭方 <code>recv()</code> 返回<code>EOF</code>时，说明主动方通过 <code>close()</code>或 <code>shutdown(fd, SHUT_WR)</code> 发起了第一次挥手。 </p>
+<p>如果此时被动方执行<strong>两次</strong> <code>send()</code>。</p>
+<ul>
+<li><p>第一次<code>send()</code>, 一般会成功返回。</p>
+</li>
+<li><p>第二次<code>send()</code>时。如果主动方是通过 <code>shutdown(fd, SHUT_WR)</code> 发起的第一次挥手，那此时<code>send()</code>还是会成功。如果主动方通过 <code>close()</code>发起的第一次挥手，那此时会产生<code>SIGPIPE</code>信号，进程默认会终止，异常退出。不想异常退出的话，记得捕获处理这个信号。</p>
+</li>
+</ul>
+<br>
+
+
+
+<h3 id="如果被动方一直不发第三次挥手，会怎么样"><a href="#如果被动方一直不发第三次挥手，会怎么样" class="headerlink" title="如果被动方一直不发第三次挥手，会怎么样"></a>如果被动方一直不发第三次挥手，会怎么样</h3><p>第三次挥手，是由<strong>被动方</strong>主动触发的，比如调用<code>close()</code>。</p>
+<p>如果由于代码错误或者其他一些原因，被动方就是不执行第三次挥手。</p>
+<p>这时候，主动方会根据自身第一次挥手的时候用的是 <code>close()</code> 还是 <code>shutdown(fd, SHUT_WR)</code> ，有不同的行为表现。</p>
+<ul>
+<li><p>如果是 <code>shutdown(fd, SHUT_WR)</code> ，说明主动方其实只关闭了写，但还可以读，此时会一直处于 <code>FIN-WAIT-2</code>， 死等被动方的第三次挥手。</p>
+</li>
+<li><p>如果是 <code>close()</code>， 说明主动方读写都关闭了，这时候会处于 <code>FIN-WAIT-2</code>一段时间，这个时间由 <code>net.ipv4.tcp_fin_timeout</code> 控制，一般是 <code>60s</code>，这个值正好跟<code>2MSL</code>一样 。<strong>超过这段时间之后，状态不会变成 <code>TIME-WAIT</code>，而是直接变成<code>CLOSED</code>。</strong></p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /proc/sys/net/ipv4/tcp_fin_timeout</span></span><br><span class="line">60</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E4%B8%80%E7%9B%B4%E4%B8%8D%E5%8F%91%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E6%83%85%E5%86%B53.png" alt="一直不发第三次挥手的情况"></p>
+<br>
+
+<h2 id="TCP三次挥手"><a href="#TCP三次挥手" class="headerlink" title="TCP三次挥手"></a>TCP三次挥手</h2><p>四次挥手聊完了，那有没有可能出现三次挥手？</p>
+<p><strong>是可能的。</strong></p>
+<p>我们知道，TCP四次挥手里，第二次和第三次挥手之间，是有可能有数据传输的。第三次挥手的目的是为了告诉主动方，”被动方没有数据要发了”。</p>
+<p>所以，在第一次挥手之后，如果被动方没有数据要发给主动方。第二和第三次挥手是<strong>有可能</strong>合并传输的。这样就出现了三次挥手。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="TCP三次挥手"></p>
+<br>
+
+<h3 id="如果有数据要发，就不能是三次挥手了吗"><a href="#如果有数据要发，就不能是三次挥手了吗" class="headerlink" title="如果有数据要发，就不能是三次挥手了吗"></a>如果有数据要发，就不能是三次挥手了吗</h3><p>上面提到的是<strong>没有数据要发</strong>的情况，如果第二、第三次挥手之间<strong>有数据</strong>要发，就不可能变成三次挥手了吗？</p>
+<p><strong>并不是</strong>。TCP中还有个特性叫<strong>延迟确认</strong>。可以简单理解为：<strong>接收方收到数据以后不需要立刻马上回复ACK确认包。</strong></p>
+<p>在此基础上，<strong>不是每一次发送数据包都能对应收到一个 <code>ACK</code> 确认包，因为接收方可以合并确认。</strong></p>
+<p> 而这个合并确认，放在四次挥手里，可以把第二次挥手、第三次挥手，以及他们之间的数据传输都合并在一起发送。因此也就出现了三次挥手。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%BB%B6%E8%BF%9F%E7%A1%AE%E8%AE%A4.png" alt="TCP三次挥手延迟确认"></p>
+<br>
+
+<h2 id="TCP两次挥手"><a href="#TCP两次挥手" class="headerlink" title="TCP两次挥手"></a>TCP两次挥手</h2><p>前面在四次挥手中提到，关闭的时候双方都<strong>发出了一个FIN和收到了一个ACK</strong>。</p>
+<p>正常情况下TCP连接的两端，是不同<strong>IP+端口</strong>的进程。</p>
+<p>但如果TCP连接的两端，<strong>IP+端口</strong>是一样的情况下，那么在关闭连接的时候，也同样做到了<strong>一端发出了一个FIN，也收到了一个 ACK</strong>，只不过正好这两端其实是<code>同一个socket</code> 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B2.png" alt="TCP两次挥手"></p>
+<p>而这种两端<strong>IP+端口</strong>都一样的连接，叫<strong>TCP自连接</strong>。</p>
+<p>是的，你没看错，我也没打错别字。<strong>同一个socket确实可以自己连自己，形成一个连接。</strong></p>
+<br>
+
+<h3 id="一个socket能建立连接？"><a href="#一个socket能建立连接？" class="headerlink" title="一个socket能建立连接？"></a>一个socket能建立连接？</h3><p>上面提到了，同一个客户端socket，自己对自己发起连接请求。是可以成功建立连接的。这样的连接，叫<strong>TCP自连接</strong>。</p>
+<p>下面我们尝试下复现。</p>
+<p>注意我是在以下系统进行的实验。在<code>mac</code>上多半无法复现。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  cat /etc/os-release</span></span><br><span class="line">NAME=<span class="string">&quot;CentOS Linux&quot;</span></span><br><span class="line">VERSION=<span class="string">&quot;7 (Core)&quot;</span></span><br><span class="line">ID=<span class="string">&quot;centos&quot;</span></span><br><span class="line">ID_LIKE=<span class="string">&quot;rhel fedora&quot;</span></span><br><span class="line">VERSION_ID=<span class="string">&quot;7&quot;</span></span><br><span class="line">PRETTY_NAME=<span class="string">&quot;CentOS Linux 7 (Core)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<code>nc</code>命令可以很简单的创建一个<strong>TCP自连接</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nc -p 6666 127.0.0.1 6666</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的 <code>-p</code> 可以指定源端口号。也就是指定了一个端口号为<code>6666</code>的客户端去连接 <code>127.0.0.1:6666</code> 。 </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># netstat -nt | grep 6666</span></span><br><span class="line">tcp        0      0 127.0.0.1:6666          127.0.0.1:6666          ESTABLISHED</span><br></pre></td></tr></table></figure>
+
+<p><strong>整个过程中，都没有服务端参与</strong>。可以抓个包看下。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210810093309117.png" alt="image-20210810093309117"></p>
+<p>可以看到，<strong>相同的socket，自己连自己的时候，握手是三次的。挥手是两次的。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E8%87%AA%E8%BF%9E%E6%8E%A52.png" alt="TCP自连接"></p>
+<p>上面这张图里，左右都是同一个客户端，把它画成两个是为了方便大家理解状态的迁移。</p>
+<p>我们可以拿自连接的握手状态<strong>对比下</strong>正常情况下的TCP三次握手。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B2.png" alt="正常情况下的TCP三次握手"></p>
+<p>看了自连接的状态图，再看看下面几个问题。</p>
+<br>
+
+<h4 id="一端发出第一次握手后，如果又收到了第一次握手的SYN包，TCP连接状态会怎么变化？"><a href="#一端发出第一次握手后，如果又收到了第一次握手的SYN包，TCP连接状态会怎么变化？" class="headerlink" title="一端发出第一次握手后，如果又收到了第一次握手的SYN包，TCP连接状态会怎么变化？"></a>一端发出第一次握手后，如果又收到了第一次握手的SYN包，TCP连接状态会怎么变化？</h4><p>第一次握手过后，连接状态就变成了<code>SYN_SENT</code>状态。如果此时又收到了第一次握手的SYN包，那么连接状态就会从<code>SYN_SENT</code>状态变成<code>SYN_RCVD</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// net/ipv4/tcp_input.c</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">tcp_rcv_synsent_state_process</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// SYN_SENT状态下，收到SYN包</span></span><br><span class="line">	<span class="keyword">if</span> (th-&gt;syn) &#123;</span><br><span class="line">        <span class="comment">// 状态置为 SYN_RCVD</span></span><br><span class="line">		tcp_set_state(sk, TCP_SYN_RECV);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="一端发出第二次握手后，如果又收到第二次握手的SYN-ACK包，TCP连接状态会怎么变化？"><a href="#一端发出第二次握手后，如果又收到第二次握手的SYN-ACK包，TCP连接状态会怎么变化？" class="headerlink" title="一端发出第二次握手后，如果又收到第二次握手的SYN+ACK包，TCP连接状态会怎么变化？"></a>一端发出第二次握手后，如果又收到第二次握手的SYN+ACK包，TCP连接状态会怎么变化？</h4><p>第二握手过后，连接状态就变为<code>SYN_RCVD</code>了，此时如果再收到第二次握手的<code>SYN+ACK</code>包。连接状态会变为<code>ESTABLISHED</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// net/ipv4/tcp_input.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">tcp_rcv_state_process</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 前面省略很多逻辑，能走到这就认为肯定有ACK</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 判断下这个ack是否合法</span></span><br><span class="line">		<span class="keyword">int</span> acceptable = tcp_ack(sk, skb, FLAG_SLOWPATH | FLAG_UPDATE_TS_RECENT) &gt; <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">switch</span> (sk-&gt;sk_state) &#123;</span><br><span class="line">		<span class="keyword">case</span> TCP_SYN_RECV:</span><br><span class="line">			<span class="keyword">if</span> (acceptable) &#123;</span><br><span class="line">        <span class="comment">// 状态从 SYN_RCVD 转为 ESTABLISHED</span></span><br><span class="line">				tcp_set_state(sk, TCP_ESTABLISHED);</span><br><span class="line">			&#125; </span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="一端第一次挥手后，又收到第一次挥手的包，TCP连接状态会怎么变化？"><a href="#一端第一次挥手后，又收到第一次挥手的包，TCP连接状态会怎么变化？" class="headerlink" title="一端第一次挥手后，又收到第一次挥手的包，TCP连接状态会怎么变化？"></a>一端第一次挥手后，又收到第一次挥手的包，TCP连接状态会怎么变化？</h4><p>第一次挥手过后，一端状态就会变成 <code>FIN-WAIT-1</code>。正常情况下，是要等待第二次挥手的<code>ACK</code>。但实际上却等来了 一个第一次挥手的 <code>FIN</code>包， 这时候连接状态就会变为<code>CLOSING</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// net/</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">tcp_fin</span><span class="params">(struct sock *sk)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span> (sk-&gt;sk_state) &#123;</span><br><span class="line">	<span class="keyword">case</span> TCP_FIN_WAIT1:</span><br><span class="line">		tcp_send_ack(sk);</span><br><span class="line">    <span class="comment">// FIN-WAIT-1状态下，收到了FIN，转为 CLOSING</span></span><br><span class="line">		tcp_set_state(sk, TCP_CLOSING);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这可以说是<strong>隐藏剧情</strong>了。</p>
+<p><code>CLOSING</code> 很少见，除了出现在<strong>自连接关闭</strong>外，一般还会出现在TCP两端<strong>同时关闭</strong>连接的情况下。</p>
+<p>处于<code>CLOSING</code>状态下时，只要再收到一个<code>ACK</code>，就能进入 <code>TIME-WAIT</code> 状态，然后等个<code>2MSL</code>，连接就彻底断开了。这跟正常的四次挥手还是有些差别的。大家可以滑到文章开头的TCP四次挥手再对比下。</p>
+<br>
+
+<h4 id="代码复现自连接"><a href="#代码复现自连接" class="headerlink" title="代码复现自连接"></a>代码复现自连接</h4><p>可能大家会产生怀疑，这是不是<code>nc</code>这个软件本身的<code>bug</code>。</p>
+<p>那我们可以尝试下用<code>strace</code>看看它内部都做了啥。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># strace nc -p 6666 127.0.0.1 6666</span></span><br><span class="line">// ...</span><br><span class="line">socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 3</span><br><span class="line">fcntl(3, F_GETFL)                       = 0x2 (flags O_RDWR)</span><br><span class="line">fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK)    = 0</span><br><span class="line">setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0</span><br><span class="line"><span class="built_in">bind</span>(3, &#123;sa_family=AF_INET, sin_port=htons(6666), sin_addr=inet_addr(<span class="string">&quot;0.0.0.0&quot;</span>)&#125;, 16) = 0</span><br><span class="line">connect(3, &#123;sa_family=AF_INET, sin_port=htons(6666), sin_addr=inet_addr(<span class="string">&quot;127.0.0.1&quot;</span>)&#125;, 16) = -1 EINPROGRESS (Operation now <span class="keyword">in</span> progress)</span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
+
+<p>无非就是以创建了一个客户端<code>socket</code>句柄，然后对这个句柄执行 <code>bind</code>, 绑定它的端口号是<code>6666</code>，然后再向 <code>127.0.0.1:6666</code>发起<code>connect</code>方法。</p>
+<p>我们可以尝试用<code>C语言</code>去复现一遍。</p>
+<p><strong>下面的代码，只用于复现问题。直接跳过也完全不影响阅读。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;strings.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> lfd, cfd;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv_addr</span>, <span class="title">clie_addr</span>;</span></span><br><span class="line">    <span class="keyword">socklen_t</span> clie_addr_len;</span><br><span class="line">    <span class="keyword">char</span> buf[BUFSIZ];</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">0</span>, i = <span class="number">0</span>, ret = <span class="number">0</span> ;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;This is a client \n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Step 1: 创建客户端端socket描述符cfd*/</span>    </span><br><span class="line">    cfd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(cfd == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> flag=<span class="number">1</span>,len=<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">	<span class="keyword">if</span>( setsockopt(cfd, SOL_SOCKET, SO_REUSEADDR, &amp;flag, len) == <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		perror(<span class="string">&quot;setsockopt&quot;</span>);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">	&#125; </span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    bzero(&amp;clie_addr, <span class="keyword">sizeof</span>(clie_addr));</span><br><span class="line">    clie_addr.sin_family = AF_INET;</span><br><span class="line">    clie_addr.sin_port = htons(<span class="number">6666</span>);</span><br><span class="line">    inet_pton(AF_INET,<span class="string">&quot;127.0.0.1&quot;</span>, &amp;clie_addr.sin_addr.s_addr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Step 2: 客户端使用bind绑定客户端的IP和端口*/</span>  </span><br><span class="line">    ret = bind(cfd, (struct sockaddr* )&amp;clie_addr, <span class="keyword">sizeof</span>(clie_addr));</span><br><span class="line">    <span class="keyword">if</span>(ret != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Step 3: connect链接服务器端的IP和端口号*/</span>    </span><br><span class="line">    bzero(&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_port = htons(<span class="number">6666</span>);</span><br><span class="line">    inet_pton(AF_INET,<span class="string">&quot;127.0.0.1&quot;</span>, &amp;serv_addr.sin_addr.s_addr);</span><br><span class="line">    ret = connect(cfd,(struct sockaddr *)&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    <span class="keyword">if</span>(ret != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">&quot;connect error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Step 4: 向服务器端写数据*/</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        fgets(buf, <span class="keyword">sizeof</span>(buf), <span class="built_in">stdin</span>);</span><br><span class="line">        write(cfd, buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line">        n = read(cfd, buf, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">        write(STDOUT_FILENO, buf, n);<span class="comment">//写到屏幕上</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*Step 5: 关闭socket描述符*/</span></span><br><span class="line">    close(cfd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>保存为 <code>client.c</code> 文件，然后执行下面命令，会发现连接成功。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gcc client.c -o client &amp;&amp; ./client</span></span><br><span class="line">This is a client </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># netstat -nt | grep 6666</span></span><br><span class="line">tcp        0      0 127.0.0.1:6666          127.0.0.1:6666          ESTABLISHED</span><br></pre></td></tr></table></figure>
+
+<p>说明，这不是nc的bug。事实上，这也是内核允许的一种情况。</p>
+<br>
+
+<h4 id="自连接的解决方案"><a href="#自连接的解决方案" class="headerlink" title="自连接的解决方案"></a>自连接的解决方案</h4><p>自连接一般不太常见，但遇到了也不难解决。</p>
+<p>解决方案比较简单，只要能保证客户端和服务端的端口不一致就行。</p>
+<p>事实上，我们写代码的时候一般不会去指定客户端的端口，系统会随机给客户端分配某个范围内的端口。而这个范围，可以通过下面的命令进行查询</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /proc/sys/net/ipv4/ip_local_port_range</span></span><br><span class="line">32768   60999</span><br></pre></td></tr></table></figure>
+
+<p>也就是只要我们的服务器端口不在<code>32768-60999</code>这个范围内，比如设置为<code>8888</code>。就可以规避掉这个问题。</p>
+<p>另外一个解决方案，可以参考<code>golang</code>标准网络库的实现，在连接建立完成之后判断下IP和端口是否一致，如果遇到自连接，则断开重试。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dialTCP</span><span class="params">(net <span class="keyword">string</span>, laddr, raddr *TCPAddr, deadline time.Time)</span> <span class="params">(*TCPConn, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 如果是自连接，这里会重试</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">2</span> &amp;&amp; (laddr == <span class="literal">nil</span> || laddr.Port == <span class="number">0</span>) &amp;&amp; (selfConnect(fd, err) || spuriousENOTAVAIL(err)); i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">			fd.Close()</span><br><span class="line">		&#125;</span><br><span class="line">		fd, err = internetSocket(net, laddr, raddr, deadline, syscall.SOCK_STREAM, <span class="number">0</span>, <span class="string">&quot;dial&quot;</span>, sockaddrToTCP)</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">selfConnect</span><span class="params">(fd *netFD, err error)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="comment">// 判断是否端口、IP一致</span></span><br><span class="line">	<span class="keyword">return</span> l.Port == r.Port &amp;&amp; l.IP.Equal(r.IP)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<br>
+
+<h2 id="四次握手"><a href="#四次握手" class="headerlink" title="四次握手"></a>四次握手</h2><p>前面提到的<code>TCP</code>自连接是一个客户端自己连自己的场景。那不同客户端之间是否可以互联？</p>
+<p>答案是<strong>可以的</strong>，有一种情况叫<strong>TCP同时打开</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP%E5%90%8C%E6%97%B6%E6%89%93%E5%BC%802.png" alt="TCP同时打开"></p>
+<p>大家可以对比下，<strong>TCP同时打开</strong>在握手时的状态变化，跟TCP自连接是非常的像。</p>
+<p>比如<code>SYN_SENT</code>状态下，又收到了一个<code>SYN</code>，其实就相当于自连接里，在发出了第一次握手后，又收到了第一次握手的请求。结果都是变成 <code>SYN_RCVD</code>。</p>
+<p>在 <code>SYN_RCVD</code> 状态下收到了 <code>SYN+ACK</code>，就相当于自连接里，在发出第二次握手后，又收到第二次握手的请求，结果都是变成 <code>ESTABLISHED</code>。<strong>他们的源码其实都是同一块逻辑。</strong></p>
+<br>
+
+<h4 id="复现TCP同时打开"><a href="#复现TCP同时打开" class="headerlink" title="复现TCP同时打开"></a>复现TCP同时打开</h4><p>分别在<strong>两个控制台</strong>下，分别执行下面两行命令。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span> nc -p 2224 127.0.0.1 2223 -v;<span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span> nc -p 2223 127.0.0.1 2224 -v;<span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>上面两个命令的含义也比较简单，两个客户端互相请求连接对方的端口号，如果失败了则不停重试。</p>
+<p>执行后看到的现象是，一开始会疯狂失败，重试。一段时间后，连接建立完成。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># netstat -an | grep  2223</span></span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State </span><br><span class="line">tcp        0      0 127.0.0.1:2224          127.0.0.1:2223          ESTABLISHED</span><br><span class="line">tcp        0      0 127.0.0.1:2223          127.0.0.1:2224          ESTABLISHED</span><br></pre></td></tr></table></figure>
+
+<p>期间抓包获得下面的结果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210815090301418.png"></p>
+<p>可以看到，这里面建立连接用了四次交互。因此可以说这是通过**”四次握手”**建立的连接。</p>
+<p>而且更重要的是，这里面只涉及两个客户端，<strong>没有服务端</strong>。</p>
+<p>看到这里，不知道大家有没有跟我一样，被刷新了一波认知，对<code>socket</code>有了重新的认识。</p>
+<p>在以前的观念里，建立连接，必须要有一个客户端和一个服务端，并且服务端还要执行一个<code>listen()</code>和一个<code>accept()</code>。而实际上，这些都不是必须的。</p>
+<p>那么下次，面试官问你**”没有<code>listen()</code>， TCP能建立连接吗？”**， 我想大家应该知道该怎么回答了。</p>
+<p>但问题又来了，只有两个客户端，没有<code>listen()</code> ，为什么能建立<code>TCP</code>连接？</p>
+<p>如果大家感兴趣，我们以后有机会再填上这个坑。</p>
+<br>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p><strong>四次挥手</strong>中，不管是程序主动执行<code>close()</code>，还是进程被杀，都有可能发出第一次挥手<code>FIN</code>包。如果机器上<code>FIN-WAIT-2</code>状态特别多，一般是因为对端一直不执行<code>close()</code>方法发出第三次挥手。</p>
+</li>
+<li><p><code>Close()</code>会<strong>同时关闭</strong>发送和接收消息的功能。<code>shutdown()</code> 能<strong>单独关闭</strong>发送或接受消息。</p>
+</li>
+<li><p>第二、第三次挥手，是有可能合在一起的。于是四次挥手就变成<strong>三次挥手</strong>了。</p>
+</li>
+<li><p>同一个socket自己连自己，会产生<strong>TCP自连接</strong>，自连接的挥手是<strong>两次挥手</strong>。</p>
+</li>
+<li><p>没有<code>listen</code>，两个客户端之间也能建立连接。这种情况叫<strong>TCP同时打开</strong>，它由<strong>四次握手</strong>产生。</p>
+</li>
+</ul>
+<br>
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>今天提到的，不管是<strong>两次挥手</strong>，还是<strong>自连接</strong>，或是<strong>TCP同时打开</strong>什么的。</p>
+<p>咋一看，可能对日常搬砖没什么用，实际上也确实没什么用。</p>
+<p>并且在面试上大概率也不会被问到。</p>
+<p><strong>毕竟一般面试官也不在意茴字有几种写法。</strong></p>
+<p>这篇文章的目的，主要是想从另外一个角度让大家重新认识下<code>socket</code>。原来<code>TCP</code>是可以自己连自己的，甚至两个客户端之间，不用服务端也能连起来。</p>
+<p>这实在是，太出乎意料了。</p>
+<br>
+
+<br>
+
+<p><strong>如果文章对你有帮助，欢迎…..</strong></p>
+<p>算了。</p>
+<p>兄弟们都是自家人，点不<strong>点赞</strong>，在不<strong>在看</strong>什么的，没关系的，大家看开心了就好。</p>
+<p><strong>在看，点赞</strong>什么的，我不是特别在意，真的，真的，别不信啊。</p>
+<p>不三连也真的没关系的。</p>
+<p>兄弟们不要在意啊。</p>
+<p>我是<strong>虚伪</strong>的小白，我们下期见！</p>
+<br>
+
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81.gif"></p>
+<br>
+
+<p>不满足于在留言区说骚话？</p>
+<p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点阳间的话题。就<strong>超！开！心！</strong></p>
+<img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210814073504558.png" width = "50%"   align=center />
+
+
+
+
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0H8WL6QeZ2VbO1hHPkn8Ug">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ">动图图解！GMP模型里为什么要有P？背后的原因让人暖心</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q">i/o timeout，希望你不要踩到这个net/http包的坑</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ">妙啊! 程序猿的第一本互联网黑话指南</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA">我感觉，我可能要拿图灵奖了。。。</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解HTTP知识点+面试题</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a> </p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/01/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%94%B6%E5%88%B0RST%EF%BC%8C%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E6%96%AD%E5%BC%80TCP%E8%BF%9E%E6%8E%A5%E5%90%97%EF%BC%9F/" rel="prev" title="动图图解！收到RST，就一定会断开TCP连接吗？">
+      <i class="fa fa-chevron-left"></i> 动图图解！收到RST，就一定会断开TCP连接吗？
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B2%A1%E6%9C%89accept%E8%83%BD%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E5%90%97/" rel="next" title="动图图解！没有accept，能建立TCP连接吗？">
+      动图图解！没有accept，能建立TCP连接吗？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">1.</span> <span class="nav-text">TCP四次挥手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FIN%E4%B8%80%E5%AE%9A%E8%A6%81%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8Cclose-%E6%88%96shutdown-%E6%89%8D%E8%83%BD%E5%8F%91%E5%87%BA%E5%90%97%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">FIN一定要程序执行close()或shutdown()才能发出吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%9C%BA%E5%99%A8%E4%B8%8AFIN-WAIT-2%E7%8A%B6%E6%80%81%E7%89%B9%E5%88%AB%E5%A4%9A%EF%BC%8C%E6%98%AF%E4%B8%BA%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">如果机器上FIN-WAIT-2状态特别多，是为什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%9C%A8close%E4%B9%8B%E5%90%8E%E6%94%B6%E5%88%B0%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E4%BC%9A%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">主动方在close之后收到的数据，会怎么处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B9%8B%E9%97%B4%EF%BC%8C%E4%B8%8D%E8%83%BD%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE%E5%90%97%EF%BC%9F"><span class="nav-number">1.4.</span> <span class="nav-text">第二第三次挥手之间，不能传输数据吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E5%AF%B9%E7%AB%AFsocket%E6%89%A7%E8%A1%8C%E4%BA%86close%E8%BF%98%E6%98%AFshutdown"><span class="nav-number">1.5.</span> <span class="nav-text">怎么知道对端socket执行了close还是shutdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E8%A2%AB%E5%8A%A8%E6%96%B9%E4%B8%80%E7%9B%B4%E4%B8%8D%E5%8F%91%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">1.6.</span> <span class="nav-text">如果被动方一直不发第三次挥手，会怎么样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">2.</span> <span class="nav-text">TCP三次挥手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%9C%89%E6%95%B0%E6%8D%AE%E8%A6%81%E5%8F%91%EF%BC%8C%E5%B0%B1%E4%B8%8D%E8%83%BD%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%BA%86%E5%90%97"><span class="nav-number">2.1.</span> <span class="nav-text">如果有数据要发，就不能是三次挥手了吗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">3.</span> <span class="nav-text">TCP两次挥手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AAsocket%E8%83%BD%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">一个socket能建立连接？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E7%AB%AF%E5%8F%91%E5%87%BA%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%90%8E%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%8F%88%E6%94%B6%E5%88%B0%E4%BA%86%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84SYN%E5%8C%85%EF%BC%8CTCP%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81%E4%BC%9A%E6%80%8E%E4%B9%88%E5%8F%98%E5%8C%96%EF%BC%9F"><span class="nav-number">3.1.1.</span> <span class="nav-text">一端发出第一次握手后，如果又收到了第一次握手的SYN包，TCP连接状态会怎么变化？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E7%AB%AF%E5%8F%91%E5%87%BA%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%90%8E%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%8F%88%E6%94%B6%E5%88%B0%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84SYN-ACK%E5%8C%85%EF%BC%8CTCP%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81%E4%BC%9A%E6%80%8E%E4%B9%88%E5%8F%98%E5%8C%96%EF%BC%9F"><span class="nav-number">3.1.2.</span> <span class="nav-text">一端发出第二次握手后，如果又收到第二次握手的SYN+ACK包，TCP连接状态会怎么变化？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E7%AB%AF%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%90%8E%EF%BC%8C%E5%8F%88%E6%94%B6%E5%88%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E5%8C%85%EF%BC%8CTCP%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81%E4%BC%9A%E6%80%8E%E4%B9%88%E5%8F%98%E5%8C%96%EF%BC%9F"><span class="nav-number">3.1.3.</span> <span class="nav-text">一端第一次挥手后，又收到第一次挥手的包，TCP连接状态会怎么变化？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%8E%B0%E8%87%AA%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.1.4.</span> <span class="nav-text">代码复现自连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E8%BF%9E%E6%8E%A5%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.1.5.</span> <span class="nav-text">自连接的解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">4.</span> <span class="nav-text">四次握手</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E7%8E%B0TCP%E5%90%8C%E6%97%B6%E6%89%93%E5%BC%80"><span class="nav-number">4.0.1.</span> <span class="nav-text">复现TCP同时打开</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">6.0.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.1.</span> <span class="nav-text">文章推荐：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9e966cbffd502f60f88d',
+      clientSecret: 'edc2f958eb9405e24a41f38c041dc3cdfc24d095',
+      repo        : 'xiaobaiTech.github.io',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : '83e0a4345514e5c5d0ed5bb5f7992371',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
