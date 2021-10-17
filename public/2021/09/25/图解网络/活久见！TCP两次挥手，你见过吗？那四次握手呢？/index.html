@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"xiaobaitech.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="我们都知道，TCP是个面向连接的、可靠的、基于字节流的传输层通信协议。  那这里面提到的”面向连接“，意味着需要 建立连接，使用连接，释放连接。 建立连接是指我们熟知的TCP三次握手。 而使用连接，则是通过一发送、一确认的形式，进行数据传输。 还有就是释放连接，也就是我们常见的TCP四次挥手。 TCP四次挥手大家应该比较了解了，但大家见过三次挥手吗？还有两次挥手呢？ 都见过？ 那四次握手呢？ 今天">
 <meta property="og:type" content="article">
 <meta property="og:title" content="活久见！TCP两次挥手，你见过吗？那四次握手呢？">
-<meta property="og:url" content="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/index.html">
+<meta property="og:url" content="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/index.html">
 <meta property="og:site_name" content="小白debug">
 <meta property="og:description" content="我们都知道，TCP是个面向连接的、可靠的、基于字节流的传输层通信协议。  那这里面提到的”面向连接“，意味着需要 建立连接，使用连接，释放连接。 建立连接是指我们熟知的TCP三次握手。 而使用连接，则是通过一发送、一确认的形式，进行数据传输。 还有就是释放连接，也就是我们常见的TCP四次挥手。 TCP四次挥手大家应该比较了解了，但大家见过三次挥手吗？还有两次挥手呢？ 都见过？ 那四次握手呢？ 今天">
 <meta property="og:locale" content="zh_CN">
@@ -50,7 +50,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png">
 
-<link rel="canonical" href="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
+<link rel="canonical" href="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
 
 
 <script id="page-configurations">
@@ -186,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaitech.github.io/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">

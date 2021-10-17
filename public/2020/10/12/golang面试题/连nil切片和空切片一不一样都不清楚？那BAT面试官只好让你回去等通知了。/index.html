@@ -17,12 +17,12 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"xiaobaitech.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="article">
 <meta property="og:title" content="连nil切片和空切片一不一样都不清楚？那BAT面试官只好让你回去等通知了。">
-<meta property="og:url" content="https://xiaobaitech.github.io/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/index.html">
+<meta property="og:url" content="https://xiaobaidebug.top/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/index.html">
 <meta property="og:site_name" content="小白debug">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/640-20210524195843699.png">
@@ -33,7 +33,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/640-20210524195843699.png">
 
-<link rel="canonical" href="https://xiaobaitech.github.io/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/">
+<link rel="canonical" href="https://xiaobaidebug.top/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/">
 
 
 <script id="page-configurations">
@@ -169,7 +169,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaitech.github.io/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2020/10/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E8%BF%9Enil%E5%88%87%E7%89%87%E5%92%8C%E7%A9%BA%E5%88%87%E7%89%87%E4%B8%80%E4%B8%8D%E4%B8%80%E6%A0%B7%E9%83%BD%E4%B8%8D%E6%B8%85%E6%A5%9A%EF%BC%9F%E9%82%A3BAT%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AA%E5%A5%BD%E8%AE%A9%E4%BD%A0%E5%9B%9E%E5%8E%BB%E7%AD%89%E9%80%9A%E7%9F%A5%E4%BA%86%E3%80%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
