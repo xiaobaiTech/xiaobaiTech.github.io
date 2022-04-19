@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="golang面试题：简单聊聊内存逃逸？">
+<meta property="og:url" content="https://xiaobaidebug.top/2020/05/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/golang%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E7%AE%80%E5%8D%95%E8%81%8A%E8%81%8A%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%EF%BC%9F/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS9jNzJkY2JmNi05YTc2LTRlYmMtODBkMC1lZjNmNzZjNDk5NzcucG5n?x-oss-process=image/format,png">
+<meta property="article:published_time" content="2020-05-12T14:57:55.000Z">
+<meta property="article:modified_time" content="2022-04-19T12:18:17.479Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS9jNzJkY2JmNi05YTc2LTRlYmMtODBkMC1lZjNmNzZjNDk5NzcucG5n?x-oss-process=image/format,png">
+
+<link rel="canonical" href="https://xiaobaidebug.top/2020/05/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/golang%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E7%AE%80%E5%8D%95%E8%81%8A%E8%81%8A%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%EF%BC%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>golang面试题：简单聊聊内存逃逸？ | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2020/05/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/golang%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E7%AE%80%E5%8D%95%E8%81%8A%E8%81%8A%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          golang面试题：简单聊聊内存逃逸？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-12 22:57:55" itemprop="dateCreated datePublished" datetime="2020-05-12T22:57:55+08:00">2020-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS9jNzJkY2JmNi05YTc2LTRlYmMtODBkMC1lZjNmNzZjNDk5NzcucG5n?x-oss-process=image/format,png"></p>
+<span id="more"></span>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>知道golang的<strong>内存逃逸</strong>吗？什么情况下会发生内存逃逸？</p>
+<h2 id="怎么答"><a href="#怎么答" class="headerlink" title="怎么答"></a>怎么答</h2><figure class="highlight plaintext"><figcaption><span>```逃逸``` 了，必须在```堆上分配```。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">  </span><br><span class="line">能引起变量逃逸到堆上的**典型情况**：</span><br><span class="line">- **在方法内把局部变量指针返回** 局部变量原本应该在栈中分配，在栈中回收。但是由于返回时被外部引用，因此其生命周期大于栈，则溢出。</span><br><span class="line">- **发送指针或带有指针的值到 channel 中。** 在编译时，是没有办法知道哪个 goroutine 会在 channel 上接收数据。所以编译器没法知道变量什么时候才会被释放。</span><br><span class="line">- **在一个切片上存储指针或带指针的值。** 一个典型的例子就是 []*string 。这会导致切片的内容逃逸。尽管其后面的数组可能是在栈上分配的，但其引用的值一定是在堆上。</span><br><span class="line">- **slice 的背后数组被重新分配了，因为 append 时可能会超出其容量( cap )。** slice 初始化的地方在编译时是可以知道的，它最开始会在栈上分配。如果切片背后的存储要基于运行时的数据进行扩充，就会在堆上分配。</span><br><span class="line">- **在 interface 类型上调用方法。** 在 interface 类型上调用方法都是动态调度的 —— 方法的真正实现只能在运行时知道。想像一个 io.Reader 类型的变量 r , 调用 r.Read(b) 会使得 r 的值和切片b 的背后存储都逃逸掉，所以会在堆上分配。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 举例</span><br><span class="line">- 通过一个例子加深理解，接下来尝试下怎么通过 ```go build -gcflags=-m``` 查看逃逸的情况。</span><br><span class="line">```go</span><br><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">type A struct &#123;</span><br><span class="line">	s string</span><br><span class="line">&#125;</span><br><span class="line">// 这是上面提到的 &quot;在方法内把局部变量指针返回&quot; 的情况</span><br><span class="line">func foo(s string) *A &#123;</span><br><span class="line">	a := new(A) </span><br><span class="line">	a.s = s</span><br><span class="line">	return a //返回局部变量a,在C语言中妥妥野指针，但在go则ok，但a会逃逸到堆</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	a := foo(&quot;hello&quot;)</span><br><span class="line">	b := a.s + &quot; world&quot;</span><br><span class="line">	c := b + &quot;!&quot;</span><br><span class="line">	fmt.Println(c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>执行<code>go build -gcflags=-m main.go</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> build -gcflags=-m main.<span class="keyword">go</span></span><br><span class="line"># command-line-arguments</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">7</span>:<span class="number">6</span>: can inline foo</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">13</span>:<span class="number">10</span>: inlining call to foo</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">16</span>:<span class="number">13</span>: inlining call to fmt.Println</span><br><span class="line">/<span class="keyword">var</span>/folders/<span class="number">45</span>/qx9lfw2s2zzgvhzg3mtzkwzc0000gn/T/<span class="keyword">go</span>-build409982591/b001/_gomod_.<span class="keyword">go</span>:<span class="number">6</span>:<span class="number">6</span>: can inline init<span class="number">.0</span></span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">7</span>:<span class="number">10</span>: leaking param: s</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">8</span>:<span class="number">10</span>: <span class="built_in">new</span>(A) escapes to heap</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">16</span>:<span class="number">13</span>: io.Writer(os.Stdout) escapes to heap</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">16</span>:<span class="number">13</span>: c escapes to heap</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">15</span>:<span class="number">9</span>: b + <span class="string">&quot;!&quot;</span> escapes to heap</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">13</span>:<span class="number">10</span>: main <span class="built_in">new</span>(A) does not escape</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">14</span>:<span class="number">11</span>: main a.s + <span class="string">&quot; world&quot;</span> does not escape</span><br><span class="line">./main.<span class="keyword">go</span>:<span class="number">16</span>:<span class="number">13</span>: main []<span class="keyword">interface</span> &#123;&#125; literal does not escape</span><br><span class="line">&lt;autogenerated&gt;:<span class="number">1</span>: os.(*File).<span class="built_in">close</span> .this does not escape</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>./main.go:8:10: new(A) escapes to heap</code> 说明 <code>new(A)</code> 逃逸了,符合上述提到的常见情况中的第一种。</li>
+<li><code>./main.go:14:11: main a.s + &quot; world&quot; does not escape</code> 说明 <code>b</code> 变量没有逃逸，因为它只在方法内存在，会在方法结束时被回收。</li>
+<li><code>./main.go:15:9: b + &quot;!&quot; escapes to heap</code> 说明 <code>c</code> 变量逃逸，通过<code>fmt.Println(a ...interface&#123;&#125;)</code>打印的变量，都会发生逃逸，感兴趣的朋友可以去查查为什么。</li>
+</ul>
+<ul>
+<li>以上操作其实就叫<strong>逃逸分析</strong>。<strong>下篇文章，跟大家聊聊怎么用一个比较trick的方法使变量不逃逸。方便大家在面试官面前秀一波</strong>。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/10/golang%E9%9D%A2%E8%AF%95%E9%A2%98/golang%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E7%BF%BB%E8%BD%AC%E5%90%AB%E6%9C%89%E4%B8%AD%E6%96%87%E3%80%81%E6%95%B0%E5%AD%97%E3%80%81%E8%8B%B1%E6%96%87%E5%AD%97%E6%AF%8D%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="prev" title="golang面试题：翻转含有中文、数字、英文字母的字符串">
+      <i class="fa fa-chevron-left"></i> golang面试题：翻转含有中文、数字、英文字母的字符串
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/13/golang%E9%9D%A2%E8%AF%95%E9%A2%98/golang%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%8B%B7%E8%B4%9D%E5%A4%A7%E5%88%87%E7%89%87%E4%B8%80%E5%AE%9A%E6%AF%94%E5%B0%8F%E5%88%87%E7%89%87%E4%BB%A3%E4%BB%B7%E5%A4%A7%E5%90%97%EF%BC%9F/" rel="next" title="拷贝大切片一定比小切片代价大吗？">
+      拷贝大切片一定比小切片代价大吗？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%AD%94"><span class="nav-number">2.</span> <span class="nav-text">怎么答</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3329955fccef6fbcdea8',
+      clientSecret: 'fa9688ca19b34fd14615a5cc564222f4a7056d07',
+      repo        : 'gitTalk',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : 'b7401152256754bdac5b66f29bb9b141',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

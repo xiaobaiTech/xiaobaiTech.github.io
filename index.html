@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="有时骚话连篇，有时硬核图解">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小白debug">
+<meta property="og:url" content="https://xiaobaidebug.top/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="有时骚话连篇，有时硬核图解">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xiaobaidebug.top/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/" class="post-title-link" itemprop="url">Mysql的索引为什么使用B+树而不使用跳表？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-16 22:57:55" itemprop="dateCreated datePublished" datetime="2022-04-16T22:57:55+08:00">2022-04-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:04:31" itemprop="dateModified" datetime="2022-04-19T21:04:31+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。</p>
+<p>直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了O(lg(n))。</p>
+<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的<strong>跳表</strong>，也是lg(n)，并且实现还贼简单。</p>
+<p><strong>那为什么mysql的索引，不使用跳表呢？</strong></p>
+<p>我们今天就来聊聊这个话题。</p>
+<br>
+
+<h3 id="B-树的结构"><a href="#B-树的结构" class="headerlink" title="B+树的结构"></a>B+树的结构</h3><p>之前的一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>里，已经提到过<strong>B+树的结构</strong>了。文章不长，如果没看过，建议先看下。</p>
+<p><strong>当然，不看也行。</strong></p>
+<p>在这里，<del>为了混点字数</del>，我简单总结下B+树的结构。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/B+%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B-20220403085542636-20220403090359219.png" alt="B+树查询过程"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/" class="post-title-link" itemprop="url">为什么大家说mysql数据库单表最大两千万？依据是啥？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-05 22:57:55" itemprop="dateCreated datePublished" datetime="2022-04-05T22:57:55+08:00">2022-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:05:19" itemprop="dateModified" datetime="2022-04-19T21:05:19+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>故事从好多年前说起。</p>
+<p>想必大家也听说过数据库单表<strong>建议最大2kw</strong>条数据这个说法。如果超过了，性能就会下降得比较厉害。</p>
+<p>巧了。</p>
+<p>我也听说过。</p>
+<p><strong>但我不接受它的建议，硬是单表装了1亿条数据。</strong></p>
+<p>这时候，我们组里新来的实习生看到了之后，天真无邪的问我：”单表不是建议最大两千万吗？为什么这个表都<strong>放了1个亿还不分库分表</strong>“？</p>
+<p>我能说我是<strong>因为懒</strong>吗？我当初设计时哪里想到这表竟然能涨这么快。。。</p>
+<p>我不能。</p>
+<p>说了等于承认自己是<strong>开发组里的毒瘤</strong>，虽然我确实是，但我<strong>不能承认</strong>。</p>
+<p>我如坐针毡，如芒刺背，如鲠在喉。</p>
+<p>开始了一波骚操作。</p>
+<p>“我这么做是有道理的”</p>
+<p>“虽然这个表很大，但你有没有发现它查询其实还是很快”</p>
+<p>“这个2kw是个建议值，我们要来看下这个2kw是怎么来的”</p>
+<br>
+
+<h3 id="数据库单表行数最大多大？"><a href="#数据库单表行数最大多大？" class="headerlink" title="数据库单表行数最大多大？"></a>数据库单表行数最大多大？</h3><p>我们先看下单表行数理论最大值是多少。</p>
+<p>建表的SQL是这么写的，</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">100037</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>其中id就是主键。主键本身唯一，也就是说主键的大小可以限制表的上限。</p>
+<p>如果主键声明为<code>int</code>大小，也就是32位，那么能支持2^32-1，也就是<strong>21个亿</strong>左右。</p>
+<p>如果是<code>bigint</code>，那就是2^64-1，但这个<strong>数字太大</strong>，一般还没到这个限制之前，<strong>磁盘先受不了</strong>。</p>
+<p>搞离谱点。</p>
+<p>如果我把主键声明为 <code>tinyint</code>，一个字节，8位，最大2^8-1，也就是<code>255</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` tinyint(<span class="number">2</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">0</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>如果我想插入一个id=256的数据，那<strong>就会报错</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> `tmp` (`id`, `name`, `age`) <span class="keyword">VALUES</span> (<span class="number">256</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">60</span>);</span><br><span class="line">ERROR <span class="number">1264</span> (<span class="number">22003</span>): <span class="keyword">Out</span> <span class="keyword">of</span> <span class="keyword">range</span> <span class="keyword">value</span> <span class="keyword">for</span> <span class="keyword">column</span> <span class="string">&#x27;id&#x27;</span> <span class="keyword">at</span> <span class="type">row</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，<code>tinyint</code>主键限制表内最多255条数据。</p>
+<p>那除了主键，还有哪些因素会影响行数？</p>
+<br>
+
+<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引内部是用的B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
+<p>为了不让大家有过于强烈的审丑疲劳，今天我尝试从另外一个角度给大家讲讲这玩意。</p>
+<br>
+
+<h4 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h4><p>假设我们有这么一张user数据表。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/" class="post-title-link" itemprop="url">Mysql数据库查询好慢，除了索引，还能因为什么？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-22 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-22T22:57:55+08:00">2022-03-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:56:02" itemprop="dateModified" datetime="2022-04-19T20:56:02+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>我熟练应用ctrl c和ctrl v 开发curd代码好多年了。</p>
+<p>mysql查询为什么会慢，关于这个问题，在实际开发经常会遇到，而面试中，也是个高频题。</p>
+<p>遇到这种问题，我们一般也会想到是因为索引。</p>
+<p><strong>那除开索引之外，还有哪些因素会导致数据库查询变慢呢？</strong></p>
+<p><strong>有哪些操作，可以提升mysql的查询能力呢？</strong></p>
+<p>今天这篇文章，我们就来聊聊会导致数据库查询变慢的场景有哪些，并给出原因和解决方案。</p>
+<br>
+
+<h3 id="数据库查询流程"><a href="#数据库查询流程" class="headerlink" title="数据库查询流程"></a>数据库查询流程</h3><p>我们先来看下，一条查询语句下来，会经历哪些流程。</p>
+<p>比如我们有一张数据库表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `gender` <span class="type">int</span>(<span class="number">8</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;性别&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`),</span><br><span class="line">  KEY `idx_gender` (`gender`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>我们平常写的应用代码（go或C++之类的），这时候就叫<strong>客户端</strong>了。</p>
+<p>客户端底层会带着账号密码，尝试向mysql建立一条TCP长链接。</p>
+<p>mysql的<strong>连接管理模块</strong>会对这条连接进行管理。</p>
+<p>建立连接后，客户端执行一条查询sql语句。 比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> gender <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> age <span class="operator">=</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>客户端会将sql语句通过网络连接给mysql。</p>
+<p>mysql收到sql语句后，会在<strong>分析器</strong>中先判断下SQL语句有没有语法错误，比如select，如果少打一个<code>l</code>，写成<code>slect</code>，则会报错<code>You have an error in your SQL syntax; </code>。这个报错对于我这样的手残党来说可以说是很熟悉了。</p>
+<p>接下来是<strong>优化器</strong>，在这里会<strong>根据一定的规则选择该用什么索引</strong>。</p>
+<p>之后，才是通过<strong>执行器</strong>去调用<strong>存储引擎</strong>的接口函数。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/Mysql%E6%9E%B6%E6%9E%843-20220320082526675.png" alt="Mysql架构"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">两个事务并发写，能保证数据唯一吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-16 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-16T22:57:55+08:00">2022-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:52:12" itemprop="dateModified" datetime="2022-04-19T20:52:12+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>哟，又是我小白。最近有点高产了。</p>
+<p>连我自己都害怕了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006APoFYly8grrdl7zawuj30af0afwiu.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/" class="post-title-link" itemprop="url">给32位系统装8g内存条能用吗？为什么？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-09 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-09T22:57:55+08:00">2022-03-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:03:11" itemprop="dateModified" datetime="2022-04-19T21:03:11+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">图解操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/421646663617_.pic_hd.jpg"></p>
+<p>关于32位和64位，这个概念一直让人比较懵。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">mysql主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-02 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-02T22:57:55+08:00">2022-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:03:43" itemprop="dateModified" datetime="2022-04-19T21:03:43+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>大家好，我是小白，好长时间没更新技术文了，相信大家看我写的水文也看烦了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/1539510639669-20220302001234401.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/" class="post-title-link" itemprop="url">为什么张一鸣推崇延时满足。。。</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-30 22:57:55" itemprop="dateCreated datePublished" datetime="2022-01-30T22:57:55+08:00">2022-01-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:55:29" itemprop="dateModified" datetime="2022-04-19T20:55:29+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>大家知道，字节的文化里，有一条叫”<strong>延迟满足</strong>“，意思是为了长远的、更大的利益，自愿延缓或者放弃目前的、较小的满足，有种<strong>先苦后甜</strong>的那个味道。</p>
+<p>看到标题，感觉好像会是个口水文，可能会通过人物故事去剖析，然后讲一些没什么用的鸡汤。</p>
+<p>我需要否定下，至少不是“好像”，这就是口水文。</p>
+<p>我希望能从更底层的原理来聊聊这个话题，而不是光灌鸡汤。</p>
+<br>
+
+<p>大家高中的时候应该学过，人体具有调节平衡的机制。</p>
+<p>举个例子，当你病毒性感冒时，人体会通过调节体内的白细胞，淋巴，噬菌体这些进行免疫抵抗，所以你会发烧。而打针，一般除了给你杀杀病毒细菌之外，还会通过盐水葡萄糖，让你的身体更快恢复平衡。</p>
+<p>所以这就跟大学时候学的<strong>反馈调节系统</strong>，非常像。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/01/80d3a0ad9f620091.png" alt="反馈调节系统"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/" class="post-title-link" itemprop="url">大学生毕业找工作，该选择哪个方向。</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-29 22:57:55" itemprop="dateCreated datePublished" datetime="2021-11-29T22:57:55+08:00">2021-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:55:19" itemprop="dateModified" datetime="2022-04-19T20:55:19+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>兄弟们。</p>
+<p>出来说骚话啊。</p>
+<p>考虑到，读者里面，有不少是还未踏入社会的学生党。</p>
+<p>今天在这里想简单介绍下行业的区别。</p>
+<p>虽然都是写代码，虽然大家都叫程序员，但其实，分为很多种类。程序员大体上分为<strong>前端和后端</strong>。</p>
+<p>因为我不懂前端，所以这里主要讲下<strong>后端</strong>吧。</p>
+<p>而后端，可以从很多角度进行分类。</p>
+<p>我们从大家最熟悉的大学专业开始展开吧。</p>
+<br>
+
+<h3 id="非计算机专业"><a href="#非计算机专业" class="headerlink" title="非计算机专业"></a>非计算机专业</h3><p>一般提到程序员，都会以为都是计算机专业的，但其实除了计算机专业外，还有一些专业，比如电气工程、自动化、通信工程等，都会有不少相关的对口程序员工种。</p>
+<p>比如大学时候学的51单片，STM32之类的相关，那个其实属于嵌入式软件开发的范畴，用的一般是C语言。</p>
+<p>如果是画画PCB电路板之类的，那应该属于嵌入式硬件工程师的范畴。</p>
+<p>跟这两块比较相近的，还有个工作自动控制系统相关的相关工作，叫PLC工程师。用的编程语言也比较特别，叫梯形图。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20211121223351338.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/" class="post-title-link" itemprop="url">动图图解！怎么让goroutine跑一半就退出？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-15 22:57:55" itemprop="dateCreated datePublished" datetime="2021-11-15T22:57:55+08:00">2021-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:51:13" itemprop="dateModified" datetime="2022-04-19T20:51:13+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/doutub_gif2.gif"></p>
+<p>光看标题，大家可能不太理解我说的是啥。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B2%A1%E6%9C%89accept%E8%83%BD%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E5%90%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B2%A1%E6%9C%89accept%E8%83%BD%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E5%90%97/" class="post-title-link" itemprop="url">动图图解！没有accept，能建立TCP连接吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-09-25T22:57:55+08:00">2021-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%8F%A1%E6%89%8B%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E6%B5%81%E7%A8%8B3.gif" alt="握手建立连接流程"></p>
+<p>上面这个动图，是我们平时客户端和服务端建立连接时的代码流程。</p>
+<p>对应的是下面一段简化过的服务端伪代码。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B2%A1%E6%9C%89accept%E8%83%BD%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E5%90%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/./page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/./page/4/">4</a><a class="extend next" rel="next" href="/./page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+</body>
+</html>

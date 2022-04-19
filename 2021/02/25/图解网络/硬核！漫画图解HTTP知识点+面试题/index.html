@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬核！漫画图解HTTP基础+面试题">
+<meta property="og:url" content="https://xiaobaidebug.top/2021/02/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%EF%BC%81%E6%BC%AB%E7%94%BB%E5%9B%BE%E8%A7%A3HTTP%E7%9F%A5%E8%AF%86%E7%82%B9+%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613317170976-%E4%B8%8D%E8%A6%81%E6%89%93%E6%89%B0%E6%88%91%E5%AD%A6HTTP.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613436372639-b%E7%AB%99%E6%92%B8%E7%8C%AB%E5%A4%A7%E5%9B%BE.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041437612-http%E4%BC%A0%E8%BE%93%E7%A4%BA%E4%BE%8B%E6%BC%AB%E7%94%BB.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613013885789-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613007117086-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613021710607-http%E6%8A%A5%E6%96%87%E8%A7%A3%E6%9E%90.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041939151-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613043758890-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613046030107-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613046094269-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613045259027-Untitled%20Diagram%20(3).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613055907068-GET%E8%B7%9F%E6%88%91%E4%B8%80%E6%A0%B7%E7%9A%84%E8%BF%98%E6%9C%897%E4%B8%AA.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613058818793-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-12/1613060189629-options%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5%20(2).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613174205328-_options%E5%93%8D%E5%BA%94%E5%AD%97%E6%AE%B5%20(1).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613057652579-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041939151-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613311181978-%E6%98%AF%E5%90%A6%E5%90%8C%E6%BA%90.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613176456625-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B%20(2).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/options%E4%BC%98%E5%8C%96%E5%90%8E.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613045090544-%E7%8A%B6%E6%80%81%E7%A0%81%E8%A1%A8%E6%A0%BC.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-15/1613345953784-Copy%20of%202xx%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613439607255-2xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(2).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-15/1613403987304-4xx%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613406108083-5xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613187421644-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777634555-Get%E5%92%8CPost%20(1).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777745819-502%E7%9A%84%E8%BF%87%E7%A8%8B.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777517520-504%E7%9A%84%E8%BF%87%E7%A8%8B%20(1).jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613299089850-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613298634191-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613298705993-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613290339498-http%E7%9F%AD%E8%BF%9E%E6%8E%A5.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613292366161-http%E9%95%BF%E8%BF%9E%E6%8E%A5.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-1/1612146090912-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613297647760-image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613314979045-%E8%84%B8%E7%BA%A2%E5%BC%80%E5%BF%83.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-1-10/1610269930614-640.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-1-6/1609890505711-%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-01-06-0.gif">
+<meta property="article:published_time" content="2021-02-25T14:57:55.000Z">
+<meta property="article:modified_time" content="2022-04-19T12:18:17.487Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png">
+
+<link rel="canonical" href="https://xiaobaidebug.top/2021/02/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%EF%BC%81%E6%BC%AB%E7%94%BB%E5%9B%BE%E8%A7%A3HTTP%E7%9F%A5%E8%AF%86%E7%82%B9+%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>硬核！漫画图解HTTP基础+面试题 | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/02/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%EF%BC%81%E6%BC%AB%E7%94%BB%E5%9B%BE%E8%A7%A3HTTP%E7%9F%A5%E8%AF%86%E7%82%B9+%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          硬核！漫画图解HTTP基础+面试题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-02-25T22:57:55+08:00">2021-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png"></p>
+<blockquote>
+<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613317170976-%E4%B8%8D%E8%A6%81%E6%89%93%E6%89%B0%E6%88%91%E5%AD%A6HTTP.jpg" style="zoom:100%" />
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613436372639-b%E7%AB%99%E6%92%B8%E7%8C%AB%E5%A4%A7%E5%9B%BE.png"></p>
+<span id="more"></span>
+
+<h1 id="什么是HTTP"><a href="#什么是HTTP" class="headerlink" title="什么是HTTP"></a>什么是HTTP</h1><p>HTTP 全称<strong>超⽂文本传输协议</strong>，也就是<strong>H</strong>yper<strong>T</strong>ext <strong>T</strong>ransfer <strong>P</strong>rotocol。<br>其中我们常见的<strong>文本，图片，视频</strong>这些东西都可以用超文本进行表示，而我常看的猫片，也属于超文本，所以大家不要再说我偷偷看猫片了，我只是在看超文本。HTTP只是定义了一套传输超文本的规则，只要符合了这一套规则，不管你是用iphone，还是用老爷机，都可以实现猫片的传输。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041437612-http%E4%BC%A0%E8%BE%93%E7%A4%BA%E4%BE%8B%E6%BC%AB%E7%94%BB.jpg"></p>
+<h1 id="七层网络"><a href="#七层网络" class="headerlink" title="七层网络"></a>七层网络</h1><p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613013885789-image.png" alt="网络协议"></p>
+<p>大概了解了<strong>HTTP</strong>后，给大家看看它在它们家族里的地位。HTTP位于<strong>应用层</strong>，跟它类似的协议还有常见的<strong>FTP协议</strong>，常见的<strong>某影天堂</strong>的下载链接曾经经常是以<strong>FTP开头</strong>的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613007117086-image.png"></p>
+<h1 id="HTTP报文格式"><a href="#HTTP报文格式" class="headerlink" title="HTTP报文格式"></a>HTTP报文格式</h1><p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613021710607-http%E6%8A%A5%E6%96%87%E8%A7%A3%E6%9E%90.jpg"></p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041939151-image.png" style="zoom:100%" />
+
+ 
+
+<p>有点抽象？不知道小白说的啥？那实操一下，用<code>wireshark</code>抓包看一下猫片里的请求报文和响应报文具体长什么样子吧</p>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/cmaskboss/164203142_30_1.enhance.webmask</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>upos-sz-staticks3.bilivideo.com</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>*/*</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>https://www.bilibili.com</span><br><span class="line"><span class="attribute">Sec-Fetch-Site</span><span class="punctuation">: </span>cross-site</span><br><span class="line"><span class="attribute">Sec-Fetch-Mode</span><span class="punctuation">: </span>cors</span><br><span class="line"><span class="attribute">Sec-Fetch-Dest</span><span class="punctuation">: </span>empty</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>https://www.bilibili.com/</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>identity</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Range</span><span class="punctuation">: </span>bytes=0-16</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这上面第一行的GET 就是<strong>请求方法</strong>，<code>/cmaskboss/164203142_30_1.enhance.webmask</code> 则是 <strong>URL</strong> , 而<code>HTTP/1.1</code>则是<strong>协议版本</strong>。接下来从<code>Host</code>开始到最后一行<code>Range</code>，都是<strong>Headers头</strong>。</p>
+<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">206</span> Partial Content</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/octet-stream</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>17</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>Tengine</span><br><span class="line"><span class="attribute">ETag</span><span class="punctuation">: </span>&quot;92086de1e6d1d4791fb950a0ac7e30ba&quot;</span><br><span class="line"><span class="attribute">Date</span><span class="punctuation">: </span>Sat, 30 Jan 2021 09:31:31 GMT</span><br><span class="line"><span class="attribute">Last-Modified</span><span class="punctuation">: </span>Sun, 04 Oct 2020 01:54:28 GMT</span><br><span class="line"><span class="attribute">Expires</span><span class="punctuation">: </span>Mon, 01 Mar 2021 09:31:31 GMT</span><br><span class="line"><span class="attribute">Age</span><span class="punctuation">: </span>1018695</span><br><span class="line"><span class="attribute">Content-Range</span><span class="punctuation">: </span>bytes 0-16/353225</span><br><span class="line"><span class="attribute">Accept-Ranges</span><span class="punctuation">: </span>bytes</span><br><span class="line"><span class="attribute">X-Application-Context</span><span class="punctuation">: </span>application</span><br><span class="line"><span class="attribute">x-kss-request-id</span><span class="punctuation">: </span>75bcbfa8ab194e3c825e89c81a912692</span><br><span class="line"><span class="attribute">x-kss-BucketOwner</span><span class="punctuation">: </span>MjAwMDAyMDEwNw==</span><br><span class="line"><span class="attribute">X-Info-StorageClass</span><span class="punctuation">: </span>-</span><br><span class="line"><span class="attribute">Content-MD5</span><span class="punctuation">: </span>kght4ebR1HkfuVCgrH4wug==</span><br><span class="line"><span class="attribute">X-Cache-Status</span><span class="punctuation">: </span>HIT from KS-CLOUD-JH-MP-01-03</span><br><span class="line"><span class="attribute">X-Cache-Status</span><span class="punctuation">: </span>HIT from KS-CLOUD-TJ-UN-14-13</span><br><span class="line"><span class="attribute">X-Cache-Status</span><span class="punctuation">: </span>HIT from KS-CLOUD-LF-UN-11-25</span><br><span class="line"><span class="attribute">Access-Control-Allow-Origin</span><span class="punctuation">: </span>https://www.bilibili.com</span><br><span class="line"><span class="attribute">Access-Control-Allow-Headers</span><span class="punctuation">: </span>Origin,X-Requested-With,Content-Type,Accept,range</span><br><span class="line"><span class="attribute">X-Cdn-Request-ID</span><span class="punctuation">: </span>7e2c783ca7d392624118593ec1dc66bc</span><br></pre></td></tr></table></figure>
+
+<p>类似请求报文，<code>HTTP/1.1</code>是<strong>协议版本</strong>，<code>206</code>是<strong>状态码</strong>，<code>Partial Content</code> 则是<strong>状态描述符</strong>。接下来从<code>Content-Type</code>开始到最后一行<code>X-Cdn-Request-ID</code>都是<strong>Headers信息</strong>。</p>
+<h1 id="报文信息解读"><a href="#报文信息解读" class="headerlink" title="报文信息解读"></a>报文信息解读</h1><p>其实上面的抓包信息，在浏览器里按F12就能看到，之所以要用<code>wireshark</code>可能<strong>只是装X效果比较好吧</strong>。按下F12看到的响应数据就跟下图展示的那样。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613043758890-image.png" style="zoom:100%" />
+
+<h2 id="1-请求数据"><a href="#1-请求数据" class="headerlink" title="1.请求数据"></a>1.请求数据</h2><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613046030107-image.png" style="zoom:100%" />
+
+
+
+
+
+<h2 id="2-响应数据"><a href="#2-响应数据" class="headerlink" title="2.响应数据"></a>2.响应数据</h2><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613046094269-image.png" style="zoom:100%" />
+
+
+
+
+<h2 id="3-Request-URL"><a href="#3-Request-URL" class="headerlink" title="3.Request URL"></a>3.Request URL</h2><h3 id="URL是什么"><a href="#URL是什么" class="headerlink" title="URL是什么"></a>URL是什么</h3><p>URL 代表着是统一资源定位符（Uniform Resource Locator）。作用是为了告诉使用者 某个资源在 Web 上的地址。这个资源可以是一个 HTML 页面，一个 CSS 文档，一幅图像或一个猫片等等。上面我们请求猫片的URL就是 <code>https://upos-sz-staticks3.bilivideo.com/cmaskboss/164203142_30_1.enhance.webmask</code> 这里面细分，又可以分为好几个部分。</p>
+<ul>
+<li>协议部分</li>
+</ul>
+<p>表示该URL的协议部分为http还是https，会用//为分隔符。上面的URL表示网页用的是HTTPS协议，而上面提到的X影天堂用的则是ftp协议的下载链接。</p>
+<ul>
+<li>域名部分</li>
+</ul>
+<p>域名是<code>upos-sz-staticks3.bilivideo.com</code>，在发送请求前，会向DNS服务器解析IP，如果已经知道ip，还可以跳过DNS解析那一步，直接把IP当做域名部分使用。</p>
+<ul>
+<li>端口部分</li>
+</ul>
+<p>域名后面有些时候会带有端口，和域名之间用:分隔，端口不是一个URL的必须的部分。当网址为<strong>http://<strong>时，默认端口为</strong>80</strong></p>
+<p>当网址为<strong>https://<strong>时，默认端口为</strong>443</strong>，以上两种都可以省略端口号。上面的URL其实<strong>省略了443端口</strong>号。</p>
+<ul>
+<li>虚拟目录</li>
+</ul>
+<p>从域名的第一个/开始到最后一个/为止，是虚拟目录的部分。虚拟目录也不是URL必须的部分，本例中的虚拟目录是<code>/cmaskboss/</code></p>
+<ul>
+<li>文件名部分</li>
+</ul>
+<p>从域名最后一个/开始到?为止，是文件名部分；如果没有?，则是从域名最后一个/开始到#为止，是文件名部分；如果没有?和#，那么就从域名的最后一个/从开始到结束，都是文件名部分。本例中的文件名是<code>164203142_30_1.enhance.webmask</code>，文件名也不是一个URL的必须部分。</p>
+<h3 id="URL-和-URI-的区别"><a href="#URL-和-URI-的区别" class="headerlink" title="URL 和 URI 的区别"></a>URL 和 URI 的区别</h3><ul>
+<li><strong>URL</strong>:Uniform Resource Locator <strong>统一资源定位符</strong>；  </li>
+<li><strong>URI</strong>: Uniform Resource Identifier <strong>统一资源标识符</strong>；</li>
+</ul>
+<p>其实一直有个误解，很多人以为URI是URL的子集，其实应该反过来。URL是URI的子集才对。简单解释下。<br>假设”小白”(URI)是一种资源，而”在迪丽亦巴的怀里”表明了一个位置。如果你想要找到（locate）小白，那么你可以到”在迪丽亦巴怀里”找到小白，而”在迪丽亦巴怀里的/小白”才是我们常说的URL。而”在迪丽亦巴怀里的/小白”（URL）显然是”小白”（URI）的子集，毕竟，”小白”还可能是”在牛亦菲怀里的/小白”（其他URL）。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613045259027-Untitled%20Diagram%20(3).jpg" style="zoom:100%" />
+
+
+
+
+
+
+
+
+
+
+<h2 id="4-Request-Method"><a href="#4-Request-Method" class="headerlink" title="4.Request Method"></a>4.Request Method</h2><p>HTTP 定义了一组<strong>请求方法</strong>，以表明要对给定资源执行的操作。指示针对给定资源要执行的期望动作.。虽然他们也可以是名词，但这些请求方法有时被称为HTTP动词.。每一个请求方法都实现了不同的语义。</p>
+<p>这次请求猫片的请求里用的是GET，意味着获取。但其实HTTP定义了多种请求方法，来满足各种需求。除了Get，还有几个POST、HEAD、OPTIONS、PUT、DELETE、TRACE 和 CONNECT。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613055907068-GET%E8%B7%9F%E6%88%91%E4%B8%80%E6%A0%B7%E7%9A%84%E8%BF%98%E6%9C%897%E4%B8%AA.jpg" style="zoom:100%" />
+
+<p>常见的各个请求方法的具体功能如下：</p>
+<h3 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h3><p>请求指定的页面信息，并返回消息主体(body)+头信息(header)。</p>
+<h3 id="HEAD："><a href="#HEAD：" class="headerlink" title="HEAD："></a>HEAD：</h3><p>HEAD和GET本质是一样的，区别在于HEAD只返回头信息(header)，不返回消息主体(body)。大家不要以为它没用，它跟GET和POST一样，在http/1.0的时候就存在了，实属三元老之一了。主要用途 </p>
+<ul>
+<li><p>如果想要判断某个资源是否存在，虽然用GET也能做到，但这里用HEAD还省下拿body的消耗，返回状态码200就是有404就是无</p>
+</li>
+<li><p>如果请求的是一个比较大的资源，比如一个超大视频和文件，你只想知道它到底有多大，而不需要整个下载下来，这时候使用HEAD请求，返回的headers会带有文件的大小（<code>content-lenght</code>）。</p>
+</li>
+</ul>
+<h3 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h3><p>向服务器提交数据。这个方法用途广泛，几乎目前所有的提交操作都是靠这个完成。POST跟GET最常用，但最大的区别在于，POST每次调用都可能会修改数据，是非幂等的，而GET类似于只读，是幂等的。</p>
+<h3 id="PUT："><a href="#PUT：" class="headerlink" title="PUT："></a>PUT：</h3><p>这个方法比较少见。在HTTP规范中POST是非等幂的，多次调用会产生不同的结果。比如：创建一个用户,由于网络原因或是其他原因多创建了几次,那么将会有多个用户被创建。而PUT id/xiaobai 则会创建一个id为 xiaobai 的用户，多次调用还是会创建的结果是一样的，所以PUT是等幂的。但是一般为了避免造成心智负担，实战中也会使用POST替代PUT。</p>
+<h3 id="DELETE："><a href="#DELETE：" class="headerlink" title="DELETE："></a>DELETE：</h3><p>删除某一个资源。基本上这个也很少见，一般实战中如果是删除操作，也是使用POST来替代。</p>
+<h3 id="OPTIONS："><a href="#OPTIONS：" class="headerlink" title="OPTIONS："></a>OPTIONS：</h3><h4 id="options是什么"><a href="#options是什么" class="headerlink" title="options是什么"></a>options是什么</h4><p>它用于获取当前URL所支持的方法。若请求成功，则它会在HTTP响应头部中带上给各种“Allow”的头，表明某个请求在对应的服务器中都支持哪种请求方法。比如下图：</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613058818793-image.png" style="zoom:100%" />
+
+<p>这里面需要关注的点有两个</p>
+<ul>
+<li><p>Request Header里的关键字段</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-12/1613060189629-options%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5%20(2).jpg"></p>
+</li>
+<li><p>Response Header里的关键字段</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613174205328-_options%E5%93%8D%E5%BA%94%E5%AD%97%E6%AE%B5%20(1).jpg"></p>
+</li>
+</ul>
+<p><code>Options</code>堪称是网络协议中的老实人，就好像老实人刚谈了个女朋友，每次牵手前都要问下人家 “我可以牵你的手吗？”， “我可以抱你吗？”，得到了答应后才会下手。差点被这老实人气质感动得留下了不争气的泪水。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613057652579-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B.jpg" style="zoom:100%" />
+
+<h4 id="什么时候需要使用options"><a href="#什么时候需要使用options" class="headerlink" title="什么时候需要使用options"></a>什么时候需要使用options</h4><p>在<strong>跨域</strong>（记住这个词，待会解释）的情况下，浏览器发起<strong>复杂请求前</strong>会<strong>自动</strong>发起 options 请求。跨域共享标准规范要求，对那些可能对服务器数据产生副作用的 HTTP 请求方法（特别是 GET 以外的 HTTP 请求，或者搭配某些 MIME 类型的 POST 请求），浏览器必须首先使用 options 方法发起一个预检请求，从而获知服务端是否允许该跨域请求。服务器确认允许之后，才发起实际的 HTTP 请求。</p>
+<p>这里提到了两个关键词：</p>
+<ul>
+<li>跨域</li>
+<li>复杂请求</li>
+</ul>
+<h4 id="什么是简单请求和复杂请求。"><a href="#什么是简单请求和复杂请求。" class="headerlink" title="什么是简单请求和复杂请求。"></a>什么是简单请求和复杂请求。</h4><p>某些请求不会触发 CORS 预检请求，这样的请求一般称为”简单请求”，而会触发预检的请求则为”复杂请求”。</p>
+<p>1.简单请求</p>
+<ul>
+<li>请求方法为<code>GET、HEAD、POST</code></li>
+<li>只有以下<code>Headers</code>字段<ul>
+<li><code>Accept</code></li>
+<li><code>Accept-Language</code></li>
+<li><code>Content-Language</code></li>
+<li><code>Content-Type</code></li>
+<li><code>DPR/Downlink/Save-Data/Viewport-Width/Width</code> (这些不常见，放在一起)</li>
+</ul>
+</li>
+<li><code>Content-Type</code> 只有以下三种<ul>
+<li><code>application/x-www-form-urlencoded</code></li>
+<li><code>multipart/form-data</code></li>
+<li><code>text/plain</code></li>
+</ul>
+</li>
+<li>请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器；</li>
+<li>请求中没有使用 ReadableStream 对象。</li>
+</ul>
+<p>2.复杂请求</p>
+<ul>
+<li>不满足简单请求的，都是复杂请求</li>
+</ul>
+<p>由此可见，因为上述请求在获取网上资源的请求Headers里带有 <code>Access-Control-Request-Headers: range</code> , 而<code>range</code>正好不在简单请求的条件2中提到的Headers范围里，因此属于<strong>复杂请求</strong>，于是触发预检options请求。</p>
+<h4 id="什么是跨域"><a href="#什么是跨域" class="headerlink" title="什么是跨域"></a>什么是跨域</h4><p>刚刚提到了一个词叫<strong>跨域</strong>，那什么是跨域呢？在了解跨域之前，首先要了解一个概念：<strong>同源</strong>。所谓<strong>同源</strong>是指，<strong>域名、协议、端口均相同</strong>。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613041939151-image.png" style="zoom:100%" />
+
+<p>不明白没关系，举个例子。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613311181978-%E6%98%AF%E5%90%A6%E5%90%8C%E6%BA%90.jpg"></p>
+<p>需要特别注意的是，localhost和127.0.0.1虽然都指向本机，但也<strong>不属于同源</strong>。</p>
+<p>而<strong>非同源</strong>之间网页调用就是我们所说的<strong>跨域</strong>。在<strong>浏览器</strong>同源策略限制下，向不同<strong>源</strong>发送XHR请求，<strong>浏览器</strong>认为该请求不受信任，禁止请求，具体表现为请求后不正常响应。</p>
+<h4 id="options带来什么问题"><a href="#options带来什么问题" class="headerlink" title="options带来什么问题"></a>options带来什么问题</h4><p>由此可见，复杂请求的条件其实非常容易满足，而一旦满足复杂请求的条件，则浏览器便会发送2次请求（一次预检options，一次复杂请求），这一次options就一来一回（一个RTT），显然会导致延迟和不必要的网络资源浪费，高并发情况下则可能为服务器带来严重的性能消耗。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613176456625-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B%20(2).jpg" style="zoom:100%" />
+
+
+
+<h4 id="如何优化options"><a href="#如何优化options" class="headerlink" title="如何优化options"></a>如何优化options</h4><p>每次复杂请求前都会调用一次options，这其实非常没有必要。因为大部分时候相同的请求，短时间内获得的结果是不会变的，是否可以通过浏览器缓存省掉这一次查询？</p>
+<p><code>Access-Control-Max-Age</code>就是优化这个流程中使用的一个Header。它的作用是当你每次请求<code>options</code>方法时，服务端返回调用支持的方法（Access-Control-Allow-Methods ）和Headers（Access-Control-Allow-Headers）有哪些，同时告诉你，它在接下来 <code>Access-Control-Max-Age</code>时间（单位是秒）里都支持，则这段时间内，不再需要使用options进行请求。特别注意的是，当<code>Access-Control-Max-Age</code>的值为-1时，表示禁用缓存，每一次请求都需要发送预检请求，即用OPTIONS请求进行检测。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/options%E4%BC%98%E5%8C%96%E5%90%8E.jpg" alt="options优化后"></p>
+<h2 id="5-Status-Code"><a href="#5-Status-Code" class="headerlink" title="5.Status Code"></a>5.Status Code</h2><h3 id="状态码是什么"><a href="#状态码是什么" class="headerlink" title="状态码是什么"></a>状态码是什么</h3><p>HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏览器会向网页所在服务器发出请求。服务器则会根据请求作出响应，而状态码则是响应的一部分，代表着本次请求的结果。所有状态码的第一个数字代表了响应的大概含义，组合上第二第三个数字则可以表示更具体的原因。如果请求失败了，通过这个状态码，大概初步判断出这次请求失败的原因。以下是五类状态码的含义。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-11/1613045090544-%E7%8A%B6%E6%80%81%E7%A0%81%E8%A1%A8%E6%A0%BC.jpg"></p>
+<h3 id="状态码流程"><a href="#状态码流程" class="headerlink" title="状态码流程"></a>状态码流程</h3><p>可以根据以下流程图了解下各类状态码间的关系。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-15/1613345953784-Copy%20of%202xx%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg" style="zoom:150%" />
+
+
+
+<ul>
+<li>2xx和3xx之间的流程关系</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613439607255-2xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(2).jpg"></p>
+<ul>
+<li>4xx的状态流程</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-15/1613403987304-4xx%E6%B5%81%E7%A8%8B.jpg" style="zoom:100%" />
+
+
+
+<ul>
+<li>5xx的状态流程</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-16/1613406108083-5xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg" style="zoom:100%" />
+
+
+
+
+
+<h3 id="常见状态码介绍"><a href="#常见状态码介绍" class="headerlink" title="常见状态码介绍"></a>常见状态码介绍</h3><ul>
+<li>200 OK</li>
+</ul>
+<p>这是最常见的状态码。代表请求已成功，数据也正常返回。而请求猫片虽然响应成功了，但却不是200，而是206，是为什么呢，接下去继续看看。</p>
+<ul>
+<li>206 Partial Content</li>
+</ul>
+<p>这个状态码在上面请求的响应结果。服务器已经成功处理了部分 GET 请求。类似于看视频或者迅雷这类的 HTTP下载工具都是使用此类响应实现断点续传或者将一个大文档分解为多个下载段同时下载。</p>
+<ul>
+<li><p>307 Temporary Redirect</p>
+<p>内部重定向。重定向的意思是，当你输入一个网址的时候，浏览器会自动帮你跳转到另外一个网址上。比如，当你在浏览器输入框输入<code>http://www.baidu.com/</code>时。由于使用http并不安全，百度会自动帮你跳转到它对应的https网页上。而此时，需要重定向的地址，会通过<code>Response Headers</code>的<code>Location</code>返回</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-13/1613187421644-image.png" style="zoom:100%" /></li>
+<li><p>404 Not Found</p>
+<p>请求失败，请求所希望得到的资源未被在服务器上发现。出现这个错误的最有可能的原因是服务器端没有这个页面，或者是Request Method与注册URL的Method不一致，比如我有一个URL在服务端注册的Request Method 为 <strong>POST</strong>，但调用的时候却错误用了<strong>GET</strong>，则也会出现404错误。</p>
+</li>
+<li><p>499 Client has closed connection</p>
+<p>网络请求过程中，由于服务端处理时间过长，客户端超时。一般常见于，后端服务器处理时间过长，而客户端也设置了一个超时等待时间，客户端等得“不耐烦”了，主动关掉连接时报出。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777634555-Get%E5%92%8CPost%20(1).jpg"></p>
+</li>
+<li><p>502 Bad Gateway</p>
+<p>服务器方面无法给予正常的响应。一般常见于服务器崩溃后，nginx 无法正常收到服务端的响应，给客户端返回502状态码。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777745819-502%E7%9A%84%E8%BF%87%E7%A8%8B.jpg"></p>
+</li>
+<li><p>504 Gateway Timeout</p>
+<p>网络请求过程中，由于服务端处理时间过长，网关超时。一般常见于，后端服务器逻辑处理时间过长，甚至长于 nginx设置的最长等待时间时报错。它跟 499 状态码非常像，区别在于499 表示的是客户端超时，504是网关超时。如果是499超时，可以考虑修改客户端的代码调整超时时间，如果是504，则考虑调整nginx的超时配置。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-20/1613777517520-504%E7%9A%84%E8%BF%87%E7%A8%8B%20(1).jpg"></p>
+</li>
+</ul>
+<h2 id="6-Headers"><a href="#6-Headers" class="headerlink" title="6. Headers"></a>6. Headers</h2><h3 id="Content-Length"><a href="#Content-Length" class="headerlink" title="Content-Length"></a>Content-Length</h3><p><code>Content-Length</code>是HTTP的消息长度, 用<strong>十进制数字</strong>表示。<code>Content-Length</code>首部指出报文中消息的当前实际字节大小。如果消息文本进行了gzip压缩的话， <code>Content-Length</code>指的就是压缩后的大小而不是原始大小。</p>
+<p>正常情况下<code>Content-Length</code>是不需要手动去设置的，大部分语言的网络库都会自动封装好，但是如果在一些特殊情况下，出现<code>Content-Length</code>与实际要发送的消息大小不一致，就会出现一些问题。</p>
+<ul>
+<li><p>如果<code>Content-Length</code> &lt; 实际长度</p>
+<p>下面启动一个HTTP服务器，所有语言都一样，示例里使用了golang。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// w表示response对象，返回给客户端的内容都在对象里处理</span></span><br><span class="line"><span class="comment">// r表示客户端请求对象，包含了请求头，请求参数等等</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">index</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	b, _ := ioutil.ReadAll(r.Body)</span><br><span class="line">	fmt.Printf(<span class="string">&quot;request body=%#v, content_length=%v \nheaders=%v&quot;</span>,<span class="keyword">string</span>(b), r.ContentLength, r.Header)</span><br><span class="line">	<span class="comment">// 往w里写入内容，就会在浏览器里输出</span></span><br><span class="line">	fmt.Fprintf(w, <span class="keyword">string</span>(b))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 设置路由，如果访问/，则调用index方法</span></span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/&quot;</span>, index)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动web服务，监听9090端口</span></span><br><span class="line">	err := http.ListenAndServe(<span class="string">&quot;:9999&quot;</span>, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;ListenAndServe: &quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在控制台输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> $ curl -L -X POST <span class="string">&#x27;http://127.0.0.1:9999&#x27;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> -H <span class="string">&#x27;Content-Length: 5&#x27;</span> -d <span class="string">&#x27;1234567&#x27;</span> |  jq</span></span><br><span class="line"><span class="meta">  %</span><span class="bash"> Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span></span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100    12  100     5  100     7    828   1160 --:--:-- --:--:-- --:--:--  1400</span><br><span class="line">12345</span><br></pre></td></tr></table></figure>
+
+<p>输入的body是 <code>1234567</code>，共<strong>7个数字</strong>，但是输入的 <code>Content-Length</code>为 5。到了服务器那，收到了 <code>12345</code>，共<strong>5个数字</strong>，数量上跟输入的<code>Content-Length</code>一致。 由此可见当<code>Content-Length</code> &lt; 实际长度， 消息会被截断。</p>
+</li>
+<li><p>如果<code>Content-Length</code> &gt;  实际长度 </p>
+<p>还是上面的服务端代码，但是控制台输入以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> curl -L -X POST <span class="string">&#x27;http://127.0.0.1:9999&#x27;</span> -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> -H <span class="string">&#x27;Content-Length: 100&#x27;</span> -d <span class="string">&#x27;1234567&#x27;</span> | jq</span></span><br><span class="line"><span class="meta">  %</span><span class="bash"> Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span></span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100     7    0     0    0     7      0      0 --:--:--  0:01:19 --:--:--     0</span><br></pre></td></tr></table></figure>
+
+<p>这次情况不太一样，会发现请求一直阻塞没有返回。这是因为输入的body是 <code>1234567</code>，共<strong>7个数字</strong>，但是输入的 <code>Content-Length</code>为 100。也就是服务端一直认为这次的body<strong>长度为100</strong>，但是目前只收到了<strong>部分消息（长度为7）</strong>，剩余的长度为93的消息由于各种原因<strong>还在路上</strong>，因此选择<strong>傻傻等待剩下的消息</strong>，就造成了上面提到的阻塞。</p>
+</li>
+</ul>
+<h3 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h3><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613299089850-image.png" style="zoom:100%" />
+
+<p>视频播放需要支持用户调整播放进度，支持让用户选择直接跳到中间部分开始播放。为了实现这个功能，需要通过HTTP Range Requests 协议用于指定需要获取视频片段。而 Request Header里的range头则是用于指定要请求文件的起始和结束位置。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613298634191-image.png" style="zoom:100%" />
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613298705993-image.png" style="zoom:100%" />
+
+<ul>
+<li>如果服务器不支持，直接忽略 Range 头，浏览器会正常按流式加载整个视频文件，以状态码 200 响应即可。另外，当我们在 html 中放一个 video 标签，浏览器会直接发起一个 <code>Range: bytes=0-</code> 的请求，向服务器请求从开始到结尾的完整文件。</li>
+<li>如果服务器支持 Range Requests，会读取视频文件，并将他的第 162653～242638 字节提取出来，响应码为 206，则浏览器会在接收到足够字节（比如当前播放进度往后推20s）时结束掉请求，以节省网络流量；当播放进度继续往前，缓存不够时，浏览器会发起一个新的 Range Requests 请求，请求的 Range 直接从缓存结尾的字节开始，只加载剩余的部分文件。同时返回的Response Headers中有一个 content-range 的字段域，用于告诉了客户端发送了多少数据。content-range  描述了响应覆盖的范围和整个实体长度。一般格式：<code>Content-Range：开始字节位置-结束字节位置／文件大小（byte）</code>。</li>
+</ul>
+<h3 id="Connection"><a href="#Connection" class="headerlink" title="Connection"></a>Connection</h3><h4 id="长连接和短连接"><a href="#长连接和短连接" class="headerlink" title="长连接和短连接"></a>长连接和短连接</h4><ul>
+<li><p>Connection: close</p>
+<p>表示请求响应完成之后立即关闭连接，这是HTTP/1.0请求的默认值。每次请求都经过“创建tcp连接 -&gt; 请求资源 -&gt; 响应资源 -&gt; 释放连接”这样的过程</p>
+</li>
+<li><p>Connection: keep-alive</p>
+<p>表示连接不立即关闭，可以继续响应下一个请求。HTTP/1.1的请求默认使用一个持久连接。可以做到只建立一次连接，多次资源请求都复用该连接，完成后关闭。流程上是 建立tcp连接 -&gt; 请求资源 -&gt; 响应资源 -&gt; … （保持连接）…  -&gt;  第n次请求资源 -&gt; 第n次响应资源 -&gt; 释放连接。</p>
+</li>
+</ul>
+<p>在http1.1中Request Header和Reponse Header中都有可能出现一个Connection: keep-alive 头信息。Request Header里的Connection: keep-alive 头是为了告诉服务端，客户端想要以长连接形式进行通信。而Response Header里的Connection: keep-alive 头是服务端告诉客户端，我的服务器支持以长连接的方式进行通信。如果不能使用长连接，会<strong>返回  Connection: close ，相当于告诉客户端“我不支持长连接，你死了这条心，老老实实用短连接吧</strong>” 。</p>
+<h4 id="HTTP为什么要使用长连接"><a href="#HTTP为什么要使用长连接" class="headerlink" title="HTTP为什么要使用长连接"></a>HTTP为什么要使用长连接</h4><p>我们知道 HTTP 建立在 TCP 传输层协议之上，而 TCP 的建立需要三次握手，关闭需要四次挥手，这些步骤都需要时间，带给 HTTP 的就是请求响应时延。如果使用短连接，那么每次数据传输都需要经历一次上面提到的几个步骤，如果能只连接一次，保持住这个连接不断开，期间通信就可以省下建立连接和断开连接的过程，对于提升HTTP性能有很大的帮助。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613290339498-http%E7%9F%AD%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
+
+<ul>
+<li>可以看到，在使用 Connection: close 通信时，每次都需要重新经历一次握手挥手。可以通过 Connection: keep-alive 省下这部分的资源消耗。</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613292366161-http%E9%95%BF%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
+
+<ul>
+<li><strong>长连接</strong>可以<strong>省去较多的TCP建立和关闭的操作，减少浪费，节约时间</strong>。对于频繁请求资源的客户来说，较适用长连接。但是在长连接的应用场景下，需要有一方主动关闭连接。如果客户端和服务端之间的连接一直不关闭的话，连接数则会越来越多，严重的时候会造成资源占用过高。</li>
+<li>解决方案也比较简单。如果这些连接其实长时间内并没有任何数据传输的话，那其实属于空闲连接，这时候可以在服务端设置空闲连接的存活时间，超过一定时间后由服务端主动断掉，从而保证无用连接及时释放。</li>
+</ul>
+<h3 id="Cookies"><a href="#Cookies" class="headerlink" title="Cookies"></a>Cookies</h3><h4 id="Cookies是什么"><a href="#Cookies是什么" class="headerlink" title="Cookies是什么"></a>Cookies是什么</h4><ol>
+<li>Cookie 是浏览器访问服务器后，服务器传给浏览器的一段数据。里面一般带有该浏览器的身份信息。</li>
+</ol>
+<ol start="2">
+<li><p>浏览器需要保存这段数据，不得轻易删除。</p>
+</li>
+<li><p>此后每次浏览器访问该服务器，都必须带上这段数据。服务器用使用这段数据确认浏览器身份信息。</p>
+</li>
+</ol>
+<h4 id="Cookie的作用"><a href="#Cookie的作用" class="headerlink" title="Cookie的作用"></a>Cookie的作用</h4><p>Cookie 一般有两个作用。</p>
+<p>1.识别用户身份。</p>
+<ul>
+<li>举个例子。用户 A 用浏览器访问了“猫猫网”，“猫猫网”的服务器就会立刻给 A 返回一段Cookie数据，内含「uid=a」。</li>
+<li>当 A 再次访问“猫猫网”下的其他页面时，比如跳转到“猫猫交友评论”，就会附带上「uid=a」这段数据。</li>
+<li>同理，用户 B 用浏览器访问“猫猫网” 时，就给 B 分配了一段Cookie数据，内含「uid=b」。B 之后访问“猫猫网”的时候，就会一直带上「uid=b」这段数据。</li>
+<li>因此“猫猫网”的服务器通过Cookie数据就能区分 A 和 B 两个用户了。</li>
+</ul>
+<p>2.持久化用户信息。</p>
+<ul>
+<li>因为cookies的数据会被用户浏览器保存到本地下。因此可以利用这一特点保持一些简单的用户数据。</li>
+<li>比如一些博客网站，可以通过cookies记录下用户的性别年龄等信息，以此进行一些个性化展示。</li>
+<li>当然上面提到的都是一些比较粗糙的场景，是为了方便大家理解cookies的功能。实际使用cookies会非常谨慎。</li>
+</ul>
+<h3 id="Referrer-Policy-和-Referrer"><a href="#Referrer-Policy-和-Referrer" class="headerlink" title="Referrer Policy 和 Referrer"></a>Referrer Policy 和 Referrer</h3><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-1/1612146090912-image.png" style="zoom:100%" />
+
+
+
+<h4 id="Referrer是什么"><a href="#Referrer是什么" class="headerlink" title="Referrer是什么"></a>Referrer是什么</h4><p>Referrer 是HTTP请求header的报文头，用于指明当前流量的来源参考页面，常被用于分析用户来源等信息。通过这个信息，我们可以知道访客是怎么来到当前页面的。比如在上面的请求截图里，可以看出我是使用<code>https://www.bilibili.com/</code>访问的视频资源。</p>
+<h4 id="Referrer-Policy-是什么"><a href="#Referrer-Policy-是什么" class="headerlink" title="Referrer Policy 是什么"></a>Referrer Policy 是什么</h4><ul>
+<li><p>Referrer 字段，会用来指定该请求是从哪个页面跳转页来的，里面的信息是浏览器填的。</p>
+</li>
+<li><p>而 Referrer Policy 则是用于控制Referrer信息传不传、传哪些信息、在什么时候传的策略。</p>
+</li>
+</ul>
+<p>为什么要这么麻烦呢？因为有些网站一些用户敏感信息，比如 sessionid 或是 token 放在地址栏里，如果当做Referrer字段全部传递的话，那第三方网站就会拿到这些信息，会有一定的安全隐患。所以就有了 Referrer Policy，用于过滤 Referrer 报头内容。</p>
+<p>比如在上面的请求截图里，可以看出我是使用<code>strict-origin-when-cross-origin</code>策略，含义是跨域时将当前页面URL过滤掉参数及路径部分，仅将协议、域名和端口（如果有的话）当作 Referrer。否则 Referrer 还是传递当前页的全路径。同时当发生降级（比如从 https:// 跳转到 http:// ）时，不传递 Referrer 报头。</p>
+<h3 id="Cache-control"><a href="#Cache-control" class="headerlink" title="Cache-control"></a>Cache-control</h3><h4 id="什么是cache-control"><a href="#什么是cache-control" class="headerlink" title="什么是cache-control"></a>什么是cache-control</h4><p>cache-control，用于控制浏览器缓存。简而言之，当某人访问网站时，其浏览器将在本地保存某些资源，例如图像和网站数据。当该用户重新访问同一网站时，缓存控制设置的规则会确定该用户是否从本地缓存中加载这些资源，或者浏览器是否必须向服务器发送新资源的请求。</p>
+<h4 id="什么是浏览器缓存"><a href="#什么是浏览器缓存" class="headerlink" title="什么是浏览器缓存"></a>什么是浏览器缓存</h4><p>浏览器缓存是指浏览器本地保存网站资源，以便不必再次通过网络从服务器获取它们。例如，“猫猫网”的背景图像可以保存到本地缓存中，这样在用户第二次访问该页面时，该图像将从用户的本地文件加载，剩下网络获取资源的时间，页面加载速度就会更快。</p>
+<p>但是浏览器也不会永远把这些网站资源放在本地，否则本地磁盘就会炸，所以会限定保存资源的时间，这叫生存时间（TTL）。如果 TTL 过期后用户请求缓存的资源，浏览器必须再次通过网络与服务器建立连接并重新下载这个资源。</p>
+<h4 id="常见的缓存控制策略"><a href="#常见的缓存控制策略" class="headerlink" title="常见的缓存控制策略"></a>常见的缓存控制策略</h4><ul>
+<li><p>cache-control: private<br>具有“private”指令的响应只能由客户端缓存，不能由中间代理（例如 CDN或代理）缓存。这些资源通常是包含私密数据的资源，例如显示用户个人信息的网站。</p>
+</li>
+<li><p>cache-control: public<br>相反，“public”指令表示资源可以由任何缓存存储。</p>
+</li>
+<li><p>cache-control: no-store<br>带有“no-store”指令的响应无法缓存到任何位置，也永不缓存。也就是说，用户每次请求此数据时，都必须将请求发送到源站服务器以获取新副本。此指令通常保留给包含极其敏感数据的资源，例如银行帐户信息。</p>
+</li>
+<li><p>cache-control: max-age<br>此指令指定了生存时间，也就是资源在下载后可以缓存多少秒钟。例如，如果将最大期限设置为 1800，则首次从服务器请求资源后的 1800 秒（30 分钟）内，后续请求都会向用户提供该资源的缓存版本。如果 30 分钟后用户再次请求资源，则客户端需要向服务器重新请求该资源。</p>
+</li>
+<li><p>cache-control: no-cache</p>
+<p>从网页截图里可以看出，使用的缓存控制指令是<code>cache-control: no-cache</code>。它表示，只有先检查资源没有更新版本后，才可使用所请求资源的缓存版本。那么问题来了，怎么判断资源是否有更新版本呢？这就需要 <code>ETag</code>。</p>
+</li>
+</ul>
+<h3 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h3><img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613297647760-image.png" style="zoom:100%" />
+
+
+
+<p>Etag是 Entity tag的缩写，是服务端的一个资源版本的令牌标识。在 HTTP 响应头中将其传送到客户端。每当资源更新时，此令牌会更新。</p>
+<p>比如，浏览器第一次请求资源的时候，服务端返回了这个资源的<code>ETag: &quot;095933fff2323351d3b495f2f879616f1762f752&quot;</code>。</p>
+<p>当浏览器再次请求这个资源的时候，浏览器会将<code>If-None-Match: &quot;095933fff2323351d3b495f2f879616f1762f752&quot;</code> 传输给服务端，服务端拿到该ETAG，对比资源是否发生变化。</p>
+<ul>
+<li>如果资源未发生改变，则返回304HTTP状态码，不返回具体的资源。</li>
+<li>否则表示资源已经更新，浏览器需要下载新版本以提供给用户。</li>
+</ul>
+<p>此过程可确保用户始终获得资源的最新版本，并且无需进行不必要的下载。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>看个猫片都能学到这么多硬核知识。接下来我打算去舞蹈区看看有没有适合你们的知识点。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-2-14/1613314979045-%E8%84%B8%E7%BA%A2%E5%BC%80%E5%BF%83.jpg" style="zoom:100%" />
+
+<p>我是小白，有空？一起在知识的海洋里呛水啊，懂我意思？</p>
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-1-10/1610269930614-640.png" style="zoom:100%" />
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/zhaolunallen/picture/2021-1-6/1609890505711-%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-01-06-0.gif" style="zoom:100%" />
+
+
+
+
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>- [1] 计算机网络自动向下</p>
+<p>- [2] 极客时间-趣谈网络协议</p>
+<p>- [3] 极客时间-透视HTTP</p>
+<p>- [4] 图解HTTP</p>
+<p>- [5] 漫画形象-小肥柴</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/12/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E7%BB%99%E5%A4%A7%E5%AE%B6%E4%B8%A2%E8%84%B8%E4%BA%86%EF%BC%8C%E7%94%A8%E4%BA%86%E4%B8%89%E5%B9%B4golang%EF%BC%8C%E6%88%91%E8%BF%98%E6%98%AF%E6%B2%A1%E7%AD%94%E5%AF%B9%E8%BF%99%E9%81%93%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E9%A2%98/" rel="prev" title="给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题。">
+      <i class="fa fa-chevron-left"></i> 给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题。
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/10/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%98%B2%E7%8C%9D%E6%AD%BB%E6%8C%87%E5%8D%97/" rel="next" title="程序员划水指南">
+      程序员划水指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHTTP"><span class="nav-number">1.</span> <span class="nav-text">什么是HTTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83%E5%B1%82%E7%BD%91%E7%BB%9C"><span class="nav-number">2.</span> <span class="nav-text">七层网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">HTTP报文格式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87"><span class="nav-number">3.1.</span> <span class="nav-text">请求报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87"><span class="nav-number">3.2.</span> <span class="nav-text">响应报文</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E4%BF%A1%E6%81%AF%E8%A7%A3%E8%AF%BB"><span class="nav-number">4.</span> <span class="nav-text">报文信息解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.</span> <span class="nav-text">1.请求数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">2.响应数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Request-URL"><span class="nav-number">4.3.</span> <span class="nav-text">3.Request URL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#URL%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.3.1.</span> <span class="nav-text">URL是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#URL-%E5%92%8C-URI-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.3.2.</span> <span class="nav-text">URL 和 URI 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Request-Method"><span class="nav-number">4.4.</span> <span class="nav-text">4.Request Method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GET"><span class="nav-number">4.4.1.</span> <span class="nav-text">GET</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HEAD%EF%BC%9A"><span class="nav-number">4.4.2.</span> <span class="nav-text">HEAD：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#POST"><span class="nav-number">4.4.3.</span> <span class="nav-text">POST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PUT%EF%BC%9A"><span class="nav-number">4.4.4.</span> <span class="nav-text">PUT：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DELETE%EF%BC%9A"><span class="nav-number">4.4.5.</span> <span class="nav-text">DELETE：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OPTIONS%EF%BC%9A"><span class="nav-number">4.4.6.</span> <span class="nav-text">OPTIONS：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#options%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.4.6.1.</span> <span class="nav-text">options是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8options"><span class="nav-number">4.4.6.2.</span> <span class="nav-text">什么时候需要使用options</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82%E5%92%8C%E5%A4%8D%E6%9D%82%E8%AF%B7%E6%B1%82%E3%80%82"><span class="nav-number">4.4.6.3.</span> <span class="nav-text">什么是简单请求和复杂请求。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%A8%E5%9F%9F"><span class="nav-number">4.4.6.4.</span> <span class="nav-text">什么是跨域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#options%E5%B8%A6%E6%9D%A5%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">4.4.6.5.</span> <span class="nav-text">options带来什么问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96options"><span class="nav-number">4.4.6.6.</span> <span class="nav-text">如何优化options</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Status-Code"><span class="nav-number">4.5.</span> <span class="nav-text">5.Status Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.5.1.</span> <span class="nav-text">状态码是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-number">4.5.2.</span> <span class="nav-text">状态码流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81%E4%BB%8B%E7%BB%8D"><span class="nav-number">4.5.3.</span> <span class="nav-text">常见状态码介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Headers"><span class="nav-number">4.6.</span> <span class="nav-text">6. Headers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Content-Length"><span class="nav-number">4.6.1.</span> <span class="nav-text">Content-Length</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Range"><span class="nav-number">4.6.2.</span> <span class="nav-text">Range</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connection"><span class="nav-number">4.6.3.</span> <span class="nav-text">Connection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.6.3.1.</span> <span class="nav-text">长连接和短连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E9%95%BF%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.6.3.2.</span> <span class="nav-text">HTTP为什么要使用长连接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookies"><span class="nav-number">4.6.4.</span> <span class="nav-text">Cookies</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookies%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.6.4.1.</span> <span class="nav-text">Cookies是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">4.6.4.2.</span> <span class="nav-text">Cookie的作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Referrer-Policy-%E5%92%8C-Referrer"><span class="nav-number">4.6.5.</span> <span class="nav-text">Referrer Policy 和 Referrer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Referrer%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.6.5.1.</span> <span class="nav-text">Referrer是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Referrer-Policy-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.6.5.2.</span> <span class="nav-text">Referrer Policy 是什么</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-control"><span class="nav-number">4.6.6.</span> <span class="nav-text">Cache-control</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFcache-control"><span class="nav-number">4.6.6.1.</span> <span class="nav-text">什么是cache-control</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98"><span class="nav-number">4.6.6.2.</span> <span class="nav-text">什么是浏览器缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BC%93%E5%AD%98%E6%8E%A7%E5%88%B6%E7%AD%96%E7%95%A5"><span class="nav-number">4.6.6.3.</span> <span class="nav-text">常见的缓存控制策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ETag"><span class="nav-number">4.6.7.</span> <span class="nav-text">ETag</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3329955fccef6fbcdea8',
+      clientSecret: 'fa9688ca19b34fd14615a5cc564222f4a7056d07',
+      repo        : 'gitTalk',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : 'e17874855760457674a443ea709fe72b',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
