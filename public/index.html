@@ -166,6 +166,844 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/" class="post-title-link" itemprop="url">Mysql的索引为什么使用B+树而不使用跳表？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-16 22:57:55" itemprop="dateCreated datePublished" datetime="2022-04-16T22:57:55+08:00">2022-04-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:04:31" itemprop="dateModified" datetime="2022-04-19T21:04:31+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。</p>
+<p>直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了O(lg(n))。</p>
+<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的<strong>跳表</strong>，也是lg(n)，并且实现还贼简单。</p>
+<p><strong>那为什么mysql的索引，不使用跳表呢？</strong></p>
+<p>我们今天就来聊聊这个话题。</p>
+<br>
+
+<h3 id="B-树的结构"><a href="#B-树的结构" class="headerlink" title="B+树的结构"></a>B+树的结构</h3><p>之前的一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>里，已经提到过<strong>B+树的结构</strong>了。文章不长，如果没看过，建议先看下。</p>
+<p><strong>当然，不看也行。</strong></p>
+<p>在这里，<del>为了混点字数</del>，我简单总结下B+树的结构。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/B+%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B-20220403085542636-20220403090359219.png" alt="B+树查询过程"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/" class="post-title-link" itemprop="url">为什么大家说mysql数据库单表最大两千万？依据是啥？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-05 22:57:55" itemprop="dateCreated datePublished" datetime="2022-04-05T22:57:55+08:00">2022-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:05:19" itemprop="dateModified" datetime="2022-04-19T21:05:19+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>故事从好多年前说起。</p>
+<p>想必大家也听说过数据库单表<strong>建议最大2kw</strong>条数据这个说法。如果超过了，性能就会下降得比较厉害。</p>
+<p>巧了。</p>
+<p>我也听说过。</p>
+<p><strong>但我不接受它的建议，硬是单表装了1亿条数据。</strong></p>
+<p>这时候，我们组里新来的实习生看到了之后，天真无邪的问我：”单表不是建议最大两千万吗？为什么这个表都<strong>放了1个亿还不分库分表</strong>“？</p>
+<p>我能说我是<strong>因为懒</strong>吗？我当初设计时哪里想到这表竟然能涨这么快。。。</p>
+<p>我不能。</p>
+<p>说了等于承认自己是<strong>开发组里的毒瘤</strong>，虽然我确实是，但我<strong>不能承认</strong>。</p>
+<p>我如坐针毡，如芒刺背，如鲠在喉。</p>
+<p>开始了一波骚操作。</p>
+<p>“我这么做是有道理的”</p>
+<p>“虽然这个表很大，但你有没有发现它查询其实还是很快”</p>
+<p>“这个2kw是个建议值，我们要来看下这个2kw是怎么来的”</p>
+<br>
+
+<h3 id="数据库单表行数最大多大？"><a href="#数据库单表行数最大多大？" class="headerlink" title="数据库单表行数最大多大？"></a>数据库单表行数最大多大？</h3><p>我们先看下单表行数理论最大值是多少。</p>
+<p>建表的SQL是这么写的，</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">100037</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>其中id就是主键。主键本身唯一，也就是说主键的大小可以限制表的上限。</p>
+<p>如果主键声明为<code>int</code>大小，也就是32位，那么能支持2^32-1，也就是<strong>21个亿</strong>左右。</p>
+<p>如果是<code>bigint</code>，那就是2^64-1，但这个<strong>数字太大</strong>，一般还没到这个限制之前，<strong>磁盘先受不了</strong>。</p>
+<p>搞离谱点。</p>
+<p>如果我把主键声明为 <code>tinyint</code>，一个字节，8位，最大2^8-1，也就是<code>255</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` tinyint(<span class="number">2</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">0</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>如果我想插入一个id=256的数据，那<strong>就会报错</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> `tmp` (`id`, `name`, `age`) <span class="keyword">VALUES</span> (<span class="number">256</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">60</span>);</span><br><span class="line">ERROR <span class="number">1264</span> (<span class="number">22003</span>): <span class="keyword">Out</span> <span class="keyword">of</span> <span class="keyword">range</span> <span class="keyword">value</span> <span class="keyword">for</span> <span class="keyword">column</span> <span class="string">&#x27;id&#x27;</span> <span class="keyword">at</span> <span class="type">row</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，<code>tinyint</code>主键限制表内最多255条数据。</p>
+<p>那除了主键，还有哪些因素会影响行数？</p>
+<br>
+
+<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引内部是用的B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
+<p>为了不让大家有过于强烈的审丑疲劳，今天我尝试从另外一个角度给大家讲讲这玩意。</p>
+<br>
+
+<h4 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h4><p>假设我们有这么一张user数据表。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/04/05/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%AE%B6%E8%AF%B4mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E6%9C%80%E5%A4%A7%E4%B8%A4%E5%8D%83%E4%B8%87%EF%BC%9F%E4%BE%9D%E6%8D%AE%E6%98%AF%E5%95%A5%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/" class="post-title-link" itemprop="url">Mysql数据库查询好慢，除了索引，还能因为什么？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-22 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-22T22:57:55+08:00">2022-03-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:56:02" itemprop="dateModified" datetime="2022-04-19T20:56:02+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>我熟练应用ctrl c和ctrl v 开发curd代码好多年了。</p>
+<p>mysql查询为什么会慢，关于这个问题，在实际开发经常会遇到，而面试中，也是个高频题。</p>
+<p>遇到这种问题，我们一般也会想到是因为索引。</p>
+<p><strong>那除开索引之外，还有哪些因素会导致数据库查询变慢呢？</strong></p>
+<p><strong>有哪些操作，可以提升mysql的查询能力呢？</strong></p>
+<p>今天这篇文章，我们就来聊聊会导致数据库查询变慢的场景有哪些，并给出原因和解决方案。</p>
+<br>
+
+<h3 id="数据库查询流程"><a href="#数据库查询流程" class="headerlink" title="数据库查询流程"></a>数据库查询流程</h3><p>我们先来看下，一条查询语句下来，会经历哪些流程。</p>
+<p>比如我们有一张数据库表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `gender` <span class="type">int</span>(<span class="number">8</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;性别&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`),</span><br><span class="line">  KEY `idx_gender` (`gender`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<p>我们平常写的应用代码（go或C++之类的），这时候就叫<strong>客户端</strong>了。</p>
+<p>客户端底层会带着账号密码，尝试向mysql建立一条TCP长链接。</p>
+<p>mysql的<strong>连接管理模块</strong>会对这条连接进行管理。</p>
+<p>建立连接后，客户端执行一条查询sql语句。 比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> gender <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> age <span class="operator">=</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>客户端会将sql语句通过网络连接给mysql。</p>
+<p>mysql收到sql语句后，会在<strong>分析器</strong>中先判断下SQL语句有没有语法错误，比如select，如果少打一个<code>l</code>，写成<code>slect</code>，则会报错<code>You have an error in your SQL syntax; </code>。这个报错对于我这样的手残党来说可以说是很熟悉了。</p>
+<p>接下来是<strong>优化器</strong>，在这里会<strong>根据一定的规则选择该用什么索引</strong>。</p>
+<p>之后，才是通过<strong>执行器</strong>去调用<strong>存储引擎</strong>的接口函数。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/Mysql%E6%9E%B6%E6%9E%843-20220320082526675.png" alt="Mysql架构"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/22/%E5%9B%BE%E8%A7%A3mysql/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E5%A5%BD%E6%85%A2%EF%BC%8C%E9%99%A4%E4%BA%86%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%BF%98%E8%83%BD%E5%9B%A0%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">两个事务并发写，能保证数据唯一吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-16 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-16T22:57:55+08:00">2022-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:52:12" itemprop="dateModified" datetime="2022-04-19T20:52:12+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>哟，又是我小白。最近有点高产了。</p>
+<p>连我自己都害怕了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006APoFYly8grrdl7zawuj30af0afwiu.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/16/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%EF%BC%8C%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80%E5%90%97%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/" class="post-title-link" itemprop="url">给32位系统装8g内存条能用吗？为什么？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-09 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-09T22:57:55+08:00">2022-03-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:03:11" itemprop="dateModified" datetime="2022-04-19T21:03:11+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">图解操作系统</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/421646663617_.pic_hd.jpg"></p>
+<p>关于32位和64位，这个概念一直让人比较懵。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">mysql主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-02 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-02T22:57:55+08:00">2022-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 21:03:43" itemprop="dateModified" datetime="2022-04-19T21:03:43+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>大家好，我是小白，好长时间没更新技术文了，相信大家看我写的水文也看烦了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/1539510639669-20220302001234401.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/" class="post-title-link" itemprop="url">为什么张一鸣推崇延时满足。。。</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-30 22:57:55" itemprop="dateCreated datePublished" datetime="2022-01-30T22:57:55+08:00">2022-01-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:55:29" itemprop="dateModified" datetime="2022-04-19T20:55:29+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>大家知道，字节的文化里，有一条叫”<strong>延迟满足</strong>“，意思是为了长远的、更大的利益，自愿延缓或者放弃目前的、较小的满足，有种<strong>先苦后甜</strong>的那个味道。</p>
+<p>看到标题，感觉好像会是个口水文，可能会通过人物故事去剖析，然后讲一些没什么用的鸡汤。</p>
+<p>我需要否定下，至少不是“好像”，这就是口水文。</p>
+<p>我希望能从更底层的原理来聊聊这个话题，而不是光灌鸡汤。</p>
+<br>
+
+<p>大家高中的时候应该学过，人体具有调节平衡的机制。</p>
+<p>举个例子，当你病毒性感冒时，人体会通过调节体内的白细胞，淋巴，噬菌体这些进行免疫抵抗，所以你会发烧。而打针，一般除了给你杀杀病毒细菌之外，还会通过盐水葡萄糖，让你的身体更快恢复平衡。</p>
+<p>所以这就跟大学时候学的<strong>反馈调节系统</strong>，非常像。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/01/80d3a0ad9f620091.png" alt="反馈调节系统"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/30/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%A0%E4%B8%80%E9%B8%A3%E6%8E%A8%E5%B4%87%E5%BB%B6%E6%97%B6%E6%BB%A1%E8%B6%B3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/" class="post-title-link" itemprop="url">大学生毕业找工作，该选择哪个方向。</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-29 22:57:55" itemprop="dateCreated datePublished" datetime="2021-11-29T22:57:55+08:00">2021-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:55:19" itemprop="dateModified" datetime="2022-04-19T20:55:19+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>兄弟们。</p>
+<p>出来说骚话啊。</p>
+<p>考虑到，读者里面，有不少是还未踏入社会的学生党。</p>
+<p>今天在这里想简单介绍下行业的区别。</p>
+<p>虽然都是写代码，虽然大家都叫程序员，但其实，分为很多种类。程序员大体上分为<strong>前端和后端</strong>。</p>
+<p>因为我不懂前端，所以这里主要讲下<strong>后端</strong>吧。</p>
+<p>而后端，可以从很多角度进行分类。</p>
+<p>我们从大家最熟悉的大学专业开始展开吧。</p>
+<br>
+
+<h3 id="非计算机专业"><a href="#非计算机专业" class="headerlink" title="非计算机专业"></a>非计算机专业</h3><p>一般提到程序员，都会以为都是计算机专业的，但其实除了计算机专业外，还有一些专业，比如电气工程、自动化、通信工程等，都会有不少相关的对口程序员工种。</p>
+<p>比如大学时候学的51单片，STM32之类的相关，那个其实属于嵌入式软件开发的范畴，用的一般是C语言。</p>
+<p>如果是画画PCB电路板之类的，那应该属于嵌入式硬件工程师的范畴。</p>
+<p>跟这两块比较相近的，还有个工作自动控制系统相关的相关工作，叫PLC工程师。用的编程语言也比较特别，叫梯形图。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20211121223351338.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%AF%95%E4%B8%9A%E6%89%BE%E5%B7%A5%E4%BD%9C%EF%BC%8C%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E6%96%B9%E5%90%91%E3%80%82/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/" class="post-title-link" itemprop="url">动图图解！怎么让goroutine跑一半就退出？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-15 22:57:55" itemprop="dateCreated datePublished" datetime="2021-11-15T22:57:55+08:00">2021-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 20:51:13" itemprop="dateModified" datetime="2022-04-19T20:51:13+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/doutub_gif2.gif"></p>
+<p>光看标题，大家可能不太理解我说的是啥。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/15/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%80%8E%E4%B9%88%E8%AE%A9goroutine%E8%B7%91%E4%B8%80%E5%8D%8A%E5%B0%B1%E9%80%80%E5%87%BA%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B2%A1%E6%9C%89accept%E8%83%BD%E5%BB%BA%E7%AB%8BTCP%E8%BF%9E%E6%8E%A5%E5%90%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -197,7 +1035,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
+                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,775 +1083,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/" class="post-title-link" itemprop="url">活久见！TCP两次挥手，你见过吗？那四次握手呢？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-09-25T22:57:55+08:00">2021-09-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我们都知道，TCP是个<strong>面向连接的、可靠的、基于字节流的传输层</strong>通信协议。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png" alt="TCP是什么"></p>
-<p>那这里面提到的”<strong>面向连接</strong>“，意味着需要 建立连接，使用连接，释放连接。</p>
-<p><strong>建立连接</strong>是指我们熟知的<strong>TCP三次握手</strong>。</p>
-<p>而<strong>使用连接</strong>，则是通过一发送、一确认的形式，进行<strong>数据传输</strong>。</p>
-<p>还有就是<strong>释放连接</strong>，也就是我们常见的<strong>TCP四次挥手</strong>。</p>
-<p><strong>TCP四次挥手</strong>大家应该比较了解了，但大家见过<strong>三次挥手</strong>吗？还有<strong>两次挥手</strong>呢？</p>
-<p>都见过？ 那<strong>四次握手</strong>呢？</p>
-<p>今天这个话题，不想只是猎奇，也不想搞冷知识。</p>
-<p>我们从四次挥手开始说起，搞点实用的知识点。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%B4%BB%E4%B9%85%E8%A7%81%EF%BC%81TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%8C%E4%BD%A0%E8%A7%81%E8%BF%87%E5%90%97%EF%BC%9F%E9%82%A3%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/09/01/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%94%B6%E5%88%B0RST%EF%BC%8C%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E6%96%AD%E5%BC%80TCP%E8%BF%9E%E6%8E%A5%E5%90%97%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/01/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%94%B6%E5%88%B0RST%EF%BC%8C%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E6%96%AD%E5%BC%80TCP%E8%BF%9E%E6%8E%A5%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">动图图解！收到RST，就一定会断开TCP连接吗？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-01 22:57:55" itemprop="dateCreated datePublished" datetime="2021-09-01T22:57:55+08:00">2021-09-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>想必大家已经知道我的niao性，搞个标题，就是不喜欢立马回答。</p>
-<p>就是要搞一大堆<strong>原理性</strong>的东西，再回答标题的问题。</p>
-<p>说这个是因为我这次会把问题的答案就放到开头吗？</p>
-<p>不！</p>
-<p><strong>我就不！</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/01/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%94%B6%E5%88%B0RST%EF%BC%8C%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%BC%9A%E6%96%AD%E5%BC%80TCP%E8%BF%9E%E6%8E%A5%E5%90%97%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/08/10/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Csend%E6%88%90%E5%8A%9F%E5%90%8E%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%B0%B1%E5%8F%91%E5%87%BA%E5%8E%BB%E4%BA%86%E5%90%97%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/10/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Csend%E6%88%90%E5%8A%9F%E5%90%8E%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%B0%B1%E5%8F%91%E5%87%BA%E5%8E%BB%E4%BA%86%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">动图图解！代码执行send成功后，数据就发出去了吗？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-10 22:57:55" itemprop="dateCreated datePublished" datetime="2021-08-10T22:57:55+08:00">2021-08-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:46" itemprop="dateModified" datetime="2021-10-08T09:37:46+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>今天又是被倾盆的需求淹没的一天。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/8e7e47794e20a373.jpeg"></p>
-<p>有没有人知道，那种“<strong>我用3句话，就让产品为我砍了18个需求</strong>”的鸡汤课在哪报名，想报。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/10/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Csend%E6%88%90%E5%8A%9F%E5%90%8E%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%B0%B1%E5%8F%91%E5%87%BA%E5%8E%BB%E4%BA%86%E5%90%97%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/07/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%BF%9E%E6%8E%A5%E4%B8%80%E4%B8%AAIP%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%BF%9E%E6%8E%A5%E4%B8%80%E4%B8%AAIP%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84/" class="post-title-link" itemprop="url">连接一个 IP 不存在的主机时，握手过程是怎样的？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-07-25T22:57:55+08:00">2021-07-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
-</blockquote>
-<p>鸽了好长时间了，最近<strong>很忙</strong>。以前工作忙完，就抽空写文章。</p>
-<p>现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要举手，拉到右下角**点个”在看”**就好了。</p>
-<p>真的，全怪某音。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%BF%9E%E6%8E%A5%E4%B8%80%E4%B8%AAIP%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-06-25T22:57:55+08:00">2021-06-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>首发于个人公众号：小白debug<br>原文地址：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XsZYiLxZ0AXjVMBgWCnmzw">硬核图解！断网了，还能ping通 127.0.0.1 吗？为什么？</a></p>
-<p>你<strong>女神爱不爱你</strong>，你问她，她可能不会告诉你。</p>
-<p>但<strong>网通不通</strong>，你 <code>ping</code> 一下就知道了。 </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%96%AD%E7%BD%91%E4%BA%86%EF%BC%8C%E8%BF%98%E8%83%BDping%E9%80%9A%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/06/11/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%8CGMP%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89P/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/11/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%8CGMP%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89P/" class="post-title-link" itemprop="url">动图图解！GMP模型里为什么要有P？背后的原因让人暖心</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-11 22:57:55" itemprop="dateCreated datePublished" datetime="2021-06-11T22:57:55+08:00">2021-06-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:34:49" itemprop="dateModified" datetime="2021-10-08T09:34:49+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
-</blockquote>
-<h3 id="GM模型是什么"><a href="#GM模型是什么" class="headerlink" title="GM模型是什么"></a>GM模型是什么</h3><p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GM%E5%9B%BE.png" alt="GM图"></p>
-<p>在 <code>Go 1.1</code>版本之前，其实用的就是<code>GM</code>模型。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/11/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%8CGMP%E9%87%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89P/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/06/10/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E6%88%91%E6%84%9F%E8%A7%89%EF%BC%8C%E6%88%91%E5%8F%AF%E8%83%BD%E8%A6%81%E6%8B%BF%E5%9B%BE%E7%81%B5%E5%A5%96%E4%BA%86%E3%80%82%E3%80%82%E3%80%82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/10/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E6%88%91%E6%84%9F%E8%A7%89%EF%BC%8C%E6%88%91%E5%8F%AF%E8%83%BD%E8%A6%81%E6%8B%BF%E5%9B%BE%E7%81%B5%E5%A5%96%E4%BA%86%E3%80%82%E3%80%82%E3%80%82/" class="post-title-link" itemprop="url">我感觉，我可能要拿图灵奖了。。。</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-10 22:57:55" itemprop="dateCreated datePublished" datetime="2021-06-10T22:57:55+08:00">2021-06-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:34:43" itemprop="dateModified" datetime="2021-10-08T09:34:43+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>是的，这个是<strong>标题党</strong>。</p>
-<p>事情是这样的，最近在<code>zhihu</code>上回答了一个问题。一夜之间拿到了<code>900+</code>赞，让我相当震惊。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/10/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E6%88%91%E6%84%9F%E8%A7%89%EF%BC%8C%E6%88%91%E5%8F%AF%E8%83%BD%E8%A6%81%E6%8B%BF%E5%9B%BE%E7%81%B5%E5%A5%96%E4%BA%86%E3%80%82%E3%80%82%E3%80%82/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/" class="post-title-link" itemprop="url">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-25 22:57:55" itemprop="dateCreated datePublished" datetime="2021-05-25T22:57:55+08:00">2021-05-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:37:47" itemprop="dateModified" datetime="2021-10-08T09:37:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E7%9B%AE%E5%BD%95.png"></p>
-<h3 id="什么是TCP分段和IP分片"><a href="#什么是TCP分段和IP分片" class="headerlink" title="什么是TCP分段和IP分片"></a>什么是TCP分段和IP分片</h3><p>我们知道网络就像一根管子，而管子吧，就会有粗细。</p>
-<p>一个数据包想从管子的一端到另一端，得过这个管子。<del>（废话）</del></p>
-<p>但数据包的量<strong>有大有小</strong>，想过管子，数据包不能大于这根管子的粗细。</p>
-<p>问题来了，数据包过大时怎么办？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/05/18/golang%E9%9D%A2%E8%AF%95%E9%A2%98/io_timeout%EF%BC%8C%E5%B8%8C%E6%9C%9B%E4%BD%A0%E4%B8%8D%E8%A6%81%E8%B8%A9%E5%88%B0%E8%BF%99%E4%B8%AAhttp%E5%8C%85%E7%9A%84%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/18/golang%E9%9D%A2%E8%AF%95%E9%A2%98/io_timeout%EF%BC%8C%E5%B8%8C%E6%9C%9B%E4%BD%A0%E4%B8%8D%E8%A6%81%E8%B8%A9%E5%88%B0%E8%BF%99%E4%B8%AAhttp%E5%8C%85%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">i/o timeout ， 希望你不要踩到这个net/http包的坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-18 22:57:55" itemprop="dateCreated datePublished" datetime="2021-05-18T22:57:55+08:00">2021-05-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-08 09:35:47" itemprop="dateModified" datetime="2021-10-08T09:35:47+08:00">2021-10-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
-</blockquote>
-<br>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>我们来看一段日常代码。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/18/golang%E9%9D%A2%E8%AF%95%E9%A2%98/io_timeout%EF%BC%8C%E5%B8%8C%E6%9C%9B%E4%BD%A0%E4%B8%8D%E8%A6%81%E8%B8%A9%E5%88%B0%E8%BF%99%E4%B8%AAhttp%E5%8C%85%E7%9A%84%E5%9D%91/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/./page/2/">2</a><a class="page-number" href="/./page/3/">3</a><a class="extend next" rel="next" href="/./page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/./page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/./page/4/">4</a><a class="extend next" rel="next" href="/./page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1081,14 +1154,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -1152,7 +1225,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
