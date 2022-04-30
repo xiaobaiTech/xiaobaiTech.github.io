@@ -18,7 +18,7 @@ categories: "图解mysql"
 老规矩，以下内容还是默认发生在innodb引擎的**可重复读隔离级别**下。
 
 ![都是select结果却不同](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E9%83%BD%E6%98%AFselect%E7%BB%93%E6%9E%9C%E5%8D%B4%E4%B8%8D%E5%90%8C1.drawio.png)
-
+<!-- more -->
 大家可以看到，**线程1**，同样都是读 `age >= 3` 的数据。第一次读到**1条数据**，这个是原始状态。这之后线程2将id=2的age字段也改成了3。
 
 线程1此时再读两次，一次读到的结果还是原来的**1条**，另一次读的结果却是**2条**，**区别在于加没加for update。**
