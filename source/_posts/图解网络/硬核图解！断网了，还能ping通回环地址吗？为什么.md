@@ -22,7 +22,7 @@ categories: "图解网络"
 
 以前面试的时候就遇到过这个问题，大家看个动图了解下面试官和我当时的场景，求当时小白的心里阴影面积。
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/cache_1623425479_3538.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/cache_1623425479_3538.gif)
 
 
 
@@ -31,7 +31,7 @@ categories: "图解网络"
 
 拔掉网线，断网。
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006WD51tly1fxvyqnfervj308c08c3yo.jpg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006WD51tly1fxvyqnfervj308c08c3yo.jpg)
 
 然后在控制台输入` ping 127.0.0.1`。
 
@@ -84,7 +84,7 @@ round-trip min/avg/max/stddev = 0.074/0.081/0.093/0.006 ms
 
 
 
-![回环地址](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
+![回环地址](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
 
 
 
@@ -96,7 +96,7 @@ IPV4以8位一组，每组之间用 **.** 号隔开。
 
 IPV6就以16位为一组，每组之间用 **:** 号隔开。如果全是0，那么可以省略不写。
 
-![ipv6回环地址](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ipv6%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
+![ipv6回环地址](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ipv6%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
 
 在IPV4下的回环地址是 `127.0.0.1`，在`IPV6`下，表达为 `::1` 。中间把**连续的0**给省略了，之所以不是**7个 冒号**，而是**2个冒号:** ， 是因为一个 IPV6 地址中**只允许出现⼀次两个连续的冒号**。
 
@@ -110,11 +110,11 @@ ping 是应用层命令，可以理解为它跟游戏或者聊天软件属于同
 
 ping应用的底层，用的是网络层的**ICMP协议**。
 
-![IP和ICMP和Ping所在分层](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/IP%E5%92%8CICMP%E5%92%8CPing%E6%89%80%E5%9C%A8%E5%88%86%E5%B1%82.png)
+![IP和ICMP和Ping所在分层](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/IP%E5%92%8CICMP%E5%92%8CPing%E6%89%80%E5%9C%A8%E5%88%86%E5%B1%82.png)
 
 虽然ICMP协议和IP协议**都属于网络层协议**，但其实**ICMP也是利用了IP协议进行消息的传输**。
 
-![ip和icmp的关系](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ip%E5%92%8Cicmp%E7%9A%84%E5%85%B3%E7%B3%BB.png)
+![ip和icmp的关系](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ip%E5%92%8Cicmp%E7%9A%84%E5%85%B3%E7%B3%BB.png)
 
 所以，大家在这里完全可以简单的理解为 ping 某个IP 就是往某个IP地址发个消息。
 
@@ -124,7 +124,7 @@ ping应用的底层，用的是网络层的**ICMP协议**。
 
 一般情况下，我们会使用 TCP 进行网络数据传输，那么我们可以看下它和 ping 的区别。
 
-![ping和普通发消息的关系](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB2.png)
+![ping和普通发消息的关系](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB2.png)
 
 ping和其他应用层软件都属于**应用层**。
 
@@ -154,7 +154,7 @@ ping和其他应用层软件都属于**应用层**。
 
 那么断网的情况下，网卡已经不工作了，ping 回环地址却一切正常，我们可以看下这种情况下的工作原理。
 
-![ping回环地址](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
+![ping回环地址](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png)
 
 从应用层到传输层再到网络层。这段路径跟ping外网的时候是几乎是一样的。到了网络层，系统会根据目的IP，在路由表中获取对应的**路由信息**，而这其中就包含选择**哪个网卡**把消息发出。
 
@@ -166,7 +166,7 @@ ping和其他应用层软件都属于**应用层**。
 
 专门处理软中断的工具人**"ksoftirqd"** （这是个**内核线程**），它在收到软中断后就会立马去链表里把消息取出，然后顺着数据链路层、网络层等层层往上传递最后给到应用程序。
 
-![工具人ksoftirqd](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%B7%A5%E5%85%B7%E4%BA%BAksoftirqd.png)
+![工具人ksoftirqd](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%B7%A5%E5%85%B7%E4%BA%BAksoftirqd.png)
 
 ping 回环地址和**通过TCP等各种协议发送数据到回环地址**都是走这条路径。整条路径从发到收，都没有经过"真网卡"。**之所以127.0.0.1叫本地回环地址，可以理解为，消息发出到这个地址上的话，就不会出网络，在本机打个转就又回来了。**所以断网，依然能 `ping` 通 `127.0.0.1`。
 
@@ -198,13 +198,13 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 
 为了验证这个说法，可以进行抓包，但结果跟上面的说法并不相同。
 
-![ping 127.0.0.1](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225434437.png)
+![ping 127.0.0.1](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210611225434437.png)
 
 <br>
 
 
 
-![ping 本机地址](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210611225140197.png)
+![ping 本机地址](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210611225140197.png)
 
 可以看到 ping 本机IP 跟 ping 回环地址一样，相关的网络数据，都是走的  **lo0**，本地回环接口，也就是前面提到的**"假网卡"**。
 
@@ -222,13 +222,13 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 
 以前第一次用 `nginx` 的时候，发现用这几个 `IP`，都能正常访问到 `nginx` 的欢迎网页。一度认为这几个 `IP` 都是一样的。
 
-![访问127.0.0.1:80](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190253656.png)
+![访问127.0.0.1:80](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210530190253656.png)
 
-![访问localhost:80](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190335350.png)
+![访问localhost:80](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210530190335350.png)
 
-![访问0.0.0.0:80](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530190410662.png)
+![访问0.0.0.0:80](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210530190410662.png)
 
-![访问本机的IP地址](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210530191958500.png)
+![访问本机的IP地址](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210530191958500.png)
 
 
 
@@ -317,7 +317,7 @@ ping: sendto: No route to host
 ###### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:【小白debug】
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
 
 
 

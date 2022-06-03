@@ -32,7 +32,7 @@ categories: "图解网络"
 
 下面是这篇文章的目录。
 
-![收到RST就一定会断开连接吗](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/收到RST就一定会断开连接吗1.png)
+![收到RST就一定会断开连接吗](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/收到RST就一定会断开连接吗1.png)
 
 <br>
 
@@ -48,7 +48,7 @@ categories: "图解网络"
 
 而接收到 RST的一方，一般会看到一个 `connection reset` 或  `connection refused` 的报错。
 
-![TCP报头RST位](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp报头RST位.png)
+![TCP报头RST位](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp报头RST位.png)
 
 <br>
 
@@ -62,11 +62,11 @@ categories: "图解网络"
 
 此时如果本端**应用层**尝试去执行 **读数据**操作，比如`recv`，应用层就会收到 **Connection reset by peer** 的报错，意思是**远端已经关闭连接**。
 
-![ResetByPeer](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/resetByPeer1.gif)
+![ResetByPeer](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/resetByPeer1.gif)
 
 如果本端**应用层**尝试去执行**写数据**操作，比如`send`，那么应用层就会收到 **Broken pipe** 的报错，意思是发送通道已经坏了。
 
-![BrokenPipe](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/brokenPipe1.gif)
+![BrokenPipe](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/brokenPipe1.gif)
 
 这两个是开发过程中很经常遇到的报错，感觉大家可以**把这篇文章放进收藏夹吃灰**了，等遇到这个问题了，再打开来擦擦灰，说不定对你会有帮助。
 
@@ -86,13 +86,13 @@ categories: "图解网络"
 
 ##### 端口未监听
 
-![TCP连接未监听的端口](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP连接未监听的端口.png)
+![TCP连接未监听的端口](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP连接未监听的端口.png)
 
 服务端`listen` 方法会创建一个`sock`放入到全局的`哈希表`中。
 
 此时客户端发起一个`connect`请求到服务端。服务端在收到数据包之后，第一时间会根据IP和端口从哈希表里去获取`sock`。
 
-![全局hash表](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/全局hash表.png)
+![全局hash表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/全局hash表.png)
 
 如果服务端执行过`listen`，就能从`全局哈希表`里拿到`sock`。
 
@@ -147,7 +147,7 @@ no_tcp_socket:
 
 一个数据包连校验都不能通过，那这个包，**多半有问题**。
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006cSBLKly1gl6b731molj306405q74a.jpg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006cSBLKly1gl6b731molj306405q74a.jpg)
 
 有可能是在发送的过程中被篡改了，又或者，可能只是一个**胡乱伪造**的数据包。
 
@@ -161,7 +161,7 @@ no_tcp_socket:
 
 <br>
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006i487Uly1fgqbcncf3gj30b40b43z0-20210908211826494.jpg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006i487Uly1fgqbcncf3gj30b40b43z0-20210908211826494.jpg)
 
 
 
@@ -181,7 +181,7 @@ no_tcp_socket:
 
 
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006m97Kgly1fxtp35bi77j315o15o4qp.jpg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006m97Kgly1fxtp35bi77j315o15o4qp.jpg)
 
 <br>
 
@@ -191,7 +191,7 @@ no_tcp_socket:
 
 比如你的服务端应用程序里，弄了个**空指针**，或者**数组越界**啥的，程序立马就崩了。
 
-![TCP监听了但崩了](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP监听了但崩了3.png)
+![TCP监听了但崩了](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP监听了但崩了3.png)
 
 这种情况跟**端口未监听**本质上类似，在服务端的应用程序**崩溃后**，原来监听的端口资源就被释放了，从效果上来看，类似于处于`CLOSED`状态。
 
@@ -203,7 +203,7 @@ no_tcp_socket:
 
 上面这张图，服务端程序崩溃后，如果客户端再有数据发送，会出现`RST`。但如果在客户端和服务端中间再加一个`nginx`，就像下图一样。
 
-![RST与502](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/RST与5021.png)
+![RST与502](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/RST与5021.png)
 
 `nginx`会作为客户端和服务端之间的"中间人角色"，负责**转发**请求和响应结果。但当服务端程序**崩溃**，比如出现**野指针或者OOM**的问题，那转发到服务器的请求，必然得不到响应，后端服务端还会返回一个`RST`给`nginx`。`nginx`在收到这个`RST`后会断开与服务端的连接，同时返回客户端一个`502`错误码。
 
@@ -221,7 +221,7 @@ no_tcp_socket:
 
 如果本端`socket`接收缓冲区**还有数据未读**，此时**提前`close()` socket**。那么本端会先把接收缓冲区的数据清空，然后给远端发一个RST。
 
-![recvbuf非空](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/recvbuf非空.gif)
+![recvbuf非空](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/recvbuf非空.gif)
 
 <br>
 
@@ -231,7 +231,7 @@ no_tcp_socket:
 
 远端已经`close()`了`socket`，此时本端还尝试发数据给远端。那么远端就会回一个RST。
 
-![close()触发TCP四次挥手](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/close()触发TCP四次挥手5-20210828083457512.png)
+![close()触发TCP四次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/close()触发TCP四次挥手5-20210828083457512.png)
 
 大家知道，TCP是**全双工通信**，意思是发送数据的同时，还可以接收数据。
 
@@ -253,7 +253,7 @@ no_tcp_socket:
 
 但**问题又来了**，网络环境这么复杂，丢包也是分分钟的事情，既然RST包不需要ACK来确认，那万一对方就是没收到RST，会怎么样？
 
-![RST丢失](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/RST丢失3.png)
+![RST丢失](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/RST丢失3.png)
 
 RST丢了，问题不大。比方说上图服务端，发了RST之后，服务端就认为连接不可用了。
 
@@ -261,7 +261,7 @@ RST丢了，问题不大。比方说上图服务端，发了RST之后，服务�
 
 而如果客户端之前**没有发数据**，但服务端的RST丢了，TCP有个keepalive机制，会定期发送探活包，这种数据包到了服务端，也会重新触发一个RST。
 
-![RST丢失后keepalive](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/RST丢失后keepalive2.png)
+![RST丢失后keepalive](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/RST丢失后keepalive2.png)
 
 
 
@@ -298,7 +298,7 @@ static bool tcp_validate_incoming()
 
 至于接收窗口是个啥，我们先看下面这个图。
 
-![接收窗口](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/接收窗口.png)
+![接收窗口](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/接收窗口.png)
 
 这里**黄色的部分**，就是指接收窗口，只要RST包的seq不在这个窗口范围内，那就会被丢弃。
 
@@ -310,7 +310,7 @@ static bool tcp_validate_incoming()
 
 正常情况下客户端服务端双方可以通过RST来断开连接。假设不做seq校验，如果这时候有不怀好意的第三方介入，构造了一个RST包，且在TCP和IP等报头都填上客户端的信息，发到服务端，那么服务端就会断开这个连接。同理也可以伪造服务端的包发给客户端。这就叫**RST攻击**。
 
-![RST攻击](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/RST攻击.png)
+![RST攻击](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/RST攻击.png)
 
 受到RST攻击时，从现象上看，客户端老感觉服务端崩了，这非常影响用户体验。
 
@@ -388,7 +388,7 @@ syn_challenge:
 
 当客户端发出一个不在合法窗口内的SYN包的时候，服务端会发一个带有正确的seq数据ACK包出来，这个ACK包叫 `challenge ack`。
 
-![challenge ack抓包](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210901085509641.png)
+![challenge ack抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210901085509641.png)
 
 上图是抓包的结果，用`scapy`随便伪造一个`seq=5`的包发到服务端（`端口9090`），服务端回复一个带有正确seq值的`challenge ack`包给客户端（`端口8888`）。
 
@@ -402,7 +402,7 @@ syn_challenge:
 
 在获得这个`challenge ack`后，攻击程序就可以以ack值为基础，在一定范围内设置seq，这样造成RST攻击的几率就大大增加了。
 
-![利用ChallengeACK的RST攻击](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/利用ChallengeACK的RST攻击.png)
+![利用ChallengeACK的RST攻击](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/利用ChallengeACK的RST攻击.png)
 
 <br>
 
@@ -464,7 +464,7 @@ TCP旁路攻击分析与重现 - https://www.cxyzjd.com/article/qq_27446553/5241
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/小白debug动图二维码-20210908204913011.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -472,7 +472,7 @@ TCP旁路攻击分析与重现 - https://www.cxyzjd.com/article/qq_27446553/5241
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点阳间的话题。就**超！开！心！**
 
-<img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
 
 
 

@@ -12,7 +12,7 @@ categories: "golang面试题"
 
 ### GM模型是什么
 
-![GM图](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GM%E5%9B%BE.png)
+![GM图](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GM%E5%9B%BE.png)
 
 
 
@@ -28,13 +28,13 @@ categories: "golang面试题"
 
 
 
-![GM模型](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GM%E6%A8%A1%E5%9E%8B.gif)
+![GM模型](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GM%E6%A8%A1%E5%9E%8B.gif)
 
 
 
 ### GMP模型是什么
 
-![GMP图](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GMP图.png)
+![GMP图](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP图.png)
 
 基于**没有什么是加一个中间层不能解决的**思路，`golang`在原有的`GM`模型的基础上加入了一个调度器`P`，可以简单理解为是在`G`和`M`中间加了个中间层。
 
@@ -44,21 +44,21 @@ categories: "golang面试题"
 
 - `GM`模型里M想要运行`G`，直接去全局队列里拿就行了；`GMP`模型里，`M`想要运行`G`，就得先获取`P`，然后从 `P` 的本地队列获取 `G`。
 
-![GMP模型](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GMP%E6%A8%A1%E5%9E%8B1.gif)
+![GMP模型](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP%E6%A8%A1%E5%9E%8B1.gif)
 
 - 新建 `G` 时，新`G`会优先加入到 `P` 的本地队列；如果本地队列满了，则会把本地队列中一半的 `G` 移动到全局队列。
 
 - `P` 的本地队列为空时，就从全局队列里去取。
 
-![GMP模型-获取全局协程队列](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GMP%E6%A8%A1%E5%9E%8B-%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8D%8F%E7%A8%8B%E9%98%9F%E5%88%97.gif)
+![GMP模型-获取全局协程队列](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP%E6%A8%A1%E5%9E%8B-%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8D%8F%E7%A8%8B%E9%98%9F%E5%88%97.gif)
 
 - 如果全局队列为空时，`M` 会从其他 `P` 的本地队列**偷（stealing）一半G**放到自己 `P` 的本地队列。
 
-![GMP模型-stealing](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GMP%E6%A8%A1%E5%9E%8B-stealing2.gif)
+![GMP模型-stealing](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP%E6%A8%A1%E5%9E%8B-stealing2.gif)
 
 - `M` 运行 `G`，`G` 执行之后，`M` 会从 `P` 获取下一个 `G`，不断重复下去。
 
-![GMP模型-循环执行](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/GMP%E6%A8%A1%E5%9E%8B4.gif)
+![GMP模型-循环执行](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP%E6%A8%A1%E5%9E%8B4.gif)
 
 
 
@@ -104,7 +104,7 @@ categories: "golang面试题"
 ###### 别说了，关注公众号:【小白debug】，一起在知识的海洋里呛水吧
 
 关注公众号:【小白debug】
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
 
 
 

@@ -40,10 +40,10 @@ custom_file_path:
 # ---------------------------------------------------------------
 
 favicon:
-  small: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png
-  medium: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/favicon.png
-  apple_touch_icon: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png
-  safari_pinned_tab: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaaa%E5%A4%B4%E5%83%8F.png
+  small: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/favicon.png
+  medium: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/favicon.png
+  apple_touch_icon: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/aaaaaaa%E5%A4%B4%E5%83%8F.png
+  safari_pinned_tab: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/aaaaaaa%E5%A4%B4%E5%83%8F.png
   #android_manifest: /images/manifest.json
   #ms_browserconfig: /images/browserconfig.xml
 
@@ -163,7 +163,7 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-  url: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/aaaaaa%E5%A4%B4%E5%83%8F.png
+  url: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/aaaaaa%E5%A4%B4%E5%83%8F.png
   # If true, the avatar will be dispalyed in circle.
   rounded: true
   # If true, the avatar will be rotated with the cursor.
@@ -275,8 +275,8 @@ reward_settings:
   #comment: Donate comment here.
 
 reward:
-  wechatpay: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/13951632633251_.pic_hd.jpg
-  alipay: https://cdn.jsdelivr.net/gh/xiaobaiTech/image/13941632633250_.pic_hd.jpg
+  wechatpay: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/13951632633251_.pic_hd.jpg
+  alipay: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/13941632633250_.pic_hd.jpg
   #paypal: /images/paypal.png
   #bitcoin: /images/bitcoin.png
 

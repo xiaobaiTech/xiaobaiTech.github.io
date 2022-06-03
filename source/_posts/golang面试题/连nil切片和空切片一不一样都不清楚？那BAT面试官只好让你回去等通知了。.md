@@ -5,7 +5,7 @@ tags:
 categories: "golang面试题"
 ---
 
-![img](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/640-20210524195843699.png)
+![img](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/640-20210524195843699.png)
 
 <!-- more -->
 
@@ -59,10 +59,10 @@ type SliceHeader struct {
 ```
 
 - nil切片和空切片最大的区别在于**指向的数组引用地址是不一样的**。
-  ![img](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/640.png)
+  ![img](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/640.png)
 
 - **所有的空切片指向的数组引用地址都是一样的**
-  ![img](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/640-20210524195829623.png)
+  ![img](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/640-20210524195829623.png)
 
 
 

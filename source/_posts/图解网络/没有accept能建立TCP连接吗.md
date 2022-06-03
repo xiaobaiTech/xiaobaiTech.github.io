@@ -8,7 +8,7 @@ categories: "图解网络"
 
 
 
-![握手建立连接流程](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%8F%A1%E6%89%8B%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E6%B5%81%E7%A8%8B3.gif)
+![握手建立连接流程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%8F%A1%E6%89%8B%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E6%B5%81%E7%A8%8B3.gif)
 
 上面这个动图，是我们平时客户端和服务端建立连接时的代码流程。
 
@@ -74,7 +74,7 @@ int main()
 
 其实只要在执行`accept()` 之前执行一个 `sleep(20)`，然后立刻执行客户端相关的方法，同时抓个包，就能得出结论。
 
-![不执行accept时抓包结果](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210917233531475.png)
+![不执行accept时抓包结果](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210917233531475.png)
 
 从抓包结果看来，**就算不执行accept()方法，三次握手照常进行，并顺利建立连接。**
 
@@ -94,17 +94,17 @@ int main()
 
 我们先看面试八股文的老股，三次握手。
 
-![TCP三次握手](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/TCP三次握手修正版2.png)
+![TCP三次握手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP三次握手修正版2.png)
 
 服务端代码，对socket执行bind方法可以绑定监听端口，然后执行`listen方法`后，就会进入监听（`LISTEN`）状态。内核会为每一个处于`LISTEN`状态的`socket` 分配两个队列，分别叫**半连接队列和全连接队列**。
 
-![每个listen Socket都有一个全连接和半连接队列](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%AF%8F%E4%B8%AAlistenSocket.png)
+![每个listen Socket都有一个全连接和半连接队列](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%AF%8F%E4%B8%AAlistenSocket.png)
 
 <br>
 
 #### 半连接队列、全连接队列是什么
 
-![半连接队列和全连接队列](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E5%92%8C%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%973.png)
+![半连接队列和全连接队列](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E5%92%8C%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%973.png)
 
 - **半连接队列（SYN队列）**，服务端收到**第一次握手**后，会将`sock`加入到这个队列中，队列内的`sock`都处于`SYN_RECV` 状态。
 
@@ -120,7 +120,7 @@ int main()
 
 虽然都叫**队列**，但其实**全连接队列（icsk_accept_queue）是个链表**，而**半连接队列（syn_table）是个哈希表**。
 
-![半连接全连接队列的内部结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%8D%8A%E8%BF%9E%E6%8E%A5%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png)
+![半连接全连接队列的内部结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8D%8A%E8%BF%9E%E6%8E%A5%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png)
 
 <br>
 
@@ -218,13 +218,13 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 - `tcp_abort_on_overflow`设置为 0，全连接队列满了之后，会丢弃这个第三次握手ACK包，并且开启定时器，重传第二次握手的SYN+ACK，如果重传超过一定限制次数，还会把对应的**半连接队列里的连接**给删掉。
 
-![tcp_abort_on_overflow为0](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp_abort_on_overflow%E4%B8%BA0.png)
+![tcp_abort_on_overflow为0](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp_abort_on_overflow%E4%B8%BA0.png)
 
 - `tcp_abort_on_overflow`设置为 1，全连接队列满了之后，就直接发RST给客户端，效果上看就是连接断了。
 
 这个现象是不是很熟悉，服务端**端口未监听**时，客户端尝试去连接，服务端也会回一个RST。这两个情况长一样，所以客户端这时候收到RST之后，其实无法区分到底是**端口未监听**，还是**全连接队列满了**。
 
-![tcp_abort_on_overflow为1](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp_abort_on_overflow%E4%B8%BA1.png)
+![tcp_abort_on_overflow为1](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp_abort_on_overflow%E4%B8%BA1.png)
 
 
 
@@ -238,7 +238,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 所谓**SYN Flood攻击**，可以简单理解为，攻击方模拟客户端疯狂发第一次握手请求过来，在服务端憨憨地回复第二次握手过去之后，客户端死活不发第三次握手过来，这样做，可以把服务端半连接队列打满，从而导致正常连接不能正常进来。
 
-![syn攻击](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/syn%E6%94%BB%E5%87%BB.png)
+![syn攻击](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/syn%E6%94%BB%E5%87%BB.png)
 
 
 
@@ -253,7 +253,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 当它被设置为1的时候，客户端发来**第一次握手**SYN时，服务端**不会将其放入半连接队列中**，而是直接生成一个`cookies`，这个`cookies`会跟着**第二次握手**，发回客户端。客户端在发**第三次握手**的时候带上这个`cookies`，服务端验证到它就是当初发出去的那个，就会建立连接并放入到全连接队列中。可以看出整个过程不再需要半连接队列的参与。
 
-![tcp_syncookies=1](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E5%BC%80%E5%90%AFtcp_syncookies.drawio.png)
+![tcp_syncookies=1](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%BC%80%E5%90%AFtcp_syncookies.drawio.png)
 
 <br>
 
@@ -265,7 +265,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 实际上`cookies`并不会有一个专门的队列保存，它是通过**通信双方的IP地址端口、时间戳、MSS**等信息进行**实时计算**的，保存在**TCP报头**的`seq`里。
 
-![tcp报头_seq的位置](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/tcp%E6%8A%A5%E5%A4%B4_seq%E7%9A%84%E4%BD%8D%E7%BD%AE.png)
+![tcp报头_seq的位置](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp%E6%8A%A5%E5%A4%B4_seq%E7%9A%84%E4%BD%8D%E7%BD%AE.png)
 
 当服务端收到客户端发来的第三次握手包时，会通过seq还原出**通信双方的IP地址端口、时间戳、MSS**，验证通过则建立连接。
 
@@ -283,7 +283,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 这种通过构造大量`ACK包`去消耗服务端资源的攻击，叫**ACK攻击**，受到攻击的服务器可能会因为**CPU资源耗尽**导致没能响应正经请求。
 
-![ack攻击](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ack%E6%94%BB%E5%87%BB2.gif)
+![ack攻击](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ack%E6%94%BB%E5%87%BB2.gif)
 
 
 
@@ -372,7 +372,7 @@ TCP同时打开的情况也类似，只不过从一个客户端变成了两个�
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/小白debug动图二维码-20210908204913011.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -380,7 +380,7 @@ TCP同时打开的情况也类似，只不过从一个客户端变成了两个�
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点阳间的话题。就**超！开！心！**
 
-<img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
 
 
 

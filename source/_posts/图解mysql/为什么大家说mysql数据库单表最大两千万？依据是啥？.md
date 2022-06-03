@@ -7,7 +7,6 @@ categories: "图解mysql"
 
 
 
-
 <br>
 
 故事从好多年前说起。
@@ -103,8 +102,8 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 假设我们有这么一张user数据表。
 
-![user表](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png)
-<!-- more -->
+![user表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png)
+
 其中id是**唯一主键**。
 
 这看起来的一行行数据，为了方便，我们后面就叫它们**record**吧。
@@ -117,7 +116,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 类似于下面这样。
 
-![ibd文件内部有大量的页](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/ibd%E6%96%87%E4%BB%B6%E5%86%85%E9%83%A8%E6%9C%89%E5%A4%A7%E9%87%8F%E7%9A%84%E9%A1%B5.png)
+![ibd文件内部有大量的页](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ibd%E6%96%87%E4%BB%B6%E5%86%85%E9%83%A8%E6%9C%89%E5%A4%A7%E9%87%8F%E7%9A%84%E9%A1%B5.png)
 
 我们把视角聚焦一下，放到页上面。
 
@@ -129,7 +128,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 那剩下的空间，才是用来放我们的record的。而record如果行数特别多的话，进入到页内时挨个遍历，效率也不太行，所以为这些数据生成了一个**页目录**，具体实现细节不重要。只需要知道，它可以通过**二分查找**的方式将查找效率**从O(n) 变成O(lgn)**。
 
-![页结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png)<br>
+![页结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png)<br>
 
 #### 从页到索引
 
@@ -141,7 +140,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 但为了跟之前的数据页进行区分。数据页里加入了**页层级（page level）**的信息，从0开始往上算。于是页与页之间就有了**上下层级**的概念，就像下面这样。
 
-![两层B+树结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E4%B8%A4%E5%B1%82B+%E6%A0%91%E7%BB%93%E6%9E%84.png)
+![两层B+树结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/%E4%B8%A4%E5%B1%82B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%84.png)
 
 突然页跟页之间看起来就像是一棵倒过来的树了。也就是我们常说的**B+树**索引。
 
@@ -149,7 +148,9 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 上面展示的是**两层**的树，如果数据变多了，我们还可以再通过类似的方法，再往上构建一层。就成了**三层**的树。
 
-![三层B+树结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/B+%E6%A0%91%E7%BB%93%E6%9E%841.png)
+![B加树结构7.drawio](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%847.drawio.png)
+
+
 
 <br>
 
@@ -157,7 +158,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 比方说我们想要查找行数据5。会先从顶层页的record们入手。**record里包含了主键id和页号（页地址）**。看下图黄色的箭头，向左最小id是1，向右最小id是7。那id=5的数据如果存在，那必定在左边箭头。于是顺着的record的页地址就到了`6号`数据页里，再判断id=5>4，所以肯定在右边的数据页里，于是加载`105号`数据页。在数据页里找到id=5的数据行，完成查询。
 
-![B+树查询过程](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/B+树查询过程.png)
+![B+树查询过程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png)
 
 另外需要注意的是，上面的页的页号并不是连续的，它们在磁盘里也不一定是挨在一起的。
 
@@ -184,7 +185,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 - 叶子节点内能容纳的record数量为`y`
 - B+树的层数为`z`
 
-![总行数的计算方法](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/%E6%80%BB%E8%A1%8C%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95.png)
+![总行数的计算方法](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%80%BB%E8%A1%8C%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95.png)
 
 那这棵B+树放的**行数据总量**等于 `(x ^ (z-1)) * y`。
 
@@ -196,7 +197,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 我们回去看数据页的结构。
 
-![页结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/页结构.png)
+![页结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/页结构.png)
 
 非叶子节点里主要放索引查询相关的数据，放的是主键和指向页号。
 
@@ -262,7 +263,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 于是，B树的结构就类似这样
 
-![B树结构](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/B%E6%A0%91%E7%BB%93%E6%9E%84.png)
+![B树结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/B%E6%A0%91%E7%BB%93%E6%9E%84.png)
 
 B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，掐头去尾每页剩15kb，并且一条数据表行数据还是占1kb，就算不考虑各种页指针的情况下，也只能放个15条数据。**数据页扇出明显变少了。**
 
@@ -318,7 +319,7 @@ B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，
 
 可恶，这该死的毒瘤竟然有些"知识渊博"。
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/p34066865-20220327102515813.jpg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/p34066865-20220327102515813.jpg)
 
 <br>
 
@@ -326,7 +327,7 @@ B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，
 
 我有个不成熟的请求。
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
 
 <br>
 
@@ -345,7 +346,7 @@ B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/小白debug动图二维码-20210908204913011.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -353,9 +354,9 @@ B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://cdn.jsdelivr.net/gh/xiaobaiTech/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
 
-![](https://cdn.jsdelivr.net/gh/xiaobaiTech/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
+![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
 
 
