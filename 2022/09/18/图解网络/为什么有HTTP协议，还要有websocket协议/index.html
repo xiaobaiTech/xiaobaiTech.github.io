@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。    平时我们打开网页，比如购物网站某宝。都是点一下列表商品，跳转一下网页就到了商品详情。 从HTTP协议的角度来看，就是点一下网页上的某个按钮，前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么有HTTP协议，还要有websocket协议">
+<meta property="og:url" content="https://xiaobaidebug.top/2022/09/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%BF%98%E8%A6%81%E6%9C%89websocket%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。    平时我们打开网页，比如购物网站某宝。都是点一下列表商品，跳转一下网页就到了商品详情。 从HTTP协议的角度来看，就是点一下网页上的某个按钮，前">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220827161615614.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E5%88%9B%E5%BB%BA%E8%A7%92%E8%89%B2%E9%A1%B5%E9%9D%A2.jpeg">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E4%BD%BF%E7%94%A8HTTP%E5%AE%9A%E6%97%B6%E8%BD%AE%E8%AF%A23.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220824090204629.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E9%95%BF%E8%BD%AE%E8%AF%A2.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220824085627057.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/RocketMQ%E7%9A%84%E6%B6%88%E8%B4%B9%E8%80%85%E9%80%9A%E8%BF%87%E9%95%BF%E8%BD%AE%E8%AF%A2%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/websocket%E5%9C%A8%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/base64%E8%BD%AC%E4%B8%BA%E6%96%B0%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E5%AF%B9%E6%AF%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%94%9F%E6%88%90%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E5%BB%BA%E7%AB%8Bwebsocket%E8%BF%9E%E6%8E%A5.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220825222212533.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%BB%98%E5%9B%BEddddd.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220825222810052.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663378093150.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/HTTP%E5%92%8Cwebsocket%E7%9A%84%E5%85%B3%E7%B3%BB.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/websocket%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F2.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220826101644204.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%9C%A80%E5%88%B0125%E4%B9%8B%E9%97%B42.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%9C%A8126%E5%88%B065535%E4%B9%8B%E9%97%B42.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E65536%E7%9A%84%E6%83%85%E5%86%B5.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/0bec52deb6276987.jpeg">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E9%95%BF%E5%BA%A6%E6%A0%87%E5%BF%976.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/websocket%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162506224.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
+<meta property="article:published_time" content="2022-09-18T14:57:55.000Z">
+<meta property="article:modified_time" content="2022-10-30T02:50:19.409Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image-20220827161615614.png">
+
+<link rel="canonical" href="https://xiaobaidebug.top/2022/09/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%BF%98%E8%A6%81%E6%9C%89websocket%E5%8D%8F%E8%AE%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>为什么有HTTP协议，还要有websocket协议 | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/09/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%BF%98%E8%A6%81%E6%9C%89websocket%E5%8D%8F%E8%AE%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          为什么有HTTP协议，还要有websocket协议
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-18 22:57:55" itemprop="dateCreated datePublished" datetime="2022-09-18T22:57:55+08:00">2022-09-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-30 10:50:19" itemprop="dateModified" datetime="2022-10-30T10:50:19+08:00">2022-10-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+</blockquote>
+<br>
+
+<p>平时我们打开网页，比如购物网站某宝。都是点一下<strong>列表商品</strong>，跳转一下网页就到了<strong>商品详情</strong>。</p>
+<p>从HTTP协议的角度来看，就是点一下网页上的某个按钮，<strong>前端发一次HTTP请求，网站返回一次HTTP响应</strong>。</p>
+<p>这种由客户端主动请求，服务器响应的方式也满足大部分网页的功能场景。</p>
+<p>但有没有发现，这种情况下，服务器从来就不会<strong>主动</strong>给客户端发一次消息。</p>
+<p>就像你喜欢的女生从来不会主动找你一样。</p>
+<br>
+
+<p>但如果现在，你在刷网页的时候<strong>右下角</strong>突然弹出一个<strong>小广告</strong>，提示你【<strong>一个人在家偷偷才能玩哦</strong>】。</p>
+<p><strong>求知，好学，勤奋</strong>，这些刻在你DNA里的东西都动起来了。</p>
+<p>你点开后发现。</p>
+<p>长相平平无奇的古某提示你”道士9条狗，全服横着走”。</p>
+<p>影帝某辉老师跟你说”系兄弟就来砍我”。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220827161615614.png"></p>
+<p>来都来了，你就选了个角色进到了游戏界面里。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E5%88%9B%E5%BB%BA%E8%A7%92%E8%89%B2%E9%A1%B5%E9%9D%A2.jpeg" alt="创建角色页面"></p>
+<p>这时候，上来就是一个小怪，从远处走来，然后疯狂拿木棒子抽你。</p>
+<p><strong>你全程没点任何一次鼠标</strong>。服务器就自动将怪物的移动数据和攻击数据源源不断发给你了。</p>
+<p>这….太暖心了。</p>
+<p>感动之余，问题就来了，</p>
+<p>像这种<strong>看起来服务器主动发消息给客户端的场景</strong>，是怎么做到的？</p>
+<p>在真正回答这个问题之前，我们先来聊下一些相关的知识背景。</p>
+<br>
+
+<h3 id="使用HTTP不断轮询"><a href="#使用HTTP不断轮询" class="headerlink" title="使用HTTP不断轮询"></a>使用HTTP不断轮询</h3><p>其实问题的痛点在于，<strong>怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。</strong></p>
+<p>最常见的解决方案是，<strong>网页的前端代码里不断定时发HTTP请求到服务器，服务器收到请求后给客户端响应消息。</strong></p>
+<p>这其实时一种<strong>伪</strong>服务器推的形式。</p>
+<p>它其实并不是服务器主动发消息到客户端，而是客户端自己不断偷偷请求服务器，只是用户无感知而已。</p>
+<p>用这种方式的场景也有很多，最常见的就是<strong>扫码登录</strong>。</p>
+<p>比如某信公众号平台，登录页面二维码出现之后，<strong>前端</strong>网页根本不知道用户扫没扫，于是不断去向<strong>后端</strong>服务器询问，看有没有人扫过这个码。而且是以大概1到2秒的间隔去不断发出请求，这样可以保证用户在扫码后能在1到2s内得到及时的反馈，不至于<strong>等太久</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E4%BD%BF%E7%94%A8HTTP%E5%AE%9A%E6%97%B6%E8%BD%AE%E8%AF%A23.drawio.png" alt="使用HTTP定时轮询"></p>
+<p>但这样，会有两个比较明显的问题</p>
+<ul>
+<li>当你打开F12页面时，你会发现满屏的HTTP请求。虽然很小，但这其实也消耗带宽，同时也会增加下游服务器的负担。</li>
+<li>最坏情况下，用户在扫码后，需要等个1~2s，正好才触发下一次http请求，然后才跳转页面，用户会感到<strong>明显的卡顿</strong>。</li>
+</ul>
+<p>使用起来的体验就是，二维码出现后，手机扫一扫，然后在手机上点个确认，这时候<strong>卡顿等个1~2s</strong>，页面才跳转。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220824090204629.png" alt="不断轮询查看是否有扫码"></p>
+<p>那么问题又来了，<strong>有没有更好的解决方案？</strong></p>
+<p>有，而且实现起来成本还非常低。</p>
+<br>
+
+<h3 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h3><p>我们知道，HTTP请求发出后，一般会给服务器留一定的时间做响应，比如3s，规定时间内没返回，就认为是超时。</p>
+<p>如果我们的HTTP请求<strong>将超时设置的很大</strong>，比如30s，<strong>在这30s内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。</strong></p>
+<p>这样就减少了HTTP请求的个数，并且由于大部分情况下，用户都会在某个30s的区间内做扫码操作，所以响应也是及时的。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E9%95%BF%E8%BD%AE%E8%AF%A2.drawio.png" alt="长轮询"></p>
+<p>比如，某度云网盘就是这么干的。所以你会发现一扫码，手机上点个确认，电脑端网页就<strong>秒跳转</strong>，体验很好。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220824085627057.png" alt="长轮询的方式来替代"></p>
+<p>真一举两得。</p>
+<p>像这种发起一个请求，在较长时间内等待服务器响应的机制，就是所谓的<strong>长轮询机制</strong>。我们常用的消息队列RocketMQ中，消费者去取数据时，也用到了这种方式。</p>
+<p><img src="https://cdn.xiaobaidebug.top/RocketMQ%E7%9A%84%E6%B6%88%E8%B4%B9%E8%80%85%E9%80%9A%E8%BF%87%E9%95%BF%E8%BD%AE%E8%AF%A2%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE.drawio.png" alt="RocketMQ的消费者通过长轮询获取数据"></p>
+<p>像这种，在用户不感知的情况下，服务器将数据推送给浏览器的技术，就是所谓的<strong>服务器推送</strong>技术，它还有个毫不沾边的英文名，<strong>comet</strong>技术，大家听过就好。</p>
+<br>
+
+<p>上面提到的两种解决方案，本质上，其实还是客户端主动去取数据。</p>
+<p>对于像扫码登录这样的<strong>简单场景</strong>还能用用。</p>
+<p>但如果是网页游戏呢，游戏一般会有大量的数据需要从服务器主动推送到客户端。</p>
+<p>这就得说下<strong>websocket</strong>了。</p>
+<br>
+
+<h3 id="websocket是什么"><a href="#websocket是什么" class="headerlink" title="websocket是什么"></a>websocket是什么</h3><p>我们知道TCP连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
+<p>而现在使用最广泛的<code>HTTP1.1</code>，也是基于TCP协议的，<strong>同一时间里</strong>，客户端和服务器<strong>只能有一方主动</strong>发数据，这就是所谓的<strong>半双工</strong>。</p>
+<p>也就是说，好好的全双工TCP，被HTTP用成了半双工。</p>
+<p>为什么？</p>
+<p>这是由于HTTP协议设计之初，考虑的是看看网页文本的场景，能做到<strong>客户端发起请求再由服务器响应</strong>，就够了，根本就没考虑网页游戏这种，客户端和服务器之间都要互相主动发大量数据的场景。</p>
+<p>所以为了更好的支持这样的场景，我们需要另外一个<strong>基于TCP的新协议</strong>。</p>
+<p>于是新的应用层协议<strong>websocket</strong>就被设计出来了。</p>
+<p>大家别被这个名字给带偏了。虽然名字带了个socket，但其实socket和websocket之间，就跟雷峰和雷峰塔一样，二者接近<strong>毫无关系</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/websocket%E5%9C%A8%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.drawio.png" alt="websocket在四层网络协议中的位置"></p>
+<br>
+
+<h3 id="怎么建立websocket连接"><a href="#怎么建立websocket连接" class="headerlink" title="怎么建立websocket连接"></a>怎么建立websocket连接</h3><p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是<strong>HTTP协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的<strong>websocket协议</strong>。</p>
+<p>为了兼容这些使用场景。浏览器在<strong>TCP三次握手</strong>建立连接之后，都<strong>统一使用HTTP协议</strong>先进行一次通信。</p>
+<ul>
+<li>如果此时是<strong>普通的HTTP请求</strong>，那后续双方就还是老样子继续用普通HTTP协议进行交互，这点没啥疑问。</li>
+<li>如果这时候是<strong>想建立websocket连接</strong>，就会在HTTP请求里带上一些<strong>特殊的header头</strong>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Connection: Upgrade</span><br><span class="line">Upgrade: websocket</span><br><span class="line">Sec-WebSocket-Key: T2a6wZlAwhgQNqruZ2YUyg==\r\n</span><br></pre></td></tr></table></figure>
+
+<p>这些header头的意思是，浏览器想<strong>升级协议（Connection: Upgrade）</strong>，并且<strong>想升级成websocket协议（Upgrade: websocket）</strong>。</p>
+<p>同时带上一段<strong>随机生成的base64码（Sec-WebSocket-Key）</strong>，发给服务器。</p>
+<p>如果服务器正好支持升级成websocket协议。就会走websocket握手流程，同时根据客户端生成的base64码，用某个<strong>公开的</strong>算法变成另一段字符串，放在HTTP响应的 <code>Sec-WebSocket-Accept</code> 头里，同时带上<code>101状态码</code>，发回给浏览器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 101 Switching Protocols\r\n</span><br><span class="line">Sec-WebSocket-Accept: iBJKv/ALIW2DobfoA4dmr3JHBCY=\r\n</span><br><span class="line">Upgrade: websocket\r\n</span><br><span class="line">Connection: Upgrade\r\n</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>http状态码=200（正常响应）的情况，大家见得多了。101确实不常见，它其实是指<strong>协议切换</strong>。</p>
+</blockquote>
+<p><img src="https://cdn.xiaobaidebug.top/base64%E8%BD%AC%E4%B8%BA%E6%96%B0%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2.drawio.png" alt="base64转为新的字符串"></p>
+<p>之后，浏览器也用同样的<strong>公开算法</strong>将<code>base64码</code>转成另一段字符串，如果这段字符串跟服务器传回来的<strong>字符串一致</strong>，那验证通过。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E5%AF%B9%E6%AF%94%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%94%9F%E6%88%90%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2.drawio.png" alt="对比客户端和服务端生成的字符串"></p>
+<p>就这样经历了一来一回两次HTTP握手，websocket就建立完成了，后续双方就可以使用webscoket的数据格式进行通信了。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E5%BB%BA%E7%AB%8Bwebsocket%E8%BF%9E%E6%8E%A5.drawio.png" alt="建立websocket连接.drawio"></p>
+<br>
+
+<h3 id="websocket抓包"><a href="#websocket抓包" class="headerlink" title="websocket抓包"></a>websocket抓包</h3><p>我们可以用wireshark抓个包，实际看下数据包的情况。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220825222212533.png" alt="客户端请求升级为websocket"></p>
+<p>上面这张图，注意画了红框的第<code>2445</code>行报文，是websocket的<strong>第一次握手</strong>，意思是发起了一次带有<code>特殊Header</code>的HTTP请求。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%BB%98%E5%9B%BEddddd.drawio.png" alt="服务器同意升级为websocket协议"></p>
+<p>上面这个图里画了红框的<code>4714</code>行报文，就是服务器在得到第一次握手后，响应的<strong>第二次握手</strong>，可以看到这也是个HTTP类型的报文，返回的状态码是101。同时可以看到返回的报文header中也带有各种<code>websocket</code>相关的信息，比如<code>Sec-WebSocket-Accept</code>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220825222810052.png" alt="两次HTTP请求之后正式使用websocket通信"></p>
+<p>上面这张图就是全貌了，从截图上的注释可以看出，websocket和HTTP一样都是基于TCP的协议。经历了三次TCP握手之后，利用HTTP协议升级为websocket协议。</p>
+<p>你在网上可能会看到一种说法：”websocket是基于HTTP的新协议”，<strong>其实这并不对</strong>，因为websocket只有在建立连接时才用到了HTTP，<strong>升级完成之后就跟HTTP没有任何关系了</strong>。</p>
+<p>这就好像你喜欢的女生通过你要到了你大学室友的微信，然后他们自己就聊起来了。你能说这个女生是通过你去跟你室友沟通的吗？不能。你跟HTTP一样，都只是个<strong>工具人</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663378093150.png"></p>
+<p>这就有点”<strong>借壳生蛋</strong>“的那意思。</p>
+<p><img src="https://cdn.xiaobaidebug.top/HTTP%E5%92%8Cwebsocket%E7%9A%84%E5%85%B3%E7%B3%BB.drawio.png" alt="HTTP和websocket的关系"></p>
+<br>
+
+<h3 id="websocket的消息格式"><a href="#websocket的消息格式" class="headerlink" title="websocket的消息格式"></a>websocket的消息格式</h3><p>上面提到在完成协议升级之后，两端就会用webscoket的数据格式进行通信。</p>
+<p>数据包在websocket中被叫做<strong>帧</strong>。</p>
+<p>我们来看下它的数据格式长什么样子。</p>
+<p><img src="https://cdn.xiaobaidebug.top/websocket%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F2.drawio.png" alt="websocket报文格式"></p>
+<p>这里面字段很多，但我们只需要关注下面这几个。</p>
+<p><strong>opcode字段</strong>：这个是用来标志这是个<strong>什么类型</strong>的数据帧。比如。</p>
+<ul>
+<li>等于1时是指text类型（<code>string</code>）的数据包</li>
+<li>等于2是二进制数据类型（<code>[]byte</code>）的数据包</li>
+<li>等于8是关闭连接的信号</li>
+</ul>
+<p><strong>payload字段</strong>：存放的是我们<strong>真正想要传输的数据的长度</strong>，单位是<strong>字节</strong>。比如你要发送的数据是<code>字符串&quot;111&quot;</code>，那它的长度就是<code>3</code>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image-20220826101644204.png"></p>
+<p>另外，可以看到，我们存放<strong>payload长度的字段有好几个</strong>，我们既可以用最前面的<code>7bit</code>, 也可以用后面的<code>7+16bit或7+64bit。</code></p>
+<p>那么问题就来了。</p>
+<p>我们知道，在数据层面，大家都是01二进制流。我怎么知道<strong>什么情况下应该读7bit，什么情况下应该读7+16bit呢？</strong></p>
+<p>websocket会用最开始的7bit做标志位。不管接下来的数据有多大，都<strong>先读最先的7个bit</strong>，根据它的取值决定还要不要再读个16bit或64bit。</p>
+<ul>
+<li>如果<code>最开始的7bit</code>的值是 0~125，那么它就表示了 <strong>payload 全部长度</strong>，只读最开始的<code>7个bit</code>就完事了。</li>
+</ul>
+<p><img src="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%9C%A80%E5%88%B0125%E4%B9%8B%E9%97%B42.png" alt="payload长度在0到125之间"></p>
+<ul>
+<li>如果是<code>126（0x7E）</code>。那它表示payload的长度范围在 <code>126~65535</code> 之间，接下来还需要<strong>再读16bit</strong>。这16bit会包含payload的真实长度。</li>
+</ul>
+<p><img src="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%9C%A8126%E5%88%B065535%E4%B9%8B%E9%97%B42.png" alt="payload长度在126到65535之间"></p>
+<ul>
+<li>如果是<code>127（0x7F）</code>。那它表示payload的长度范围<code>&gt;=65536</code>，接下来还需要<strong>再读64bit</strong>。这64bit会包含payload的长度。这能放2的64次方byte的数据，换算一下好多个TB，肯定够用了。</li>
+</ul>
+<p><img src="https://cdn.xiaobaidebug.top/payload%E9%95%BF%E5%BA%A6%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E65536%E7%9A%84%E6%83%85%E5%86%B5.png" alt="payload长度大于等于65536的情况"></p>
+<p><strong>payload data字段</strong>：这里存放的就是真正要传输的数据，在知道了上面的payload长度后，就可以根据这个值去截取对应的数据。</p>
+<p>大家有没有发现一个小细节，websocket的数据格式也是  <strong>数据头（内含payload长度） + payload data</strong> 的形式。</p>
+<p><img src="https://cdn.xiaobaidebug.top/0bec52deb6276987.jpeg"></p>
+<p>之前写的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7121882245605883934">《既然有HTTP协议，为什么还要有RPC》</a>提到过，TCP协议本身就是全双工，但直接使用<strong>纯裸TCP</strong>去传输数据，会有<strong>粘包</strong>的”问题”。为了解决这个问题，上层协议一般会用<strong>消息头+消息体</strong>的格式去重新包装要发的数据。</p>
+<p>而<strong>消息头</strong>里一般含有<strong>消息体的长度</strong>，通过这个长度可以去截取真正的消息体。</p>
+<p>HTTP协议和大部分RPC协议，以及我们今天介绍的websocket协议，都是这样设计的。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E9%95%BF%E5%BA%A6%E6%A0%87%E5%BF%976.drawio.png" alt="消息边界长度标志"></p>
+<br>
+
+<h3 id="websocket的使用场景"><a href="#websocket的使用场景" class="headerlink" title="websocket的使用场景"></a>websocket的使用场景</h3><p>websocket完美继承了TCP协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
+<p>回到文章开头的问题，在使用websocket协议的网页游戏里，怪物移动以及攻击玩家的行为是<strong>服务器逻辑</strong>产生的，对玩家产生的伤害等数据，都需要由<strong>服务器主动发送给客户端</strong>，客户端获得数据后展示对应的效果。</p>
+<p><img src="https://cdn.xiaobaidebug.top/websocket%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.drawio.png" alt="websocket的使用场景"></p>
+<br>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>TCP协议本身是<strong>全双工</strong>的，但我们最常用的HTTP1.1，虽然是基于TCP的协议，但它是<strong>半双工</strong>的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的websocket协议。</li>
+<li>在HTTP1.1里。只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用<strong>定时轮询或者长轮询</strong>的方式实现<strong>服务器推送</strong>(comet)的效果。</li>
+<li>对于客户端和服务端之间需要频繁交互的复杂场景，比如网页游戏，都可以考虑使用websocket协议。</li>
+<li>websocket和socket几乎没有任何关系，只是叫法相似。</li>
+<li>正因为各个浏览器都支持HTTP协议，所以websocket会先利用HTTP协议加上一些特殊的header头进行握手升级操作，升级成功后就跟HTTP没有任何关系了，之后就用websocket的数据格式进行收发数据。</li>
+</ul>
+<hr>
+<br>
+
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<p>我有个不成熟的请求。</p>
+<img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
+
+<br>
+
+<p><strong>离开广东好长时间了，好久没人叫我靓仔了。</strong></p>
+<p>大家可以在<strong>评论区</strong>里，叫我一靓仔吗？</p>
+<p>我这么善良质朴的愿望，能被满足吗？</p>
+<p>如果实在叫不出口的话，能帮我<strong>点下关注</strong>和右下角的<strong>点赞+在看</strong>吗？</p>
+<br>
+
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png"></p>
+<br>
+
+<p>不满足于在留言区说骚话？</p>
+<p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就<strong>超！开！心！</strong></p>
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
+
+<p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
+<br>
+
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%83%BDping%E9%80%9A%EF%BC%8C%E5%B0%B1%E4%BB%A3%E8%A1%A8TCP%E4%B8%80%E5%AE%9A%E8%83%BD%E8%BF%9E%E9%80%9A%E5%90%97%EF%BC%9F/" rel="prev" title="能ping通，TCP就一定能连通吗？">
+      <i class="fa fa-chevron-left"></i> 能ping通，TCP就一定能连通吗？
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/17/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/UDP%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94TCP%E5%BF%AB%E5%90%97/" rel="next" title="动图图解 | UDP就一定比TCP快吗？">
+      动图图解 | UDP就一定比TCP快吗？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8HTTP%E4%B8%8D%E6%96%AD%E8%BD%AE%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">使用HTTP不断轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E8%BD%AE%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">长轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">websocket是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%BB%BA%E7%AB%8Bwebsocket%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">怎么建立websocket连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket%E6%8A%93%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">websocket抓包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket%E7%9A%84%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">websocket的消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.</span> <span class="nav-text">websocket的使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">9.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">9.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3329955fccef6fbcdea8',
+      clientSecret: 'fa9688ca19b34fd14615a5cc564222f4a7056d07',
+      repo        : 'gitTalk',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : '5352297a7029a18b8ba21271efab3b0e',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

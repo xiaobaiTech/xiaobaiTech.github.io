@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="我们先来聊聊你这大半年都做了哪些事情吧。   你做的这个事情，业务价值是什么？   那你了解这个事情对业务的收益是什么吗？   你了解后续业务规划是怎么样的吗？   你对业务的规划有什么自己的想法吗？   ok，看得出来你对业务的收益和规划都比较清晰，所以你完成了这些需求，也取得了不少结果。 但这是业务需求本身的价值，你正好分到了一个容易取得结果的需求，但这是业务属性决定的，你不能说A需求业">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读者提问：你听说过pip协议吗？该不该签？">
+<meta property="og:url" content="https://xiaobaidebug.top/2021/05/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%BD%A0%E5%81%9A%E7%9A%84%E8%BF%99%E4%B8%AA%E4%BA%8B%E6%83%85%EF%BC%8C%E4%B8%9A%E5%8A%A1%E4%BB%B7%E5%80%BC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="我们先来聊聊你这大半年都做了哪些事情吧。   你做的这个事情，业务价值是什么？   那你了解这个事情对业务的收益是什么吗？   你了解后续业务规划是怎么样的吗？   你对业务的规划有什么自己的想法吗？   ok，看得出来你对业务的收益和规划都比较清晰，所以你完成了这些需求，也取得了不少结果。 但这是业务需求本身的价值，你正好分到了一个容易取得结果的需求，但这是业务属性决定的，你不能说A需求业">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/pip%E5%8D%8F%E8%AE%AE.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+<meta property="article:published_time" content="2021-05-29T14:57:55.000Z">
+<meta property="article:modified_time" content="2022-10-30T02:37:04.071Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif">
+
+<link rel="canonical" href="https://xiaobaidebug.top/2021/05/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%BD%A0%E5%81%9A%E7%9A%84%E8%BF%99%E4%B8%AA%E4%BA%8B%E6%83%85%EF%BC%8C%E4%B8%9A%E5%8A%A1%E4%BB%B7%E5%80%BC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>读者提问：你听说过pip协议吗？该不该签？ | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2021/05/29/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E4%BD%A0%E5%81%9A%E7%9A%84%E8%BF%99%E4%B8%AA%E4%BA%8B%E6%83%85%EF%BC%8C%E4%B8%9A%E5%8A%A1%E4%BB%B7%E5%80%BC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          读者提问：你听说过pip协议吗？该不该签？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-29 22:57:55" itemprop="dateCreated datePublished" datetime="2021-05-29T22:57:55+08:00">2021-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-30 10:37:04" itemprop="dateModified" datetime="2022-10-30T10:37:04+08:00">2022-10-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%AA%9A%E8%AF%9D%E8%BF%9E%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">骚话连篇</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif"></p>
+<br>
+
+<p>我们先来聊聊你这大半年都做了哪些事情吧。</p>
+<br>
+
+<p>你做的这个事情，业务价值是什么？</p>
+<br>
+
+<p>那你了解这个事情对业务的收益是什么吗？</p>
+<br>
+
+<p>你了解后续业务规划是怎么样的吗？</p>
+<br>
+
+<p>你对业务的规划有什么自己的想法吗？</p>
+<br>
+
+<p>ok，看得出来你对业务的收益和规划都比较清晰，所以你完成了这些需求，也取得了不少结果。</p>
+<p>但这是业务需求本身的价值，<strong>你正好分到了一个容易取得结果的需求</strong>，但这是业务属性决定的，你不能说A需求业务价值比B需求更容易拿到结果，其他同事碰巧拿到了B需求，而你拿到了A需求，<strong>大家一样努力，就否定B同事的付出，对吧？</strong></p>
+<p>所以我就想问你，<strong>除了业务本身的价值以外，你还为业务提供了哪些额外的价值？</strong></p>
+<br>
+
+<p>嗯嗯，这其实也是为了完成业务需求做的事情，还有其他例子可以举证的吗？</p>
+<br>
+
+<p>那这些事情有落地吗？取得什么成果了吗？<strong>我比较关注有哪些结果落地了</strong>。</p>
+<br>
+
+<p>另外，你在这段时间里，<strong>你有没有觉得自己哪些事情做的不够好的？</strong></p>
+<br>
+
+<p><strong>那还有其他觉得做的不好的点吗？</strong></p>
+<br>
+
+<p>我看了一下，我发现你的<strong>bug比较多</strong>。这一点你有意识到吗？</p>
+<br>
+
+<p>嗯嗯，我知道，你确实没有造成过任何一次线上事故，所有的bug都是提测期间出现的。</p>
+<p>我理解这其实是你的代码提测质量比较差？</p>
+<br>
+
+<p>嗯嗯，我明白，分配给你的需求确实不少，从产出上来看确实也不错。<strong>但我们在分配活的时候，都是根据每个人的能力模型来进行分配的，我们分配给你这么多活，说明我们是认为你的能力可以cover住的</strong>。如果你觉得吃力，我觉得你应该及早提醒我们，让我们降低对你的预期和调整你的工作安排，如果你需要支持但却没有主动来沟通，我理解这是<strong>沟通能力不足的表现</strong>。</p>
+<br>
+
+<p>Ok，那我可以认为你是认可自己的能力可以胜任这些工作的，所以我们是拉平了这条<strong>比较的线</strong>的。所以对每一个同事其实都是公平的。但有些同事，比如xxx，就在完成了业务开发的同时，还做了xxx的事情。而你在完成需求以外，我看不到为业务和团队提供更多的价值，并且提测质量也不太理想，<strong>这一点不太符合预期</strong>。</p>
+<br>
+
+<p>另外，你是否了解组内其他开发目前做的事情吗？</p>
+<br>
+
+<p>嗯那你了解他们做的业务会对你做的事情带来什么收益吗？</p>
+<br>
+
+<p>ok，看来你对整个项目组做的事情了解的并不是很全面啊，你可能需要提升一下大局观，你可以尝试一下，跳上一个台阶去看下我们下一步的规划，而<strong>不是只盯着自己在做的事情</strong>。</p>
+<br>
+
+<p>而且从你对自己接下来的做的事情的规划上来看，你打算深钻这个领域，这点我觉得ROI可能有点低了，这说句不好听，其实叫<strong>钻牛角尖</strong>，我觉得你如果完成手上的业务需求，可以把时间投入到组里其他项目中，去拿到更多的结果。</p>
+<br>
+
+<p>所以综合以上这些考虑，我这次给你的绩效是xxx，我知道这可能让你有些意外，但我这边结合上面说的事情给你列出几个点，希望能引起你的反思。balabala。我想问问你是否认可。</p>
+<br>
+
+<p>不不不，你不要闷着，也不需要情绪化，你如果有什么想法，完全可以说出来，我们坦诚的交流。</p>
+<br>
+
+<p>一个人最可贵的品质其实是他能虚心的接受他人的意见，我举一些身边的例子。balablabala。所以你现在再对齐到你自己的情况上，你是否有做到？</p>
+<br>
+
+<p>没错，你确实可能做到了这些点，但是我们在招你进来的时候，我们对你有更高的期望，我希望你不仅仅只是做到上面这些点。</p>
+<p>而且我个人也非常关注你，我发现你是个有着xxx优秀品质的人，我甚至在你身上看到了以前的自己。<strong>但是</strong>我现在重新审视过去的自己，就会发现，自己有xxx的不足，你想一下，你是不是也跟曾经的我一样，犯了这些错误？</p>
+<br>
+
+<p>嗯嗯，我能走到今天这个位置，那当然说明我在这方面比你有经验，至少是个前辈。所以<strong>我希望能帮助你变得更好</strong>。我也有信心有能力能帮助到你。</p>
+<p>我也知道你非常关注自己的技术能力成长，这起码说明你是个很上进的人，我也知道你其实是个很有想法的人，我想听听你的想法。</p>
+<br>
+
+<p><strong>看来你已经意识到自己的问题了，你对自己的问题有复盘过吗？你有没有总结出什么方法论吗？是不是可以将这些事情落地为一套SOP？</strong></p>
+<p><strong>那你告诉我，接下来你将怎么做，做哪些事情，怎么样才能避免下一次还犯这样的错误？</strong></p>
+<br>
+
+<p>我给你立个标杆吧，你身边有的同事xxx，他balablabala，最后取得了balabla的结果，所以说你也应该向他一样。你希望能变成和他一样的人吗？</p>
+<br>
+
+<p>好的，接下来为了让你变得更好，我会跟你一起制定一套改进方案pip (performance improve plan) ，针对你的问题和痛点，给出解决方法，并且帮助你在一定的时间内能变得更好。我其实一直很相信你的能力，我相信只要你认真执行，一定可以变得更好，如果你还能在这个过程中<strong>沉淀出一套方案论</strong>，并且将这个方法论带给身边的同事，让身边的同事也变得更好，这就是大大超出预期的成果，那下次一定能拿到好的绩效。你认可吗？</p>
+<p><img src="https://cdn.xiaobaidebug.top/pip%E5%8D%8F%E8%AE%AE.png" alt="pip协议"></p>
+<br>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>以上内容，均来自于一些读者的想象，我只负责整理。并不是读者的亲身经历。完全不是。现实中也完全不可能会有这样的人。</strong></p>
+<p>如有雷同……不，不可能有雷同。</p>
+<p>很多读者可能没听说过pip，它其实是一份协议，也<strong>有人说过</strong>这是<strong>认罪/劝退协议书</strong>，原则上它会规定你在一定的时间内完成某些任务，如果你签了，就相当于承认自己有问题，如果你最后未能达到要求，就会以能力不足为由被辞退。</p>
+<p>那个人还说过：”N+1？没有的啊，你忘了你自己承认自己不能胜任工作了吗。”</p>
+<p>当然，<strong>说这个话的人，肯定是瞎说，大家不要信。</strong>我不信，狗也不信。</p>
+<p>就我知道的情况来看，很多工作了三五年的老哥，做了几年才发现原来他们能力不足，需要做pip计划，也不知道为啥，虽然他们表面看起来能力出色，工作也做的很好，但可能是他们都是在演戏吧。<strong>我谴责他们没有好好工作。</strong></p>
+<p>让你签pip的人<strong>怎么可能</strong>只是想找个理由裁员呢，他当然只是希望你变得更好而已。<strong>请大家不要恶意揣测任何人。</strong></p>
+<br>
+
+<p>但不得不说，从对话里你可以看出，这里面其实涉及到非常多的谈判技巧，既有<strong>推</strong>也有<strong>拉</strong>，俗称<strong>打一巴掌给颗糖，再打巴掌再给糖</strong>。你能在里面看到几个这样的小技巧？你又能在这样的对话下抗住几个回合？</p>
+<p><strong>如果你还遇到过什么有意思的犬话，我们评论区见啊。</strong></p>
+<p>如果你遇到了pip，那你加我微信，我有一个<strong>不成熟的小建议</strong>。</p>
+<br>
+
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我本是某科技公司ceo<br>权力被架空<br>股份被清空<br>现在<br>我只想夺回我的公司<br>现在只差一个 <strong>你的点赞和在看</strong><br>我就能东山再起<br><strong>点击关注《小白debug》</strong> ，我有一套详细的复仇计划等待实施</p>
+<br>
+
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png"></p>
+<br>
+
+
+
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/" rel="prev" title="动图图解！既然IP层会分片，为什么TCP层也还要分段？">
+      <i class="fa fa-chevron-left"></i> 动图图解！既然IP层会分片，为什么TCP层也还要分段？
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/10/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/%E6%88%91%E6%84%9F%E8%A7%89%EF%BC%8C%E6%88%91%E5%8F%AF%E8%83%BD%E8%A6%81%E6%8B%BF%E5%9B%BE%E7%81%B5%E5%A5%96%E4%BA%86%E3%80%82%E3%80%82%E3%80%82/" rel="next" title="我感觉，我可能要拿图灵奖了。。。">
+      我感觉，我可能要拿图灵奖了。。。 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">2.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3329955fccef6fbcdea8',
+      clientSecret: 'fa9688ca19b34fd14615a5cc564222f4a7056d07',
+      repo        : 'gitTalk',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : '598cb7b13294d78c19d80d5d63eb3035',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
