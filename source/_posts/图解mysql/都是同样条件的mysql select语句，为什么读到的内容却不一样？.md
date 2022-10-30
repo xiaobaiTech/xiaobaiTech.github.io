@@ -13,11 +13,11 @@ categories: "图解mysql"
 
 假设当前数据库里有下面这张表。
 
-![user表数据库原始状态](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%814.drawio.png)
+![user表数据库原始状态](https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%814.drawio.png)
 
 老规矩，以下内容还是默认发生在innodb引擎的**可重复读隔离级别**下。
 
-![都是select结果却不同](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E9%83%BD%E6%98%AFselect%E7%BB%93%E6%9E%9C%E5%8D%B4%E4%B8%8D%E5%90%8C1.drawio.png)
+![都是select结果却不同](https://cdn.xiaobaidebug.top/image/%E9%83%BD%E6%98%AFselect%E7%BB%93%E6%9E%9C%E5%8D%B4%E4%B8%8D%E5%90%8C1.drawio.png)
 <!-- more -->
 大家可以看到，**线程1**，同样都是读 `age >= 3` 的数据。第一次读到**1条数据**，这个是原始状态。这之后线程2将id=2的age字段也改成了3。
 
@@ -65,7 +65,7 @@ commit;
 
 回想下事务的`ACID`里有个`A`，**原子性**，整个事务就是个整体，要么一起成功，要么一起失败。
 
-![ACID](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ACID.png)
+![ACID](https://cdn.xiaobaidebug.top/image/ACID.png)
 
 如果失败了的话，那就要让执行到一半的事务有能力回到没执行事务前的状态，这就是**回滚**。
 
@@ -92,13 +92,13 @@ except Exception:
 
 比如`id=1`那行数据，`name`字段从**"小白"**更新成了**"小白debug"**，那就会新增一个undo日志，用于记录之前的数据。
 
-![undo日志会记录之前的数据](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/undo%E6%97%A5%E5%BF%97%E4%BC%9A%E8%AE%B0%E5%BD%95%E4%B9%8B%E5%89%8D%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png)
+![undo日志会记录之前的数据](https://cdn.xiaobaidebug.top/image/undo%E6%97%A5%E5%BF%97%E4%BC%9A%E8%AE%B0%E5%BD%95%E4%B9%8B%E5%89%8D%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png)
 
 由于同时并发执行的事务可以有很多，于是可能会有很多undo日志，日志里加入事务的id（`trx_id`）字段，用于标明这是哪个事务下产生的undo日志。
 
 同时将它们用**链表的形式**组织起来，在undo日志里加入一个指针（`roll_pointer`），指向上一个undo日志，于是就形成了一条**版本链**。
 
-![undo日志版本链](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/undo%E6%97%A5%E5%BF%97%E7%89%88%E6%9C%AC%E9%93%BE.png)
+![undo日志版本链](https://cdn.xiaobaidebug.top/image/undo%E6%97%A5%E5%BF%97%E7%89%88%E6%9C%AC%E9%93%BE.png)
 
 有了这个版本链，当某个事务执行到一半发现失败时，就直接回滚，这时候就可以顺着这个版本链，回到执行事务前的状态。
 
@@ -112,7 +112,7 @@ except Exception:
 
 **快照读**，读的就是版本链里的其中一个快照，当然如果这个快照正好就是表头，那此时快照读和当前读的结果一样。
 
-![当前读和快照读](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%BD%93%E5%89%8D%E8%AF%BB%E5%92%8C%E5%BF%AB%E7%85%A7%E8%AF%BB.drawio.png)
+![当前读和快照读](https://cdn.xiaobaidebug.top/image/%E5%BD%93%E5%89%8D%E8%AF%BB%E5%92%8C%E5%BF%AB%E7%85%A7%E8%AF%BB.drawio.png)
 
 我们平时执行的普通select语句，比如下面这种，就是**快照读**。
 
@@ -166,7 +166,7 @@ select * from user where phone_no=2；
 
 现在事务（假设就叫**事务A**吧）有了read view之后，不管看哪个undo日志版本链，我们都可以把read view往版本链上一放。版本链就被分成了好几部分。
 
-![readview](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/readview2.drawio.png)
+![readview](https://cdn.xiaobaidebug.top/image/readview2.drawio.png)
 
 - **版本链快照的trx_id < read view的min_trx_id**
 
@@ -195,7 +195,7 @@ select * from user where phone_no=2；
 
 比如下图，`undo日志1`正好小于`max_trx_id`，且事务已经提交，那么就读它了。
 
-![readview与undo版本链](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/readview%E4%B8%8Eundo%E7%89%88%E6%9C%AC%E9%93%BE3.drawio.png)
+![readview与undo版本链](https://cdn.xiaobaidebug.top/image/readview%E4%B8%8Eundo%E7%89%88%E6%9C%AC%E9%93%BE3.drawio.png)
 
 <br>
 
@@ -203,7 +203,7 @@ select * from user where phone_no=2；
 
 像上面这种，维护一个多快照的**undo日志版本链**，事务根据自己的`read view`去决定具体读那个undo日志**快照**，最理想的情况下是每个事务都读自己的一份快照，然后在这个快照上做自己的逻辑，只有在写数据的时候，才去操作最新的行数据，这样**读和写就被分开了**，比起单行数据没有快照的方式，它能更好的解决读写冲突，所以数据库并发性能也更好。其实这就是面试里常问的**MVCC**，全称**M**ulti-**V**ersion **C**oncurrency **C**ontrol，即**多版本并发控制。**
 
-![MVCC](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/MVCC.png)
+![MVCC](https://cdn.xiaobaidebug.top/image/MVCC.png)
 
 
 
@@ -215,7 +215,7 @@ select * from user where phone_no=2；
 
 知道了**undo日志版本链**和**MVCC**之后，我们再回过头来看下这个问题。
 
-![四层隔离级别](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/四层隔离级别.png)
+![四层隔离级别](https://cdn.xiaobaidebug.top/image/四层隔离级别.png)
 
 **读未提交**，每次读到的都是最新的数据，也不管数据行所在的事务是否提交。实现也很简单，只需要每次都读undo日志版本链的**链表头**（最新的快照）就行了。
 
@@ -235,21 +235,21 @@ select * from user where phone_no=2；
 
 我们用上面提到的概念，重新回到文章开头的例子，梳理一遍。
 
-![user表数据库原始状态](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user表数据库原始状态4.drawio.png)
+![user表数据库原始状态](https://cdn.xiaobaidebug.top/image/user表数据库原始状态4.drawio.png)
 
 我们**假设**数据库一开始的三条数据，都是由`trx_id=1`的事务`insert`生成的。
 
 于是数据表一开始长下面这样。每行数据只有一个快照。注意快照里，`trx_id`填的是创建它们的事务id，也就是刚刚提到的事务`1`。`roll_pointer`原本应该指向insert产生的undo日志，为了简化，这里写为`null`（insert undo日志在事务提交后可以被清理掉）。
 
-![user表数据库原始trx信息.drawio](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8Btrx%E4%BF%A1%E6%81%AF.drawio.png)
+![user表数据库原始trx信息.drawio](https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8Btrx%E4%BF%A1%E6%81%AF.drawio.png)
 
 下面这个图，还是文章开头的图，这里放出来是为了方便大家，不用划回去看了。
 
-![都是select结果却不同](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/都是select结果却不同1.drawio.png)
+![都是select结果却不同](https://cdn.xiaobaidebug.top/image/都是select结果却不同1.drawio.png)
 
 在**线程1**启动事务，我们假设它的事务`trx_id=2`，**第一次执行普通select，是快照读**，在**可重复读**隔离级别，会生成一个`read view`。当前这个数据库，活跃事务只有它一个，那`m_ids =[2]`。 m_ids里最小的id，也就是`min_trx_id=2`。max_trx_id是当前最大数据库事务id（只有它自己，所以也是2），加个1，也就是`max_trx_id=3`
 
-![事务1的readview](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%BA%8B%E5%8A%A11%E7%9A%84readview.drawio.png)
+![事务1的readview](https://cdn.xiaobaidebug.top/image/%E4%BA%8B%E5%8A%A11%E7%9A%84readview.drawio.png)
 
 此时**线程1**的事务，拿着这个read view去读数据库表。
 
@@ -259,7 +259,7 @@ select * from user where phone_no=2；
 
 这时候事务2，假设它的事务`trx_id=3`，执行更新操作，生成新的undo日志快照。
 
-![user表数据库加入undo日志](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E5%85%A5undo%E6%97%A5%E5%BF%97.drawio.png)
+![user表数据库加入undo日志](https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E5%85%A5undo%E6%97%A5%E5%BF%97.drawio.png)
 
 此时线程1**第二次执行普通select**，还是**快照读**，由于是可重复读，会复用之前的read view，再执行一次读操作，这里重点关注id=2的那行数据，从版本链表头开始遍历，**第一个快照trx_id=3** `>=` **read view的max_trx_id=3**，因此不可读，遍历下一个快照**trx_id=1** `<` **min_trx_id=2**，可读。于是id=2的那行数据，还是拿到age=2，而不是更新后的age=3，因此快照读结果还是只有**1条**数据符合age>=3。
 
@@ -295,7 +295,7 @@ select * from user where phone_no=2；
 
 我有个不成熟的请求。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
+![](https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
 
 <br>
 
@@ -314,7 +314,7 @@ select * from user where phone_no=2；
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -322,9 +322,9 @@ select * from user where phone_no=2；
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
+![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
 
 

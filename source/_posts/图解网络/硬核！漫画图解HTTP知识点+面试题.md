@@ -5,17 +5,17 @@ tags:
 categories: "图解网络"
 ---
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png)
+![](https://cdn.xiaobaidebug.top/image/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png)
 
 > 文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613317170976-%E4%B8%8D%E8%A6%81%E6%89%93%E6%89%B0%E6%88%91%E5%AD%A6HTTP.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613317170976-%E4%B8%8D%E8%A6%81%E6%89%93%E6%89%B0%E6%88%91%E5%AD%A6HTTP.jpg" style="zoom:100%" />
 
 
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-16/1613436372639-b%E7%AB%99%E6%92%B8%E7%8C%AB%E5%A4%A7%E5%9B%BE.png)
+![](https://cdn.xiaobaidebug.top/image/2021-2-16/1613436372639-b%E7%AB%99%E6%92%B8%E7%8C%AB%E5%A4%A7%E5%9B%BE.png)
 
 <!-- more -->
 
@@ -24,28 +24,28 @@ categories: "图解网络"
 HTTP 全称**超⽂文本传输协议**，也就是**H**yper**T**ext **T**ransfer **P**rotocol。
 其中我们常见的**文本，图片，视频**这些东西都可以用超文本进行表示，而我常看的猫片，也属于超文本，所以大家不要再说我偷偷看猫片了，我只是在看超文本。HTTP只是定义了一套传输超文本的规则，只要符合了这一套规则，不管你是用iphone，还是用老爷机，都可以实现猫片的传输。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613041437612-http%E4%BC%A0%E8%BE%93%E7%A4%BA%E4%BE%8B%E6%BC%AB%E7%94%BB.jpg)
+![](https://cdn.xiaobaidebug.top/image/2021-2-11/1613041437612-http%E4%BC%A0%E8%BE%93%E7%A4%BA%E4%BE%8B%E6%BC%AB%E7%94%BB.jpg)
 
 
 
 # 七层网络
 
-![网络协议](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613013885789-image.png)
+![网络协议](https://cdn.xiaobaidebug.top/image/2021-2-11/1613013885789-image.png)
 
 
 
 大概了解了**HTTP**后，给大家看看它在它们家族里的地位。HTTP位于**应用层**，跟它类似的协议还有常见的**FTP协议**，常见的**某影天堂**的下载链接曾经经常是以**FTP开头**的。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613007117086-image.png)
+![](https://cdn.xiaobaidebug.top/image/2021-2-11/1613007117086-image.png)
 
 
 
 # HTTP报文格式
 
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613021710607-http%E6%8A%A5%E6%96%87%E8%A7%A3%E6%9E%90.jpg)
+![](https://cdn.xiaobaidebug.top/image/2021-2-11/1613021710607-http%E6%8A%A5%E6%96%87%E8%A7%A3%E6%9E%90.jpg)
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613041939151-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613041939151-image.png" style="zoom:100%" />
 
  
 
@@ -112,11 +112,11 @@ X-Cdn-Request-ID: 7e2c783ca7d392624118593ec1dc66bc
 
 其实上面的抓包信息，在浏览器里按F12就能看到，之所以要用`wireshark`可能**只是装X效果比较好吧**。按下F12看到的响应数据就跟下图展示的那样。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613043758890-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613043758890-image.png" style="zoom:100%" />
 
 ## 1.请求数据
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613046030107-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613046030107-image.png" style="zoom:100%" />
 
 
 
@@ -124,7 +124,7 @@ X-Cdn-Request-ID: 7e2c783ca7d392624118593ec1dc66bc
 
 ## 2.响应数据
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613046094269-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613046094269-image.png" style="zoom:100%" />
 
 
 
@@ -169,7 +169,7 @@ URL 代表着是统一资源定位符（Uniform Resource Locator）。作用是�
 其实一直有个误解，很多人以为URI是URL的子集，其实应该反过来。URL是URI的子集才对。简单解释下。
 假设"小白"(URI)是一种资源，而"在迪丽亦巴的怀里"表明了一个位置。如果你想要找到（locate）小白，那么你可以到"在迪丽亦巴怀里"找到小白，而"在迪丽亦巴怀里的/小白"才是我们常说的URL。而"在迪丽亦巴怀里的/小白"（URL）显然是"小白"（URI）的子集，毕竟，"小白"还可能是"在牛亦菲怀里的/小白"（其他URL）。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613045259027-Untitled%20Diagram%20(3).jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613045259027-Untitled%20Diagram%20(3).jpg" style="zoom:100%" />
 
 
 
@@ -186,7 +186,7 @@ HTTP 定义了一组**请求方法**，以表明要对给定资源执行的操�
 
 这次请求猫片的请求里用的是GET，意味着获取。但其实HTTP定义了多种请求方法，来满足各种需求。除了Get，还有几个POST、HEAD、OPTIONS、PUT、DELETE、TRACE 和 CONNECT。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613055907068-GET%E8%B7%9F%E6%88%91%E4%B8%80%E6%A0%B7%E7%9A%84%E8%BF%98%E6%9C%897%E4%B8%AA.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613055907068-GET%E8%B7%9F%E6%88%91%E4%B8%80%E6%A0%B7%E7%9A%84%E8%BF%98%E6%9C%897%E4%B8%AA.jpg" style="zoom:100%" />
 
 常见的各个请求方法的具体功能如下：
 
@@ -232,23 +232,23 @@ HEAD和GET本质是一样的，区别在于HEAD只返回头信息(header)，不�
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613058818793-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613058818793-image.png" style="zoom:100%" />
 
 这里面需要关注的点有两个
 
 - Request Header里的关键字段
 
-  ![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-12/1613060189629-options%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5%20(2).jpg)
+  ![](https://cdn.xiaobaidebug.top/image/2021-2-12/1613060189629-options%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5%20(2).jpg)
 
 - Response Header里的关键字段
 
-  ![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-13/1613174205328-_options%E5%93%8D%E5%BA%94%E5%AD%97%E6%AE%B5%20(1).jpg)
+  ![](https://cdn.xiaobaidebug.top/image/2021-2-13/1613174205328-_options%E5%93%8D%E5%BA%94%E5%AD%97%E6%AE%B5%20(1).jpg)
 
 
 
 `Options`堪称是网络协议中的老实人，就好像老实人刚谈了个女朋友，每次牵手前都要问下人家 “我可以牵你的手吗？”， “我可以抱你吗？”，得到了答应后才会下手。差点被这老实人气质感动得留下了不争气的泪水。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613057652579-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613057652579-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B.jpg" style="zoom:100%" />
 
 #### 什么时候需要使用options
 
@@ -293,11 +293,11 @@ HEAD和GET本质是一样的，区别在于HEAD只返回头信息(header)，不�
 
 刚刚提到了一个词叫**跨域**，那什么是跨域呢？在了解跨域之前，首先要了解一个概念：**同源**。所谓**同源**是指，**域名、协议、端口均相同**。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613041939151-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613041939151-image.png" style="zoom:100%" />
 
 不明白没关系，举个例子。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613311181978-%E6%98%AF%E5%90%A6%E5%90%8C%E6%BA%90.jpg)
+![](https://cdn.xiaobaidebug.top/image/2021-2-14/1613311181978-%E6%98%AF%E5%90%A6%E5%90%8C%E6%BA%90.jpg)
 
 需要特别注意的是，localhost和127.0.0.1虽然都指向本机，但也**不属于同源**。
 
@@ -313,7 +313,7 @@ HEAD和GET本质是一样的，区别在于HEAD只返回头信息(header)，不�
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-13/1613176456625-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B%20(2).jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-13/1613176456625-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B%20(2).jpg" style="zoom:100%" />
 
 
 
@@ -327,7 +327,7 @@ HEAD和GET本质是一样的，区别在于HEAD只返回头信息(header)，不�
 
 
 
-![options优化后](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/options%E4%BC%98%E5%8C%96%E5%90%8E.jpg)
+![options优化后](https://cdn.xiaobaidebug.top/image/options%E4%BC%98%E5%8C%96%E5%90%8E.jpg)
 
 
 
@@ -339,7 +339,7 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
 
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-11/1613045090544-%E7%8A%B6%E6%80%81%E7%A0%81%E8%A1%A8%E6%A0%BC.jpg)
+![](https://cdn.xiaobaidebug.top/image/2021-2-11/1613045090544-%E7%8A%B6%E6%80%81%E7%A0%81%E8%A1%A8%E6%A0%BC.jpg)
 
 
 
@@ -347,25 +347,25 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
 可以根据以下流程图了解下各类状态码间的关系。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-15/1613345953784-Copy%20of%202xx%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg" style="zoom:150%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-15/1613345953784-Copy%20of%202xx%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg" style="zoom:150%" />
 
 
 
 - 2xx和3xx之间的流程关系
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-16/1613439607255-2xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(2).jpg)
+![](https://cdn.xiaobaidebug.top/image/2021-2-16/1613439607255-2xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(2).jpg)
 
 
 
 - 4xx的状态流程
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-15/1613403987304-4xx%E6%B5%81%E7%A8%8B.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-15/1613403987304-4xx%E6%B5%81%E7%A8%8B.jpg" style="zoom:100%" />
 
 
 
 - 5xx的状态流程
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-16/1613406108083-5xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-16/1613406108083-5xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg" style="zoom:100%" />
 
 
 
@@ -389,7 +389,7 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
   内部重定向。重定向的意思是，当你输入一个网址的时候，浏览器会自动帮你跳转到另外一个网址上。比如，当你在浏览器输入框输入`http://www.baidu.com/`时。由于使用http并不安全，百度会自动帮你跳转到它对应的https网页上。而此时，需要重定向的地址，会通过`Response Headers`的`Location`返回
 
-  <img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-13/1613187421644-image.png" style="zoom:100%" />
+  <img src="https://cdn.xiaobaidebug.top/image/2021-2-13/1613187421644-image.png" style="zoom:100%" />
 
   
 
@@ -405,7 +405,7 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
   网络请求过程中，由于服务端处理时间过长，客户端超时。一般常见于，后端服务器处理时间过长，而客户端也设置了一个超时等待时间，客户端等得“不耐烦”了，主动关掉连接时报出。
 
-  ![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-20/1613777634555-Get%E5%92%8CPost%20(1).jpg)
+  ![](https://cdn.xiaobaidebug.top/image/2021-2-20/1613777634555-Get%E5%92%8CPost%20(1).jpg)
 
   
 
@@ -413,7 +413,7 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
   服务器方面无法给予正常的响应。一般常见于服务器崩溃后，nginx 无法正常收到服务端的响应，给客户端返回502状态码。
 
-  ![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-20/1613777745819-502%E7%9A%84%E8%BF%87%E7%A8%8B.jpg)
+  ![](https://cdn.xiaobaidebug.top/image/2021-2-20/1613777745819-502%E7%9A%84%E8%BF%87%E7%A8%8B.jpg)
 
   
 
@@ -421,7 +421,7 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
   网络请求过程中，由于服务端处理时间过长，网关超时。一般常见于，后端服务器逻辑处理时间过长，甚至长于 nginx设置的最长等待时间时报错。它跟 499 状态码非常像，区别在于499 表示的是客户端超时，504是网关超时。如果是499超时，可以考虑修改客户端的代码调整超时时间，如果是504，则考虑调整nginx的超时配置。
 
-  ![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-20/1613777517520-504%E7%9A%84%E8%BF%87%E7%A8%8B%20(1).jpg)
+  ![](https://cdn.xiaobaidebug.top/image/2021-2-20/1613777517520-504%E7%9A%84%E8%BF%87%E7%A8%8B%20(1).jpg)
 
 
 
@@ -501,15 +501,15 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
 ### Range
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613299089850-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613299089850-image.png" style="zoom:100%" />
 
 视频播放需要支持用户调整播放进度，支持让用户选择直接跳到中间部分开始播放。为了实现这个功能，需要通过HTTP Range Requests 协议用于指定需要获取视频片段。而 Request Header里的range头则是用于指定要请求文件的起始和结束位置。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613298634191-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613298634191-image.png" style="zoom:100%" />
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613298705993-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613298705993-image.png" style="zoom:100%" />
 
 - 如果服务器不支持，直接忽略 Range 头，浏览器会正常按流式加载整个视频文件，以状态码 200 响应即可。另外，当我们在 html 中放一个 video 标签，浏览器会直接发起一个 `Range: bytes=0-` 的请求，向服务器请求从开始到结尾的完整文件。
 - 如果服务器支持 Range Requests，会读取视频文件，并将他的第 162653～242638 字节提取出来，响应码为 206，则浏览器会在接收到足够字节（比如当前播放进度往后推20s）时结束掉请求，以节省网络流量；当播放进度继续往前，缓存不够时，浏览器会发起一个新的 Range Requests 请求，请求的 Range 直接从缓存结尾的字节开始，只加载剩余的部分文件。同时返回的Response Headers中有一个 content-range 的字段域，用于告诉了客户端发送了多少数据。content-range  描述了响应覆盖的范围和整个实体长度。一般格式：`Content-Range：开始字节位置-结束字节位置／文件大小（byte）`。
@@ -538,11 +538,11 @@ HTTP Status Code是常说的HTTP状态码。当用户访问一个网页时，浏
 
 我们知道 HTTP 建立在 TCP 传输层协议之上，而 TCP 的建立需要三次握手，关闭需要四次挥手，这些步骤都需要时间，带给 HTTP 的就是请求响应时延。如果使用短连接，那么每次数据传输都需要经历一次上面提到的几个步骤，如果能只连接一次，保持住这个连接不断开，期间通信就可以省下建立连接和断开连接的过程，对于提升HTTP性能有很大的帮助。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613290339498-http%E7%9F%AD%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613290339498-http%E7%9F%AD%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
 
 - 可以看到，在使用 Connection: close 通信时，每次都需要重新经历一次握手挥手。可以通过 Connection: keep-alive 省下这部分的资源消耗。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613292366161-http%E9%95%BF%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613292366161-http%E9%95%BF%E8%BF%9E%E6%8E%A5.jpg" style="zoom:100%" />
 
 - **长连接**可以**省去较多的TCP建立和关闭的操作，减少浪费，节约时间**。对于频繁请求资源的客户来说，较适用长连接。但是在长连接的应用场景下，需要有一方主动关闭连接。如果客户端和服务端之间的连接一直不关闭的话，连接数则会越来越多，严重的时候会造成资源占用过高。
 - 解决方案也比较简单。如果这些连接其实长时间内并没有任何数据传输的话，那其实属于空闲连接，这时候可以在服务端设置空闲连接的存活时间，超过一定时间后由服务端主动断掉，从而保证无用连接及时释放。
@@ -583,7 +583,7 @@ Cookie 一般有两个作用。
 
 ### Referrer Policy 和 Referrer
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-1/1612146090912-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-1/1612146090912-image.png" style="zoom:100%" />
 
 
 
@@ -643,7 +643,7 @@ cache-control，用于控制浏览器缓存。简而言之，当某人访问网�
 
 ### ETag
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613297647760-image.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613297647760-image.png" style="zoom:100%" />
 
 
 
@@ -669,17 +669,17 @@ Etag是 Entity tag的缩写，是服务端的一个资源版本的令牌标识�
 
 看个猫片都能学到这么多硬核知识。接下来我打算去舞蹈区看看有没有适合你们的知识点。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-2-14/1613314979045-%E8%84%B8%E7%BA%A2%E5%BC%80%E5%BF%83.jpg" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613314979045-%E8%84%B8%E7%BA%A2%E5%BC%80%E5%BF%83.jpg" style="zoom:100%" />
 
 我是小白，有空？一起在知识的海洋里呛水啊，懂我意思？
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-1-10/1610269930614-640.png" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-1-10/1610269930614-640.png" style="zoom:100%" />
 
 
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2021-1-6/1609890505711-%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-01-06-0.gif" style="zoom:100%" />
+<img src="https://cdn.xiaobaidebug.top/image/2021-1-6/1609890505711-%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-01-06-0.gif" style="zoom:100%" />
 
 
 

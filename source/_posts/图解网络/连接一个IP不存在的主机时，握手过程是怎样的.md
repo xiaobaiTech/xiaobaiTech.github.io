@@ -19,7 +19,7 @@ categories: "图解网络"
 
 <!-- more -->
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/12021625633784_.pic.jpg)
+![](https://cdn.xiaobaidebug.top/image/12021625633784_.pic.jpg)
 
 
 
@@ -39,7 +39,7 @@ categories: "图解网络"
 
 看完了，说不定能加分！
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/12011625633784_.pic.jpg)
+![](https://cdn.xiaobaidebug.top/image/12011625633784_.pic.jpg)
 
 <br>
 
@@ -50,7 +50,7 @@ categories: "图解网络"
 
 我们**简单回顾**下基础知识点。
 
-![正常情况下的TCP三次握手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B1.png)
+![正常情况下的TCP三次握手](https://cdn.xiaobaidebug.top/image/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B1.png)
 
 在**服务端**启动好后会调用 `listen()` 方法，进入到 `LISTEN` 状态，然后静静等待**客户端**的连接请求到来。
 
@@ -62,7 +62,7 @@ categories: "图解网络"
 
 通过抓包可以直观看出三次握手的流程。
 
-![正常三次握手抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210626164202297.png)
+![正常三次握手抓包](https://cdn.xiaobaidebug.top/image/image-20210626164202297.png)
 
 
 
@@ -74,7 +74,7 @@ categories: "图解网络"
 
 那不存在的IP，分两种，**局域网内和局域网外**的。
 
-![家用路由器局域网互联](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%AE%B6%E7%94%A8%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E4%BA%92%E8%81%94.png)
+![家用路由器局域网互联](https://cdn.xiaobaidebug.top/image/%E5%AE%B6%E7%94%A8%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E4%BA%92%E8%81%94.png)
 
 我以我家里的情况举例。
 
@@ -161,7 +161,7 @@ func main() {
 
 然后尝试抓包。
 
-![连一个不存在的IP(局域网内)抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210619112642833.png)
+![连一个不存在的IP(局域网内)抓包](https://cdn.xiaobaidebug.top/image/image-20210619112642833.png)
 
 
 
@@ -177,11 +177,11 @@ func main() {
 
 首先我们看下正常情况下执行`connect`，也就是第一次握手 的流程。
 
-![正常connect的流程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%AD%A3%E5%B8%B8connect%E7%9A%84%E6%B5%81%E7%A8%8B.png)
+![正常connect的流程](https://cdn.xiaobaidebug.top/image/%E6%AD%A3%E5%B8%B8connect%E7%9A%84%E6%B5%81%E7%A8%8B.png)
 
 应用层执行`connect`过后，会通过socket层，操作系统接口，进程会从**用户态进入到内核态**，此时进入 **传输层**，因为是**TCP第一次握手**，会加入**TCP头**，且置**SYN**标志。
 
-![tcp报头的SYN](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp%E6%8A%A5%E5%A4%B4%E7%9A%84SYN.png)
+![tcp报头的SYN](https://cdn.xiaobaidebug.top/image/tcp%E6%8A%A5%E5%A4%B4%E7%9A%84SYN.png)
 
 然后进入**网络层**，我想要连的是 `192.168.31.7` ，虽然它是我瞎编的，但**IP头**还是得老老实实把它加进去。
 
@@ -189,7 +189,7 @@ func main() {
 
 我们看下那么**ARP协议的流程**是
 
-![ARP流程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ARP%E6%B5%81%E7%A8%8B3.png)
+![ARP流程](https://cdn.xiaobaidebug.top/image/ARP%E6%B5%81%E7%A8%8B3.png)
 
 1.先到本地ARP表查一下有没有 `192.168.31.7` 对应的 **mac地址**，有的话就返回，这里显然是不可能会有的。
 
@@ -262,7 +262,7 @@ $ arp -a
 
 先抓包看一下。
 
-![连一个不存在的IP(局域网外)抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210619111302173.png)
+![连一个不存在的IP(局域网外)抓包](https://cdn.xiaobaidebug.top/image/image-20210619111302173.png)
 
 这次的现象是能发出 TCP 第一次握手的 `SYN包`。
 
@@ -300,7 +300,7 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 而每次重试都会间隔一定的时间，这里的间隔一般是 1s，2s，4s，8s, 16s, 32s .
 
-![SYN重传](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/SYN%E9%87%8D%E4%BC%A0.png)
+![SYN重传](https://cdn.xiaobaidebug.top/image/SYN%E9%87%8D%E4%BC%A0.png)
 
 而事实上，看我的截图，是先重试4次，每次都是1s，之后才是 1s，2s，4s，8s, 16s, 32s 的重试。
 
@@ -324,7 +324,7 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 ### 目的IP是回环地址
 
-![连回环地址，端口不存在抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210627090037348.png)
+![连回环地址，端口不存在抓包](https://cdn.xiaobaidebug.top/image/image-20210627090037348.png)
 
 现象也比较简单，已经IP地址是存在的，也就是在互联网中这个机器是存在的。
 
@@ -332,7 +332,7 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 直到传输层，TCP协议在识别到这个端口号对应的进程根本不存在时，就会把数据丢弃，响应一个RST消息给发送端。
 
-![连回环地址时端口不存在](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%BF%9E%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png)
+![连回环地址时端口不存在](https://cdn.xiaobaidebug.top/image/%E8%BF%9E%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png)
 
 <br>
 
@@ -344,7 +344,7 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 **RST** 就是用于这种情况，一般用来**异常地**关闭一个连接。它在TCP包头中，在收到置了这个标志位的数据包后，连接就会被关闭，此时接收到 RST的一方，一般会看到一个 `connection reset` 或  `connection refused` 的报错。
 
-![TCP报头RST位](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp报头RST位.png)
+![TCP报头RST位](https://cdn.xiaobaidebug.top/image/tcp报头RST位.png)
 
 <br>
 
@@ -352,13 +352,13 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 刚刚提到我的本机IP是 `192.168.31.6` ，局域网内有台 `192.168.31.1` 。同样尝试连一个不存在的端口。
 
-![连存在的局域网内IP，端口不存在抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210619113503022.png)
+![连存在的局域网内IP，端口不存在抓包](https://cdn.xiaobaidebug.top/image/image-20210619113503022.png)
 
 此时现象跟前者一致。
 
 唯一不同的是，前者是回环地址，RST数据是从本机的传输层返回的。而这次的情况，RST数据是从目的机器的传输层返回的。
 
-![连外网地址时端口不存在](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%BF%9E%E5%A4%96%E7%BD%91%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png)
+![连外网地址时端口不存在](https://cdn.xiaobaidebug.top/image/%E8%BF%9E%E5%A4%96%E7%BD%91%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png)
 
 <br>
 
@@ -368,7 +368,7 @@ $cat /proc/sys/net/ipv4/tcp_syn_retries
 
 进行连接连接，发现与前面两种情况是一致的，目的机器在收到我的请求后，立马就通过 **RST标志位** 断开了这次的连接。
 
-![连存在的局域网外IP，端口不存在抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210619182034584.png)
+![连存在的局域网外IP，端口不存在抓包](https://cdn.xiaobaidebug.top/image/image-20210619182034584.png)
 
 这一点跟前面两种情况一致。
 
@@ -395,7 +395,7 @@ round-trip min/avg/max/stddev = 35.728/37.488/38.402/0.866 ms
 
 发消息到给百度域名背后的 IP，且瞎随机指定一个端口 **8080**， 抓包。
 
-![连baidu，端口不存在抓包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210619084158238.png)
+![连baidu，端口不存在抓包](https://cdn.xiaobaidebug.top/image/image-20210619084158238.png)
 
 现象却不一致。没有 `RST` 。而且触发了第一次握手的重试消息。这是为什么？
 
@@ -403,7 +403,7 @@ round-trip min/avg/max/stddev = 35.728/37.488/38.402/0.866 ms
 
 所以很多发到 8080端口的消息都**在防火墙这一层就被拒绝掉了**，根本到不了目的主机里，而**RST是在目的主机的TCP/IP协议栈里发出**的，都还没到这一层，就更不可能发RST了。因此发送端发现消息没有回应（因为被防火墙丢了），就会重传。所以才会出现上述抓包里的现象。
 
-![防火墙安全策略](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E9%98%B2%E7%81%AB%E5%A2%99%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5.png)
+![防火墙安全策略](https://cdn.xiaobaidebug.top/image/%E9%98%B2%E7%81%AB%E5%A2%99%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5.png)
 
 <br>
 
@@ -439,14 +439,14 @@ round-trip min/avg/max/stddev = 35.728/37.488/38.402/0.866 ms
 
 如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（**点两下**）支持一下。（**~~卑微~~疯狂暗示，拜托拜托，这对我真的很重要！**）
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/12051625633785_.pic.jpg)
+![](https://cdn.xiaobaidebug.top/image/12051625633785_.pic.jpg)
 
 我是小白，我们下期见。
 
 ###### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 

@@ -131,7 +131,7 @@ $go build -gcflags=-m main.go
 - [golang面试题：能说说uintptr和unsafe.Pointer的区别吗？](https://mp.weixin.qq.com/s?__biz=MzAwMDAxNjU4Mg==&mid=2247483679&idx=1&sn=7075859e59741b1d0a81dc472b8ce45f&chksm=9aee28b6ad99a1a0599416886660d9ea56bd7fec18841af0e5fe86c3daea3973732a83d7eabb&token=2092782362&lang=zh_CN#rd)
 
 关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 
 

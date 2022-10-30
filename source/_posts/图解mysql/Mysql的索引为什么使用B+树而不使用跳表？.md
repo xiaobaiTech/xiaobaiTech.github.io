@@ -33,7 +33,7 @@ categories: "图解mysql"
 
 在这里，~~为了混点字数~~，我简单总结下B+树的结构。
 
-![B+树查询过程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png)
+![B+树查询过程](https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png)
 如上图，一般B+树是由多个页组成的**多层级**结构，每个页`16Kb`，对于主键索引来说，最末级的**叶子结点**放行数据，**非叶子结点**放的则是索引信息（主键id和页号），用于加速查询。
 
 比方说我们想要查找行数据5。会先从顶层页的record们入手。**record里包含了主键id和页号（页地址）**。关注黄色的箭头，向左最小id是1，向右最小id是7。那id=5的数据如果存在，那必定在左边箭头。于是顺着的record的页地址就到了`6号`数据页里，再判断id=5>4，所以肯定在右边的数据页里，于是加载`105号`数据页。
@@ -52,27 +52,27 @@ categories: "图解mysql"
 
 我们可以将它们用**链表**串起来。
 
-![单链表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8D%95%E9%93%BE%E8%A1%A8.png)
+![单链表](https://cdn.xiaobaidebug.top/image/%E5%8D%95%E9%93%BE%E8%A1%A8.png)
 
 想要查询链表中的其中一个结点，时间复杂度是O(n)，这谁顶得住，于是将**部分**链表结点提出来，再构建出一个新的链表。
 
-![两层跳表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8.png)
+![两层跳表](https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8.png)
 
 这样当我想要查询一个数据的时候，我先查上层的链表，就很容易知道数据落在**哪个范围**，然后**跳到下一个层级里进行查询。**这样就把搜索范围一下子缩小了一大半。
 
 比如查询id=10的数据，我们先在上层遍历，依次判断1,6,12，很快就可以判断出10在6到12之间，然后往下一跳，就可以在遍历6,7,8,9,10之后，确定id=10的位置。直接将查询范围从原来的1到10，变成现在的1,6,7,8,9,10，算是砍半了。
 
-![两层跳表查找id为10的数据](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BEid%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png)
+![两层跳表查找id为10的数据](https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BEid%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png)
 
 既然两层链表就直接将查询范围砍半了，那我**多加几层**，岂不妙哉？
 
 于是跳表就这样变成了多层。
 
-![三层跳表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8.png)
+![三层跳表](https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8.png)
 
 如果还是查询id=10的数据，就只需要查询1,6,9,10就能找到，比两层的时候更快一些。
 
-![三层跳表查询id为10的数据](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E8%AF%A2id%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.png)
+![三层跳表查询id为10的数据](https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E8%AF%A2id%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.png)
 
 可以看出，跳表也是通过**牺牲空间换取时间**的方式提升查询性能。**时间复杂度都是lg(n)**。
 
@@ -102,15 +102,15 @@ B+树本质上是一种多叉平衡二叉树。关键在于"**平衡**"这两个
 
 - **叶子结点和索引结点都没满**。这种情况最简单，直接插入到叶子结点中就好了。
 
-![叶子和非叶子都未满](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%9C%AA%E6%BB%A1.png)
+![叶子和非叶子都未满](https://cdn.xiaobaidebug.top/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%9C%AA%E6%BB%A1.png)
 
 - **叶子结点满了，但索引结点没满**。此时需要拆分叶子结点，同时索引结点要增加新的索引信息。
 
-![叶子满了但非叶子未满.drawio](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8F%B6%E5%AD%90%E6%BB%A1%E4%BA%86%E4%BD%86%E9%9D%9E%E5%8F%B6%E5%AD%90%E6%9C%AA%E6%BB%A1.drawio.png)
+![叶子满了但非叶子未满.drawio](https://cdn.xiaobaidebug.top/image/%E5%8F%B6%E5%AD%90%E6%BB%A1%E4%BA%86%E4%BD%86%E9%9D%9E%E5%8F%B6%E5%AD%90%E6%9C%AA%E6%BB%A1.drawio.png)
 
 - **叶子结点满了，且索引结点也满了**。叶子和索引结点都要拆分，同时往上还要再**加一层索引。**
 
-![叶子和非叶子都满了](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%BB%A1%E4%BA%86.png)
+![叶子和非叶子都满了](https://cdn.xiaobaidebug.top/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%BB%A1%E4%BA%86.png)
 
 从上面可以看到，只有在叶子和索引结点**都满了**的情况下，B+树才会考虑加入一层新的结点。
 
@@ -134,7 +134,7 @@ B+树本质上是一种多叉平衡二叉树。关键在于"**平衡**"这两个
 
 举个例子，如果跳表中插入数据id=6，且随机函数返回第三层（有25%的概率），那就需要在跳表的最底层到第三层都插入数据。
 
-![跳表插入数据](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.drawio.png)
+![跳表插入数据](https://cdn.xiaobaidebug.top/image/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.drawio.png)
 
 如果这个随机函数设计成上面这样，当**数据量样本足够大**的时候，数据的分布就符合我们理想中的"二分"。
 
@@ -226,7 +226,7 @@ https://cloud.tencent.com/developer/article/1813695
 
 点开它，看到女主角的时候你就理解我了。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220404094330264.png)
+![](https://cdn.xiaobaidebug.top/image/image-20220404094330264.png)
 
 这么说吧，一个颜值出众，身材火辣的姐姐，还是个世界顶级的武术高手，穿着旗袍，踩着高跟，做着各种让牛顿棺材板都快要按不住的动作，只为手把手教会你武术基本功。
 
@@ -234,7 +234,7 @@ https://cloud.tencent.com/developer/article/1813695
 
 不得不说，当我看到姐姐穿成这样用木棍顶起400斤的汞球时。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220404094549469.png)
+![](https://cdn.xiaobaidebug.top/image/image-20220404094549469.png)
 
 
 
@@ -262,7 +262,7 @@ https://cloud.tencent.com/developer/article/1813695
 
 反正我会。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006Xk4cbgy1gqzc3sofewj30c805st8u.jpg)
+![](https://cdn.xiaobaidebug.top/image/006Xk4cbgy1gqzc3sofewj30c805st8u.jpg)
 
 <br>
 
@@ -270,7 +270,7 @@ https://cloud.tencent.com/developer/article/1813695
 
 我有个不成熟的请求。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
+![](https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
 
 <br>
 
@@ -289,7 +289,7 @@ https://cloud.tencent.com/developer/article/1813695
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -297,9 +297,9 @@ https://cloud.tencent.com/developer/article/1813695
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
+![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
 
 

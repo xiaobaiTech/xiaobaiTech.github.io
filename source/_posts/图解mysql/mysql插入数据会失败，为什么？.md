@@ -27,7 +27,7 @@ categories: "图解mysql"
 
 对面继续发：**"还有些用户不能改名"**
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/a6a681ebgy1gpfzfr4ikdj20520523yf.jpg)
+![](https://cdn.xiaobaidebug.top/image/a6a681ebgy1gpfzfr4ikdj20520523yf.jpg)
 
 "如果用上**表情符号**的话，问题必现"
 
@@ -51,17 +51,17 @@ categories: "图解mysql"
 
 如果你有一张数据库表，建表sql就像下面一样。
 
-![建表sql语句](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%BB%BA%E8%A1%A8sql%E8%AF%AD%E5%8F%A5.png)
+![建表sql语句](https://cdn.xiaobaidebug.top/image/%E5%BB%BA%E8%A1%A8sql%E8%AF%AD%E5%8F%A5.png)
 
 接下来如果你插入的数据是
 
-![insert成功case](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/insert%E6%88%90%E5%8A%9Fcase.png)
+![insert成功case](https://cdn.xiaobaidebug.top/image/insert%E6%88%90%E5%8A%9Fcase.png)
 
 **能成功**。一切正常。
 
 但如果你插入的是
 
-![insert失败case](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/insert%E5%A4%B1%E8%B4%A5case.png)
+![insert失败case](https://cdn.xiaobaidebug.top/image/insert%E5%A4%B1%E8%B4%A5case.png)
 
 就会**报错**。
 
@@ -85,7 +85,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 那么就需要有一个规则，把中文和英文字母转化为二进制，比如"debug"，计算机就需要把它转化为下图这样。 
 
-![debug的编码](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/debug%E7%9A%84%E7%BC%96%E7%A0%81.drawio.png)
+![debug的编码](https://cdn.xiaobaidebug.top/image/debug%E7%9A%84%E7%BC%96%E7%A0%81.drawio.png)
 
 其中d对应十六进制下的64，它可以转换为01二进制的格式。
 
@@ -109,11 +109,11 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 比如下图，同样都是字母d，unicode比ascii多使用了一个字节。
 
-![unicode比ascii多使用一个字节](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/unicode%E6%AF%94ascii%E5%A4%9A%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82.drawio.png)
+![unicode比ascii多使用一个字节](https://cdn.xiaobaidebug.top/image/unicode%E6%AF%94ascii%E5%A4%9A%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82.drawio.png)
 
 我们可以注意到，上面的unicode编码，放在前面的都是0，其实用不上，但还占了个字节，有点浪费，完全能隐藏掉。如果我们能做到该隐藏时隐藏，这样就能省下不少空间，按这个思路，就是就有了**UTF-8编码**。
 
-![编码格式](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F3.png)
+![编码格式](https://cdn.xiaobaidebug.top/image/%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F3.png)
 
 来总结下。
 
@@ -121,7 +121,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 比如utf-8字符集就是所有utf-8编码格式的字符的合集。
 
-![字符和字符集的关系](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%AD%97%E7%AC%A6%E5%92%8C%E5%AD%97%E7%AC%A6%E9%9B%86%E7%9A%84%E5%85%B3%E7%B3%BB3.drawio.png)
+![字符和字符集的关系](https://cdn.xiaobaidebug.top/image/%E5%AD%97%E7%AC%A6%E5%92%8C%E5%AD%97%E7%AC%A6%E9%9B%86%E7%9A%84%E5%85%B3%E7%B3%BB3.drawio.png)
 
 <br>
 
@@ -129,7 +129,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 想看下mysql支持哪些字符集。可以执行 `show charset;`
 
-![数据库支持哪些字符集](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%AF%E6%8C%81%E5%93%AA%E4%BA%9B%E5%AD%97%E7%AC%A6%E9%9B%86.png)
+![数据库支持哪些字符集](https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%AF%E6%8C%81%E5%93%AA%E4%BA%9B%E5%AD%97%E7%AC%A6%E9%9B%86.png)
 
 上面这么多字符集，我们只需要关注utf8和utf8mb4就够了。
 
@@ -149,7 +149,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 它就像是阉割版的utf8mb4，只支持部分字符。比如emoji表情，它就不支持。
 
-![utf8mb3和utf8mb4的关系](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/utf8mb3%E5%92%8Cutf8mb4%E7%9A%84%E5%85%B3%E7%B3%BB5.drawio.png)
+![utf8mb3和utf8mb4的关系](https://cdn.xiaobaidebug.top/image/utf8mb3%E5%92%8Cutf8mb4%E7%9A%84%E5%85%B3%E7%B3%BB5.drawio.png)
 
 <br>
 
@@ -161,19 +161,19 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 通过`SHOW COLLATION WHERE Charset = 'utf8mb4';`可以查看到`utf8mb4`下支持什么比较规则。
 
-![utf8mb4字符集比较规则](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/utf8mb4%E5%AD%97%E7%AC%A6%E9%9B%86%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99-20220421210049625.png)
+![utf8mb4字符集比较规则](https://cdn.xiaobaidebug.top/image/utf8mb4%E5%AD%97%E7%AC%A6%E9%9B%86%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99-20220421210049625.png)
 
 如果`collation = utf8mb4_general_ci`，是指使用utf8mb4字符集前提下，**挨个字符进行比较**（`general`），并且不区分大小写（`_ci，case insensitice`）。
 
 这种情况下，**"debug"和"Debug"是同一个单词**。
 
-![对比规则-大小写不敏感](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%AF%B9%E6%AF%94%E8%A7%84%E5%88%99-%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8D%E6%95%8F%E6%84%9F2.png)
+![对比规则-大小写不敏感](https://cdn.xiaobaidebug.top/image/%E5%AF%B9%E6%AF%94%E8%A7%84%E5%88%99-%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8D%E6%95%8F%E6%84%9F2.png)
 
 如果改成`collation=utf8mb4_bin`，就是指**挨个比较二进制位大小**。
 
 于是**"debug"和"Debug"就不是同一个单词。**
 
-![对比规则-大小写敏感](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%AF%B9%E6%AF%94%E8%A7%84%E5%88%99-%E5%A4%A7%E5%B0%8F%E5%86%99%E6%95%8F%E6%84%9F.png)
+![对比规则-大小写敏感](https://cdn.xiaobaidebug.top/image/%E5%AF%B9%E6%AF%94%E8%A7%84%E5%88%99-%E5%A4%A7%E5%B0%8F%E5%86%99%E6%95%8F%E6%84%9F.png)
 
 <br>
 
@@ -203,7 +203,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 如果我们不知道自己的表是用的哪种字符集，可以通过下面的方式进行查看。
 
-![查看数据库表的字符集](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%862.png)
+![查看数据库表的字符集](https://cdn.xiaobaidebug.top/image/%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%862.png)
 
 
 
@@ -271,7 +271,7 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 有点东西哦。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/images.jpeg)
+![](https://cdn.xiaobaidebug.top/image/images.jpeg)
 
 <br>
 
@@ -279,7 +279,7 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 这样的一个事故，复盘会一开，会挂P几呢？
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/a6a681ebgy1gp1tujp12gj208c08cmxb.jpg)
+![](https://cdn.xiaobaidebug.top/image/a6a681ebgy1gp1tujp12gj208c08cmxb.jpg)
 
 
 
@@ -291,7 +291,7 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 我有个不成熟的请求。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
+![](https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
 
 <br>
 
@@ -310,7 +310,7 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -318,9 +318,9 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
+![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
 
 

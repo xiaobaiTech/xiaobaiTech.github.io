@@ -8,7 +8,7 @@ categories: "图解网络"
 
 我们都知道，TCP是个**面向连接的、可靠的、基于字节流的传输层**通信协议。
 
-![TCP是什么](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png)
+![TCP是什么](https://cdn.xiaobaidebug.top/image/tcp%E6%98%AF%E4%BB%80%E4%B9%882.png)
 
 那这里面提到的"**面向连接**"，意味着需要 建立连接，使用连接，释放连接。
 
@@ -32,7 +32,7 @@ categories: "图解网络"
 
 简单回顾下TCP四次挥手。
 
-![TCP四次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B7.png)
+![TCP四次挥手](https://cdn.xiaobaidebug.top/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B7.png)
 
 正常情况下。只要数据传输完了，**不管是客户端还是服务端，都可以主动发起四次挥手**，释放连接。
 
@@ -76,7 +76,7 @@ categories: "图解网络"
 
 所以，如果机器上`FIN-WAIT-2`状态特别多，一般是因为对端一直不执行`close()`方法发出第三次挥手。
 
-![FIN-WAIT-2特别多的原因](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/FIN-WAIT-2%E7%89%B9%E5%88%AB%E5%A4%9A%E7%9A%84%E5%8E%9F%E5%9B%A0.png)
+![FIN-WAIT-2特别多的原因](https://cdn.xiaobaidebug.top/image/FIN-WAIT-2%E7%89%B9%E5%88%AB%E5%A4%9A%E7%9A%84%E5%8E%9F%E5%9B%A0.png)
 
 <br>
 
@@ -95,7 +95,7 @@ categories: "图解网络"
 
 但如果 主动方的四次挥手是通过 `close()` 触发的，那主动方是不会去收这个消息的。而且还会回一个 `RST`。直接结束掉这次连接。
 
-![close()触发TCP四次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/close()%E8%A7%A6%E5%8F%91TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B5.png)
+![close()触发TCP四次挥手](https://cdn.xiaobaidebug.top/image/close()%E8%A7%A6%E5%8F%91TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B5.png)
 
 
 
@@ -117,7 +117,7 @@ int shutdown(int sock, int howto);
 >- SHUT_WR：关闭写。如果发送缓冲区中还有数据没发，会将将数据传递到目标主机。
 >- SHUT_RDWR：关闭读和写。相当于`close()`了。
 
-![shutdown触发的TCP四次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/shutdown%E8%A7%A6%E5%8F%91%E7%9A%84TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
+![shutdown触发的TCP四次挥手](https://cdn.xiaobaidebug.top/image/shutdown%E8%A7%A6%E5%8F%91%E7%9A%84TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
 
 
 
@@ -129,7 +129,7 @@ int shutdown(int sock, int howto);
 
 **被动**关闭方**就懵了**，"我怎么知道对方让不让我继续发数据？"
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/e18d20c94006dfe0-feec70b0eb485633-f0e01cf6d9cce2bccba34029f1ca10e0-20210808141929988.jpg)
+![](https://cdn.xiaobaidebug.top/image/e18d20c94006dfe0-feec70b0eb485633-f0e01cf6d9cce2bccba34029f1ca10e0-20210808141929988.jpg)
 
 其实，大可不必纠结，该发就发。
 
@@ -141,7 +141,7 @@ int send( SOCKET s,const char* buf,int len,int flags);
 
 `send()` 会把数据拷贝到本机的**发送缓冲区**。如果发送缓冲区没出问题，都能拷贝进去，所以正常情况下，`send()`**一般**都会返回成功。
 
-![tcp_sendmsg逻辑](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp_sendmsg%E9%80%BB%E8%BE%912.png)
+![tcp_sendmsg逻辑](https://cdn.xiaobaidebug.top/image/tcp_sendmsg%E9%80%BB%E8%BE%912.png)
 
 
 
@@ -192,7 +192,7 @@ int send( SOCKET s,const char* buf,int len,int flags);
 60
 ```
 
-![一直不发第三次挥手的情况](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%80%E7%9B%B4%E4%B8%8D%E5%8F%91%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E6%83%85%E5%86%B53.png)
+![一直不发第三次挥手的情况](https://cdn.xiaobaidebug.top/image/%E4%B8%80%E7%9B%B4%E4%B8%8D%E5%8F%91%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E6%83%85%E5%86%B53.png)
 
 
 
@@ -208,7 +208,7 @@ int send( SOCKET s,const char* buf,int len,int flags);
 
 所以，在第一次挥手之后，如果被动方没有数据要发给主动方。第二和第三次挥手是**有可能**合并传输的。这样就出现了三次挥手。
 
-![TCP三次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
+![TCP三次挥手](https://cdn.xiaobaidebug.top/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
 
 <br>
 
@@ -222,7 +222,7 @@ int send( SOCKET s,const char* buf,int len,int flags);
 
  而这个合并确认，放在四次挥手里，可以把第二次挥手、第三次挥手，以及他们之间的数据传输都合并在一起发送。因此也就出现了三次挥手。
 
-![TCP三次挥手延迟确认](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%BB%B6%E8%BF%9F%E7%A1%AE%E8%AE%A4.png)
+![TCP三次挥手延迟确认](https://cdn.xiaobaidebug.top/image/TCP%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%BB%B6%E8%BF%9F%E7%A1%AE%E8%AE%A4.png)
 
 
 
@@ -236,7 +236,7 @@ int send( SOCKET s,const char* buf,int len,int flags);
 
 但如果TCP连接的两端，**IP+端口**是一样的情况下，那么在关闭连接的时候，也同样做到了**一端发出了一个FIN，也收到了一个 ACK**，只不过正好这两端其实是`同一个socket` 。
 
-![TCP两次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B2.png)
+![TCP两次挥手](https://cdn.xiaobaidebug.top/image/TCP%E4%B8%A4%E6%AC%A1%E6%8C%A5%E6%89%8B2.png)
 
 
 
@@ -281,19 +281,19 @@ tcp        0      0 127.0.0.1:6666          127.0.0.1:6666          ESTABLISHED
 
 **整个过程中，都没有服务端参与**。可以抓个包看下。
 
-![image-20210810093309117](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210810093309117.png)
+![image-20210810093309117](https://cdn.xiaobaidebug.top/image/image-20210810093309117.png)
 
 
 
 可以看到，**相同的socket，自己连自己的时候，握手是三次的。挥手是两次的。**
 
-![TCP自连接](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E8%87%AA%E8%BF%9E%E6%8E%A52.png)
+![TCP自连接](https://cdn.xiaobaidebug.top/image/TCP%E8%87%AA%E8%BF%9E%E6%8E%A52.png)
 
 上面这张图里，左右都是同一个客户端，把它画成两个是为了方便大家理解状态的迁移。
 
 我们可以拿自连接的握手状态**对比下**正常情况下的TCP三次握手。
 
-![正常情况下的TCP三次握手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/正常情况下的TCP三次握手2.png)
+![正常情况下的TCP三次握手](https://cdn.xiaobaidebug.top/image/正常情况下的TCP三次握手2.png)
 
 
 
@@ -531,7 +531,7 @@ func selfConnect(fd *netFD, err error) bool {
 
 答案是**可以的**，有一种情况叫**TCP同时打开**。
 
-![TCP同时打开](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E5%90%8C%E6%97%B6%E6%89%93%E5%BC%802.png)
+![TCP同时打开](https://cdn.xiaobaidebug.top/image/TCP%E5%90%8C%E6%97%B6%E6%89%93%E5%BC%802.png)
 
 大家可以对比下，**TCP同时打开**在握手时的状态变化，跟TCP自连接是非常的像。
 
@@ -564,7 +564,7 @@ tcp        0      0 127.0.0.1:2223          127.0.0.1:2224          ESTABLISHED
 
 期间抓包获得下面的结果。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210815090301418.png)
+![](https://cdn.xiaobaidebug.top/image/image-20210815090301418.png)
 
 可以看到，这里面建立连接用了四次交互。因此可以说这是通过**"四次握手"**建立的连接。
 
@@ -636,7 +636,7 @@ tcp        0      0 127.0.0.1:2223          127.0.0.1:2224          ESTABLISHED
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码.gif)
 
 <br>
 
@@ -644,7 +644,7 @@ tcp        0      0 127.0.0.1:2223          127.0.0.1:2224          ESTABLISHED
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点阳间的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 
 

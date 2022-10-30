@@ -72,7 +72,7 @@ func main() {
 
 ###### 
 关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 
 

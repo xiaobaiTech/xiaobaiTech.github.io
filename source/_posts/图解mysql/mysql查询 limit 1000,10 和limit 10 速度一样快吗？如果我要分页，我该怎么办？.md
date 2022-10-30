@@ -14,7 +14,7 @@ categories: "图解mysql"
 
 比如下图红框里的翻页功能。
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image-20220603221954745.png" style="zoom:50%;" />
+<img src="https://cdn.xiaobaidebug.top/image-20220603221954745.png" style="zoom:50%;" />
 
 <!-- more -->
 
@@ -24,7 +24,7 @@ categories: "图解mysql"
 
 假设我们的建表sql是这样的
 
-![mysql建表sql](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/mysql%E5%BB%BA%E8%A1%A8sql5.png)
+![mysql建表sql](https://cdn.xiaobaidebug.top/image/mysql%E5%BB%BA%E8%A1%A8sql5.png)
 
 <br>
 
@@ -40,7 +40,7 @@ select * from page order by id limit offset, size;
 
 比如一页有10条数据。
 
-![user表数据库原始状态](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%816.drawio.png)
+![user表数据库原始状态](https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%816.drawio.png)
 
 第一页就是下面这样的sql语句。
 
@@ -74,7 +74,7 @@ select * from page order by id limit 990, 10;
 
 我们先来看下limit sql的内部执行逻辑。
 
-![Mysql架构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/Mysql%E6%9E%B6%E6%9E%846.drawio.png)
+![Mysql架构](https://cdn.xiaobaidebug.top/Mysql%E6%9E%B6%E6%9E%8456.drawio.png)
 
 mysql内部分为**server层**和**存储引擎层**。一般情况下存储引擎都用innodb。
 
@@ -94,13 +94,13 @@ explain select * from page order by id limit 0, 10;
 
 可以看到，explain中提示 key 那里，执行的是**PRIMARY**，也就是走的**主键索引**。
 
-![分页查询offset=0](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2offset=0.png)
+![分页查询offset=0](https://cdn.xiaobaidebug.top/image/%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2offset=0.png)
 
 主键索引本质是一棵B+树，它是放在innodb中的一个数据结构。
 
 我们可以回忆下，B+树大概长这样。
 
-![B+树结构](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%842d.png)
+![B+树结构](https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%842d.png)
 
 在这个树状结构里，我们需要关注的是，最下面一层节点，也就是**叶子结点**。而这个叶子结点里放的信息会根据当前的索引是**主键还是非主键**有所不同。
 
@@ -117,7 +117,7 @@ select * from page where user_name = "小白10";
 
 此时回表到**主键索引**中做查询，最后定位到**主键为10的行数据**。
 
-![回表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%9B%9E%E8%A1%A8.drawio.png)
+![回表](https://cdn.xiaobaidebug.top/image/%E5%9B%9E%E8%A1%A8.drawio.png)
 
 但不管是主键还是非主键索引，他们的叶子结点数据都是**有序的**。比如在主键索引中，这些数据是根据主键id的大小，从小到大，进行排序的。
 
@@ -205,7 +205,7 @@ server层会调用innodb的接口，在innodb里的非主键索引中获取到�
 
 但当offset变得非常大时，比如600万，此时执行explain。
 
-![非主键索引offset值超大时走全表扫描](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E9%9D%9E%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95offset%E5%80%BC%E8%B6%85%E5%A4%A7%E6%97%B6%E8%B5%B0%E5%85%A8%E8%A1%A8%E6%89%AB%E6%8F%8F.png)
+![非主键索引offset值超大时走全表扫描](https://cdn.xiaobaidebug.top/image/%E9%9D%9E%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95offset%E5%80%BC%E8%B6%85%E5%A4%A7%E6%97%B6%E8%B5%B0%E5%85%A8%E8%A1%A8%E6%89%AB%E6%8F%8F.png)
 
 可以看到type那一栏显示的是ALL，也就是**全表扫描**。
 
@@ -275,11 +275,11 @@ select * from page;
 
 可以看下伪代码
 
-![batch获取数据](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/batch%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE.png)
+![batch获取数据](https://cdn.xiaobaidebug.top/image/batch%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE.png)
 
 这个操作，可以通过主键索引，每次定位到id在哪，然后往后遍历100个数据，这样不管是多少万的数据，查询性能都很稳定。
 
-![batch分批获取user表](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/batch分批获取user表.drawio.png)
+![batch分批获取user表](https://cdn.xiaobaidebug.top/image/batch分批获取user表.drawio.png)
 
 <br>
 
@@ -293,7 +293,7 @@ select * from page;
 
 比如，我们在使用谷歌搜索时看到的翻页功能。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220502222159101.png)
+![](https://cdn.xiaobaidebug.top/image/image-20220502222159101.png)
 
 一般来说，谷歌搜索基本上都在20页以内，作为一个用户，我就很少会翻到第10页之后。
 
@@ -309,7 +309,7 @@ select * from page;
 
 但如果能从产品的形式上就做成不支持跳页会更好，比如**只支持上一页或下一页**。
 
-![上下页的形式](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%8A%E4%B8%8B%E9%A1%B5%E7%9A%84%E5%BD%A2%E5%BC%8F.drawio.png)
+![上下页的形式](https://cdn.xiaobaidebug.top/image/%E4%B8%8A%E4%B8%8B%E9%A1%B5%E7%9A%84%E5%BD%A2%E5%BC%8F.drawio.png)
 
 这样我们就可以使用上面提到的start_id方式，采用分批获取，每批数据以start_id为起始位置。这个解法最大的好处是不管翻到多少页，查询速度永远稳定。
 
@@ -321,7 +321,7 @@ select * from page;
 
 是不是就不挫了？
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220503134616713.png)
+![](https://cdn.xiaobaidebug.top/image/image-20220503134616713.png)
 
 <br>
 
@@ -367,7 +367,7 @@ select * from page;
 
 我有个不成熟的请求。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
+![](https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg)
 
 <br>
 
@@ -386,7 +386,7 @@ select * from page;
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -394,9 +394,9 @@ select * from page;
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
+![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
 
 

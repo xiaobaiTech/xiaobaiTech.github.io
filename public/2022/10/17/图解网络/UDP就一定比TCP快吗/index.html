@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.xiaobaidebug.top/image/favicon.png">
+  <link rel="mask-icon" href="https://cdn.xiaobaidebug.top/image/aaaaaaa%E5%A4%B4%E5%83%8F.png" color="#222">
+  <meta name="google-site-verification" content="vn6zFIUUArCZNOGOlwdwIPa1V8_eawg4XBwixAWh-k8">
+  <meta name="baidu-site-verification" content="code-HiXZw7ueDb">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。  话说，UDP比TCP快吗？ 相信就算不是八股文老手，也会下意识的脱口而出：”是“。 这要追问为什么，估计大家也能说出个大概。  但这也让人好奇，用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动图图解 | UDP就一定比TCP快吗？">
+<meta property="og:url" content="https://xiaobaidebug.top/2022/10/17/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/UDP%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94TCP%E5%BF%AB%E5%90%97/index.html">
+<meta property="og:site_name" content="小白debug">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。  话说，UDP比TCP快吗？ 相信就算不是八股文老手，也会下意识的脱口而出：”是“。 这要追问为什么，估计大家也能说出个大概。  但这也让人好奇，用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663680963848.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/tcp%E6%98%AF%E4%BB%80%E4%B9%885.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663557075676.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663602070263.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663597929404.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663597968469.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663597995829.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663598420295.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/mtu%E5%88%86%E5%8C%85.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/MSS%E5%92%8CMTU%E7%9A%84%E5%8C%BA%E5%88%AB2.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E4%B9%B1%E5%BA%8F%E9%98%9F%E5%88%97%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%88%B0%E6%9D%A5.drawio.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663602192374.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1663602173391.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162506224.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
+<meta property="article:published_time" content="2022-10-17T14:57:55.000Z">
+<meta property="article:modified_time" content="2022-10-30T02:50:27.575Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.xiaobaidebug.top/1663680963848.png">
+
+<link rel="canonical" href="https://xiaobaidebug.top/2022/10/17/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/UDP%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94TCP%E5%BF%AB%E5%90%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>动图图解 | UDP就一定比TCP快吗？ | 小白debug</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?072e633280c5372714c0cf8e873ca480";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小白debug</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一起在知识的海洋里呛水</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xiaobaiTech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/10/17/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/UDP%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94TCP%E5%BF%AB%E5%90%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          动图图解 | UDP就一定比TCP快吗？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-17 22:57:55" itemprop="dateCreated datePublished" datetime="2022-10-17T22:57:55+08:00">2022-10-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-30 10:50:27" itemprop="dateModified" datetime="2022-10-30T10:50:27+08:00">2022-10-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">图解网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+</blockquote>
+<p>话说，<strong>UDP比TCP快吗？</strong></p>
+<p>相信就算不是八股文老手，也会下意识的脱口而出：”<strong>是</strong>“。</p>
+<p>这要追问为什么，估计大家也能说出个大概。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663680963848.png"></p>
+<p>但这也让人好奇，<strong>用UDP就一定比用TCP快吗？什么情况下用UDP会比用TCP慢？</strong></p>
+<p>我们今天就来聊下这个话题。</p>
+<br>
+
+<h3 id="使用socket进行数据传输"><a href="#使用socket进行数据传输" class="headerlink" title="使用socket进行数据传输"></a>使用socket进行数据传输</h3><p>作为一个程序员，假设我们需要在A电脑的进程发一段数据到B电脑的进程，我们一般会在代码里使用socket进行编程。</p>
+<p>socket就像是一个<strong>电话或者邮箱</strong>（邮政的信箱）。当你想要发送消息的时候，拨通电话或者将信息塞到邮箱里，socket内核会自动完成将数据传给对方的这个过程。</p>
+<p>基于socket我们可以选择使用TCP或UDP协议进行通信。</p>
+<p>对于TCP这样的可靠性协议，每次消息发出后都能明确知道对方收没收到，就<strong>像打电话一样</strong>，只要”喂喂”两下就能知道对方有没有在听。</p>
+<p>而UDP就像是<strong>给邮政的信箱寄信一样</strong>，你寄出去的信，根本就不知道对方有没有正常收到，丢了也是有可能的。</p>
+<blockquote>
+<p>这让我想起了大概17年前，当时还没有现在这么发达的网购，想买一本《掌机迷》杂志，还得往信封里塞钱，然后一等就是一个月，好几次都怀疑信是不是丢了。我至今印象深刻，因为那是我和我哥攒了好久的钱。。。</p>
+</blockquote>
+<br>
+
+<p>回到socket编程的话题上。</p>
+<p>创建socket的方式就像下面这样。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd = socket(AF_INET, 具体协议,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>注意上面的”<strong>具体协议</strong>“，如果传入的是<code>SOCK_STREAM</code>，是指使用<strong>字节流</strong>传输数据，说白了就是<strong>TCP协议</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/tcp%E6%98%AF%E4%BB%80%E4%B9%885.drawio.png" alt="TCP是什么"></p>
+<p>如果传入的是<code>SOCK_DGRAM</code>，是指使用<strong>数据报</strong>传输数据，也就是<strong>UDP协议</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663557075676.png" alt="UDP是什么"></p>
+<p>返回的<code>fd</code>是指socket句柄，可以理解为socket的<strong>身份证号</strong>。通过这个<code>fd</code>你可以在内核中找到<strong>唯一</strong>的socket结构。</p>
+<p>如果想要通过这个socket发消息，只需要操作这个fd就行了，比如执行 <code>send(fd, msg, ...)</code>，内核就会通过这个fd句柄找到socket然后进行发数据的操作。</p>
+<p><strong>如果一切顺利</strong>，此时对方执行接收消息的操作，也就是 <code>recv(fd, msg, ...)</code>，就能拿到你发的消息。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663602070263.gif" alt="udp发送接收过程"></p>
+<h3 id="对于异常情况的处理"><a href="#对于异常情况的处理" class="headerlink" title="对于异常情况的处理"></a>对于异常情况的处理</h3><p><strong>但如果不顺利呢？</strong></p>
+<p>比如消息发到一半，丢包了呢?</p>
+<blockquote>
+<p>丢包的原因有很多，之前写过的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7126710506936598558">《用了TCP协议，就一定不会丢包吗？》</a>有详细聊到过，这里就不再展开。</p>
+</blockquote>
+<p>那UDP和TCP的态度就不太一样了。</p>
+<br>
+
+<p>UDP表示，”哦，是吗？然后呢？关我x事”</p>
+<p>TCP态度就截然相反了，”啊？那可不行，是不是我发太快了呢？是不是链路太堵被别人影响到了呢？不过你放心，我肯定给你补发”</p>
+<p>TCP老实人石锤了。我们来看下这个老实人在背后都默默做了哪些事情。</p>
+<h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>对于TCP，它会给发出的消息打上一个<strong>编号（sequence）</strong>，接收方收到后回一个**确认(ack)**。发送方可以通过<code>ack</code>的数值知道接收方收到了哪些<code>sequence</code>的包。</p>
+<p>如果长时间等不到对方的确认，TCP就会重新发一次消息，这就是所谓的<strong>重传机制</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663597929404.png" alt="TCP重传"></p>
+<br>
+
+<h4 id="流量控制机制"><a href="#流量控制机制" class="headerlink" title="流量控制机制"></a>流量控制机制</h4><p>但重传这件事本身对性能影响是比较严重的，所以是<strong>下下策</strong>。</p>
+<p>于是TCP就需要思考有没有办法可以尽量<strong>避免重传</strong>。</p>
+<p>因为数据发送方和接收方处理数据能力可能不同，因此如果可以根据双方的能力去调整发送的数据量就好了，于是就有了<strong>发送和接收窗口</strong>，基本上从名字就能看出它的作用，比如<strong>接收窗口的大小</strong>就是指，接收方当前<strong>能接收的数据量大小</strong>，<strong>发送窗口的大小</strong>就指发送方当前能发的数据量大小。TCP根据窗口的大小去控制自己发送的数据量，这样就能大大减少丢包的概率。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663597968469.png" alt="流量控制机制"></p>
+<br>
+
+<h4 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h4><p>接收方的接收到数据之后，会不断处理，<strong>处理能力也不是一成不变的</strong>，有时候处理的快些，那就可以收多点数据，处理的慢点那就希望对方能少发点数据。毕竟发多了就有可能处理不过来导致丢包，丢包会导致重传，这可是下下策。因此我们需要动态的去调节这个接收窗口的大小，于是就有了<strong>滑动窗口机制</strong>。</p>
+<p>看到这里大家可能就有点迷了，<strong>流量控制和滑动窗口机制貌似很像，它们之间是啥关系？</strong>我总结一下。其实现在TCP是<strong>通过滑动窗口机制来实现流量控制机制的</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663597995829.png" alt="滑动窗口机制"></p>
+<br>
+
+<h4 id="拥塞控制机制"><a href="#拥塞控制机制" class="headerlink" title="拥塞控制机制"></a>拥塞控制机制</h4><p>但这还不够，有时候发生丢包，<strong>并不是因为发送方和接收方的处理能力问题导致的</strong>。而是跟<strong>网络环境</strong>有关，大家可以将网络想象为一条公路。马路上可能堵满了别人家的车，只留下一辆车的空间。那就算你家有5辆车，目的地也正好有5个停车位，你也没办法同时全部一起上路。于是TCP希望能感知到外部的网络环境，根据网络环境及时调整自己的发包数量，比如马路只够两辆车跑，那我就只发两辆车。但外部环境这么复杂，TCP是怎么感知到的呢？</p>
+<p>TCP会先慢慢试探的发数据，不断加码数据量，越发越多，先发一个，再发2个，4个…。直到出现丢包，这样TCP就知道现在当前网络大概吃得消几个包了，这既是所谓的<strong>拥塞控制机制</strong>。</p>
+<p>不少人会疑惑流量控制和拥塞控制的关系。我这里小小的总结下。<strong>流量控制</strong>针对的是<strong>单个连接</strong>数据处理能力的控制，<strong>拥塞控制</strong>针对的是<strong>整个网络环境</strong>数据处理能力的控制。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663598420295.png" alt="1663598420295"></p>
+<br>
+
+<h4 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h4><p>但上面提到的都是怎么<strong>降低</strong>重传的概率，似乎重传这个事情就是无法避免的，<strong>那如果确实发生了，有没有办法降低它带来的影响呢？</strong></p>
+<p>有。当我们需要发送一个超大的数据包时，如果这个数据包丢了，那就得重传同样大的数据包。但如果我能将其分成一小段一小段，那就算真丢了，那我也就只需要重传那一小段就好了，大大减小了重传的压力，这就是TCP的<strong>分段机制</strong>。</p>
+<p>而这个所谓的一小段的长度，在传输层叫<strong>MSS</strong>（<strong>Maximum Segment Size</strong>），数据包长度大于MSS则会分成N个小于等于MSS的包。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif" alt="MSS分包"></p>
+<p>而在网络层，如果数据包还大于<strong>MTU（Maximum Transmit Unit）</strong>，那还会继续分包。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image/mtu%E5%88%86%E5%8C%85.gif" alt="MTU分包"></p>
+<p>一般情况下，<code>MSS=MTU-40Byte</code>，所以<strong>TCP分段后，到了IP层大概率就不会再分片了</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%92%8CMTU%E7%9A%84%E5%8C%BA%E5%88%AB2.png" alt="MSS和MTU的区别"></p>
+<br>
+
+<h4 id="乱序重排机制"><a href="#乱序重排机制" class="headerlink" title="乱序重排机制"></a>乱序重排机制</h4><p>既然数据包会被分段，链路又这么复杂还会丢包，那数据包乱序也就显得不奇怪了。比如发数据包1,2,3。1号数据包走了其他网络路径，2和3数据包先到，1数据包后到，于是数据包顺序就成了2,3,1。这一点TCP也考虑到了，依靠数据包的<code>sequence</code>，接收方就能知道数据包的先后顺序。</p>
+<p>后发的数据包先到是吧，那就先放到专门的<strong>乱序队列</strong>中，等数据都到齐后，重新整理好乱序队列的数据包顺序后再给到用户，这就是<strong>乱序重排机制</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/%E4%B9%B1%E5%BA%8F%E9%98%9F%E5%88%97%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%88%B0%E6%9D%A5.drawio.png" alt="乱序队列等待数据包的到来"></p>
+<br>
+
+<h4 id="连接机制"><a href="#连接机制" class="headerlink" title="连接机制"></a>连接机制</h4><p>前面提到，UDP是无连接的，而TCP是面向连接的。</p>
+<p>这里提到的<strong>连接</strong>到底是啥？</p>
+<p>TCP通过上面提到的各种机制实现了数据的可靠性。这些机制背后是通过一个个数据结构来实现的逻辑。而为了实现这套逻辑，操作系统内核需要在两端代码里维护一套复杂的状态机（三次握手，四次挥手，RST，closing等异常处理机制），<strong>这套状态机其实就是所谓的”连接”<strong>。这其实就是TCP的</strong>连接机制</strong>，而UDP用不上这套状态机，因此它是”无连接”的。</p>
+<br>
+
+<p>网络环境链路很长，还复杂，数据丢包是很常见的。</p>
+<p>我们平常用TCP做各种数据传输，完全对这些事情无感知。</p>
+<p><strong>哪有什么岁月静好，是TCP替你负重前行。</strong></p>
+<p>这就是TCP三大特性”面向连接、可靠的、基于字节流”中”<strong>可靠</strong>“的含义。</p>
+<p>不信你改用UDP试试，丢包那就是真丢了，丢到你怀疑人生。</p>
+<br>
+
+<h3 id="用UDP就一定比用TCP快吗？"><a href="#用UDP就一定比用TCP快吗？" class="headerlink" title="用UDP就一定比用TCP快吗？"></a>用UDP就一定比用TCP快吗？</h3><p>这时候UDP就不服了：”<strong>正因为没有这些复杂的TCP可靠性机制，所以我很快啊</strong>“</p>
+<p>嗯，这也是大部分人认为UDP比TCP快的原因。</p>
+<p><strong>实际上大部分情况下也确实是这样的。这话没毛病。</strong></p>
+<br>
+
+<p>那问题就来了。</p>
+<p><strong>有没有用了UDP但却比TCP慢的情况呢？</strong></p>
+<p>其实也有。</p>
+<p>在回答这个问题前，我需要先说下<strong>UDP的用途</strong>。</p>
+<p>实际上，<strong>大部分</strong>人也不会尝试<strong>直接拿裸udp</strong>放到生产环境中去做项目。</p>
+<p>那UDP的价值在哪？</p>
+<p>在我看来，UDP的存在，本质是内核提供的一个<strong>最小网络传输功能</strong>。</p>
+<p>很多时候，大家虽然号称自己用了UDP，但实际上都很<strong>忌惮</strong>它的丢包问题，所以大部分情况下都会在UDP的基础上做各种不同程度的<strong>应用层</strong>可靠性保证。比如王者农药用的<code>KCP</code>，以及最近很火的<code>QUIC（HTTP3.0）</code>，其实都<strong>在UDP的基础上做了重传逻辑</strong>，实现了一套<strong>类似</strong>TCP那样的可靠性机制。</p>
+<p>教科书上最爱提UDP适合用于<strong>音视频传输</strong>，因为这些场景允许丢包。但其实也不是什么包都能丢的，比如重要的关键帧啥的，该重传还得重传。除此之外，还有一些<strong>乱序处理机制</strong>。举个例子吧。</p>
+<p>打音视频电话的时候，你可能遇到过丢失中间某部分信息的情况，但应该从来没遇到过乱序的情况吧。</p>
+<p>比如对方打网络电话给你，说了：”<strong>我好想给小白来个点赞在看！</strong>“</p>
+<p>这时候网络信号不好，你可能会听到”我….点赞在看”。</p>
+<p>但却从来没遇到过”在看小白好想赞”这样的<strong>乱序</strong>场景吧？</p>
+<p>所以说，<strong>虽然选择了使用UDP，但一般还是会在应用层上做一些重传机制的</strong>。</p>
+<p>于是问题就来了，<strong>如果现在我需要传一个特别大的数据包</strong>。</p>
+<p>在<code>TCP</code>里，它内部会根据<code>MSS</code>的大小<strong>分段</strong>，这时候进入到IP层之后，每个包大小都不会超过<code>MTU</code>，因此IP层一般不会再进行分片。这时候发生丢包了，只需要<strong>重传每个MSS分段</strong>就够了。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663602192374.gif" alt="TCP分段"></p>
+<p>但对于<code>UDP</code>，其本身并不会分段，如果数据过大，到了IP层，就会进行分片。此时发生丢包的话，再次重传，就会<strong>重传整个大数据包</strong>。</p>
+<p><img src="https://cdn.xiaobaidebug.top/1663602173391.gif" alt="UDP不分段"></p>
+<p>对于上面这种情况，<strong>使用UDP就比TCP要慢</strong>。</p>
+<p>当然，解决起来也不复杂。这里的关键点在于是否实现了数据分段机制，<strong>使用UDP的应用层如果也实现了分段机制的话，那就不会出现上述的问题了</strong>。</p>
+<br>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>TCP为了实现可靠性，引入了重传机制、流量控制、滑动窗口、拥塞控制、分段以及乱序重排机制。而UDP则没有实现，因此一般来说TCP比UDP慢。</li>
+<li>TCP是面向连接的协议，而UDP是无连接的协议。这里的”<strong>连接</strong>“其实是，操作系统内核在两端代码里维护的一套复杂状态机。</li>
+<li>大部分项目，会在基于UDP的基础上，模仿TCP，实现不同程度的可靠性机制。比如王者农药用的KCP其实就在基于UDP在应用层里实现了一套<strong>重传</strong>机制。</li>
+<li>对于UDP+重传的场景，如果要传<strong>超大数据包</strong>，并且没有实现<strong>分段机制</strong>的话，那数据就会在IP层分片，一旦丢包，那就需要重传整个超大数据包。而TCP则不需要考虑这个，内部会自动分段，丢包重传分段就行了。这种场景下，其实TCP更快。</li>
+</ul>
+<br>
+
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<p>我有个不成熟的请求。</p>
+<img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
+
+<br>
+
+<p><strong>离开广东好长时间了，好久没人叫我靓仔了。</strong></p>
+<p>大家可以在<strong>评论区</strong>里，叫我一靓仔吗？</p>
+<p>我这么善良质朴的愿望，能被满足吗？</p>
+<p>如果实在叫不出口的话，能帮我<strong>点下关注</strong>和右下角的<strong>点赞+收藏</strong>吗？</p>
+<p>如果评论区没人叫我靓仔，文章也没人点赞，我感觉我下篇文章要开始收费了，价钱我都想好了，8块8，毕竟男人都拒绝不了这种价格以8结尾的项目。</p>
+<p>你说是吧，易峰。</p>
+<br>
+
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png"></p>
+<br>
+
+<p>不满足于在留言区说骚话？</p>
+<p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就<strong>超！开！心！</strong></p>
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
+
+<p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
+<br>
+
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.zhihu.com/people/jin-ji-de-ren-shan-ren">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+
+            <span class="label">知乎</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAljjzyx8zLh8Ao4p0-j1SD0e2LVVMpmqf11bwH_VaHis/">
+            <span class="icon">
+              <i class="fab fa-telegram"></i>
+            </span>
+
+            <span class="label">今日头条</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://juejin.cn/user/4001878057422087">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">掘金</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%BF%98%E8%A6%81%E6%9C%89websocket%E5%8D%8F%E8%AE%AE/" rel="prev" title="为什么有HTTP协议，还要有websocket协议">
+      <i class="fa fa-chevron-left"></i> 为什么有HTTP协议，还要有websocket协议
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8socket%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">1.</span> <span class="nav-text">使用socket进行数据传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">对于异常情况的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="nav-number">2.1.</span> <span class="nav-text">重传机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">流量控制机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%BA%E5%88%B6"><span class="nav-number">2.3.</span> <span class="nav-text">滑动窗口机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.4.</span> <span class="nav-text">拥塞控制机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.5.</span> <span class="nav-text">分段机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E9%87%8D%E6%8E%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">乱序重排机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.7.</span> <span class="nav-text">连接机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8UDP%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94%E7%94%A8TCP%E5%BF%AB%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">用UDP就一定比用TCP快吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">有时骚话连篇，有时硬核图解</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://polarisxu.studygolang.com/" title="https:&#x2F;&#x2F;polarisxu.studygolang.com&#x2F;" rel="noopener" target="_blank">polarisxu</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xargin.com/" title="https:&#x2F;&#x2F;xargin.com&#x2F;" rel="noopener" target="_blank">Xargin</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eddycjy.com/" title="https:&#x2F;&#x2F;eddycjy.com&#x2F;" rel="noopener" target="_blank">脑子进煎鱼了</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mytechshares.com/" title="https:&#x2F;&#x2F;mytechshares.com&#x2F;" rel="noopener" target="_blank">董泽润的技术笔记</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qcrao.com/" title="https:&#x2F;&#x2F;www.qcrao.com&#x2F;" rel="noopener" target="_blank">码农桃花源</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.haohongfan.com/" title="https:&#x2F;&#x2F;www.haohongfan.com&#x2F;" rel="noopener" target="_blank">HHFCodeRv</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.qiyacloud.cn/" title="https:&#x2F;&#x2F;www.qiyacloud.cn" rel="noopener" target="_blank">奇伢云存储</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://asong.cloud/" title="https:&#x2F;&#x2F;asong.cloud&#x2F;" rel="noopener" target="_blank">Golang梦工厂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.syst.top/" title="https:&#x2F;&#x2F;www.syst.top&#x2F;" rel="noopener" target="_blank">吴亲强的深夜食堂</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.luozhiyun.com/" title="https:&#x2F;&#x2F;www.luozhiyun.com&#x2F;" rel="noopener" target="_blank">luozhiyun很酷</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3329955fccef6fbcdea8',
+      clientSecret: 'fa9688ca19b34fd14615a5cc564222f4a7056d07',
+      repo        : 'gitTalk',
+      owner       : 'xiaobaiTech',
+      admin       : ['xiaobaiTech'],
+      id          : '868bc0e664da2223c0580839dace72f8',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

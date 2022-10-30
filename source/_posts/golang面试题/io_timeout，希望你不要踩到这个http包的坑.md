@@ -107,7 +107,7 @@ func Get(url string) ([]byte, error) {
 
 ### 排查
 
-![五层网络协议对应的消息体变化分析](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%AF%B9%E5%BA%94%E7%9A%84%E6%B6%88%E6%81%AF%E4%BD%93%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90.png)
+![五层网络协议对应的消息体变化分析](https://cdn.xiaobaidebug.top/image/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%AF%B9%E5%BA%94%E7%9A%84%E6%B6%88%E6%81%AF%E4%BD%93%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90.png)
 
 
 
@@ -125,7 +125,7 @@ func Get(url string) ([]byte, error) {
 
 **一般遇到问题，大部分情况下都不会是底层网络的问题，大胆怀疑是自己的问题就对了**，不死心就抓个包看下。
 
-![抓包结果](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/wiresharkcp2.png)
+![抓包结果](https://cdn.xiaobaidebug.top/image/wiresharkcp2.png)
 
 分析下，从刚开始三次握手（**画了红框的地方**）。
 
@@ -184,7 +184,7 @@ TCP连接每次都是三次握手。每次断开都要四次挥手。
 
 第一次访问`http://baidu.com` 域名的时候会建立一个连接，用完之后放到空闲连接池里，下次再要访问`http://baidu.com` 的时候会重新从连接池里把这个连接捞出来`复用`。
 
-![复用长连接](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%A4%8D%E7%94%A8%E9%95%BF%E8%BF%9E%E6%8E%A5.png)
+![复用长连接](https://cdn.xiaobaidebug.top/image/%E5%A4%8D%E7%94%A8%E9%95%BF%E8%BF%9E%E6%8E%A5.png)
 
 <br>
 
@@ -394,7 +394,7 @@ func (t *Transport) dialConn() {
 
 当**第一次**发起一个http请求时，这时候肯定没有空闲连接，会建立一个新连接。同时会创建一个**读goroutine和一个写goroutine**。 
 
-![读写协程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B.png)
+![读写协程](https://cdn.xiaobaidebug.top/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B.png)
 
 注意上面代码里的`t.dial(ctx, "tcp", cm.addr())`，如果像文章开头那样设置了 `http.Transport`的
 
@@ -453,7 +453,7 @@ func poll_runtime_pollSetDeadline(pd *pollDesc, d int64, mode int) {
 
 上面的源码，简单来说就是，当第一次调用请求的，会建立个连接，这时候还会注册一个**定时器事件**，假设时间设了`3s`，那么这个事件会在`3s`后发生，然后执行注册事件的逻辑。而这个注册事件就是`netpollDeadline`。 **注意这个`netpollDeadline`，待会会提到。**
 
-![读写协程定时器事件](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B%E5%AE%9A%E6%97%B6%E5%99%A8%E4%BA%8B%E4%BB%B6.png)
+![读写协程定时器事件](https://cdn.xiaobaidebug.top/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B%E5%AE%9A%E6%97%B6%E5%99%A8%E4%BA%8B%E4%BB%B6.png)
 
 
 
@@ -654,4 +654,4 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 ###### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:**【小白debug】**
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)

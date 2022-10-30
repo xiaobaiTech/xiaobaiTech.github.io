@@ -10,7 +10,7 @@ categories: "图解网络"
 
 今天又是被倾盆的需求淹没的一天。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/8e7e47794e20a373.jpeg)
+![](https://cdn.xiaobaidebug.top/image/8e7e47794e20a373.jpeg)
 
 
 
@@ -20,7 +20,7 @@ categories: "图解网络"
 
 "**听懂掌声**"的那种课就算了，太费手了。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2b1dc921fecd27e1.gif)
+![](https://cdn.xiaobaidebug.top/image/2b1dc921fecd27e1.gif)
 
 
 
@@ -30,7 +30,7 @@ categories: "图解网络"
 
 扯远了，回到我们今天的正题，我们了解下这篇文的目录。
 
-![目录](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/send%E7%9B%AE%E5%BD%95.png)
+![目录](https://cdn.xiaobaidebug.top/image/send%E7%9B%AE%E5%BD%95.png)
 
 
 
@@ -60,7 +60,7 @@ categories: "图解网络"
 
 在建立好连接之后，这个 **socket** 文件就像是远端机器的 **"代理人"** 一样。比如，如果我们想给远端服务发点什么东西，那就只需要对这个文件执行写操作就行了。
 
-![socket_api](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/socket_api.png)
+![socket_api](https://cdn.xiaobaidebug.top/image/socket_api.png)
 
 那写到了这个文件之后，剩下的发送工作自然就是由操作系统**内核**来完成了。
 
@@ -74,7 +74,7 @@ categories: "图解网络"
 
 也就是说**一个socket ，会带有两个缓冲区**，一个用于发送，一个用于接收。因为这是个先进先出的结构，有时候也叫它们**发送、接收队列**。
 
-![一个socket有两个缓冲区](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%80%E4%B8%AAsocket%E6%9C%89%E4%B8%A4%E4%B8%AA%E7%BC%93%E5%86%B2%E5%8C%BA.png)
+![一个socket有两个缓冲区](https://cdn.xiaobaidebug.top/image/%E4%B8%80%E4%B8%AAsocket%E6%9C%89%E4%B8%A4%E4%B8%AA%E7%BC%93%E5%86%B2%E5%8C%BA.png)
 
 
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
 答案是不确定！执行 send 之后，数据只是拷贝到了socket 缓冲区。至于什么时候会发数据，发多少数据，**全听操作系统安排**。
 
-![tcp_sendmsg逻辑](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp_sendmsg%E9%80%BB%E8%BE%913.png)
+![tcp_sendmsg逻辑](https://cdn.xiaobaidebug.top/image/tcp_sendmsg%E9%80%BB%E8%BE%913.png)
 
 
 
@@ -174,13 +174,13 @@ int s = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 
 - 如果此时 socket 是阻塞的，那么程序会在那**干等、死等**，直到释放出新的缓存空间，就继续把数据拷进去，然后**返回**。
 
-![send阻塞](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/send%E9%98%BB%E5%A1%9E.gif)
+![send阻塞](https://cdn.xiaobaidebug.top/image/send%E9%98%BB%E5%A1%9E.gif)
 
 
 
 - 如果此时 socket 是非阻塞的，程序就会**立刻返回**一个 `EAGAIN` 错误信息，意思是  `Try again` , 现在缓冲区满了，你也别等了，待会再试一次。
 
-![send非阻塞](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/send%E9%9D%9E%E9%98%BB%E5%A1%9E.gif)
+![send非阻塞](https://cdn.xiaobaidebug.top/image/send%E9%9D%9E%E9%98%BB%E5%A1%9E.gif)
 
 我们可以简单看下源码是怎么实现的。还是回到刚才的 `tcp_sendmsg` 发送方法中。
 
@@ -224,15 +224,15 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 - 如果此时 socket 是阻塞的，那么程序会在那**干等**，直到接收缓冲区有数据，就会把数据从接收缓冲区拷贝到用户缓冲区，然后**返回**。
 
-![recv阻塞](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/recv%E9%98%BB%E5%A1%9E.gif)
+![recv阻塞](https://cdn.xiaobaidebug.top/image/recv%E9%98%BB%E5%A1%9E.gif)
 
 - 如果此时 socket 是非阻塞的，程序就会**立刻返回**一个 `EAGAIN` 错误信息。
 
-![recv非阻塞](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/recv%E9%9D%9E%E9%98%BB%E5%A1%9E2.gif)
+![recv非阻塞](https://cdn.xiaobaidebug.top/image/recv%E9%9D%9E%E9%98%BB%E5%A1%9E2.gif)
 
 下面用一张图汇总一下，方便大家保存面试的时候用哈哈哈。
 
-![socket读写缓冲区满了的情况汇总](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/socket.png)
+![socket读写缓冲区满了的情况汇总](https://cdn.xiaobaidebug.top/image/socket.png)
 
 
 
@@ -246,7 +246,7 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 正常情况下，如果 `socket` 缓冲区**为空**，执行 `close`。就会触发四次挥手。
 
-![TCP四次挥手](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B4.png)
+![TCP四次挥手](https://cdn.xiaobaidebug.top/image/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B4.png)
 
 
 
@@ -286,7 +286,7 @@ void tcp_close(struct sock *sk, long timeout)
 }
 ```
 
-![recvbuf非空](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/recvbuf%E9%9D%9E%E7%A9%BA.gif)
+![recvbuf非空](https://cdn.xiaobaidebug.top/image/recvbuf%E9%9D%9E%E7%A9%BA.gif)
 
 <br>
 
@@ -322,7 +322,7 @@ void tcp_send_fin(struct sock *sk)
 
 有一点需要注意的是，只有在**接收缓冲区为空的前提下**，我们才有可能走到 `tcp_send_fin()` 。而只有在进入了这个方法之后，我们才有可能考虑**发送缓冲区是否为空**的场景。
 
-![sendbuf非空](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/sendbuf%E9%9D%9E%E7%A9%BA.gif)
+![sendbuf非空](https://cdn.xiaobaidebug.top/image/sendbuf%E9%9D%9E%E7%A9%BA.gif)
 
 <br>
 
@@ -412,7 +412,7 @@ int udp_sendmsg()
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 

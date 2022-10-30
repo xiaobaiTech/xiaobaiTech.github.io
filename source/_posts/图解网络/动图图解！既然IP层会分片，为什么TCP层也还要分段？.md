@@ -7,7 +7,7 @@ categories: "图解网络"
 
 
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E7%9B%AE%E5%BD%95.png)
+![](https://cdn.xiaobaidebug.top/image/%E7%9B%AE%E5%BD%95.png)
 
 
 ### 什么是TCP分段和IP分片
@@ -24,7 +24,7 @@ categories: "图解网络"
 
 答案比较简单。会把数据包切分小块。这样数据就可以由大变小，顺利传输。
 
-![数据分片](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%872.png)
+![数据分片](https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%872.png)
 
 回去看下网络分层协议，数据先过传输层，再到网络层。
 
@@ -51,7 +51,7 @@ categories: "图解网络"
 **MSS：Maximum Segment Size** 。  TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。
 假设 MTU= 1500 byte，那么 **MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte**，如果应用层有 **2000 byte** 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。
 
-![MSS分包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/MSS%E5%88%86%E5%8C%85.gif)
+![MSS分包](https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif)
 
 
 
@@ -59,7 +59,7 @@ categories: "图解网络"
 
 我们都知道TCP三次握手，而`MSS`会在三次握手的过程中传递给对方，用于通知对端本地最大可以接收的TCP报文数据大小（不包含TCP和IP报文首部）。
 
-![抓包mss](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%8A%93%E5%8C%85mss.png)
+![抓包mss](https://cdn.xiaobaidebug.top/image/%E6%8A%93%E5%8C%85mss.png)
 
 比如上图中，B将自己的MSS发送给A，建议A在发数据给B的时候，采用`MSS=1420`进行分段。而B在发数据给A的时候，同样会带上`MSS=1372`。两者在对比后，会采用**小的**那个值（1372）作为通信的`MSS值`，这个过程叫`MSS协商`。
 
@@ -77,7 +77,7 @@ categories: "图解网络"
 
 我们再看TCP的报头。
 
-![TCP报头](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/tcp%E6%8A%A5%E5%A4%B45.png)
+![TCP报头](https://cdn.xiaobaidebug.top/image/tcp%E6%8A%A5%E5%A4%B45.png)
 
 其实MSS是作为可选项引入的，只不过一般情况下MSS都会传，但是万一遇到了哪台机器的实现上比较调皮，**不传MSS**这个可选项。那对端该怎么办？
 
@@ -100,7 +100,7 @@ categories: "图解网络"
 **MTU: Maximum Transmit Unit**，最大传输单元。 其实这个是由**数据链路层**提供，为了告诉上层IP层，自己的传输能力是多大。IP层就会根据它进行数据包切分。一般 MTU=**1500 Byte**。
 假设IP层有 <= `1500` byte 需要发送，只需要一个 IP 包就可以完成发送任务；假设 IP 层有 > `1500` byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同，同时为了分片后能在接收端把切片组装起来，还需要在分片后的IP包里加上各种信息。比如这个分片在原来的IP包里的偏移offset。
 
-![MTU分包](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/mtu%E5%88%86%E5%8C%85.gif)
+![MTU分包](https://cdn.xiaobaidebug.top/image/mtu%E5%88%86%E5%8C%85.gif)
 
 #### 如何查看MTU
 
@@ -120,7 +120,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 在一台机器的应用层到这台机器的网卡，**这条链路上**，基本上可以保证，`MSS < MTU`。
 
-![MSS和MTU的区别](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/MSS和MTU的区别2.png)
+![MSS和MTU的区别](https://cdn.xiaobaidebug.top/image/MSS和MTU的区别2.png)
 
 
 
@@ -148,11 +148,11 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 假设有一份数据，较大，且在TCP层不分段，如果这份数据在发送的过程中出现**丢包**现象，TCP会发生重传，那么重传的就是这一大份数据（虽然IP层会把数据切分为MTU长度的N多个小包，但是TCP重传的单位却是那一大份数据）。
 
-![假设TCP不分段](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E5%88%86%E7%89%871.gif)
+![假设TCP不分段](https://cdn.xiaobaidebug.top/image/TCP%E5%88%86%E7%89%871.gif)
 
 如果TCP把这份数据，分段为N个小于等于MSS长度的数据包，到了IP层后加上IP头和TCP头，还是小于MTU，那么IP层也不会再进行分包。此时在传输路上发生了丢包，那么TCP重传的时候也只是重传那一小部分的MSS段。效率会比TCP不分段时更高。
 
-![假设TCP分段](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/TCP%E5%88%86%E6%AE%B5.gif)
+![假设TCP分段](https://cdn.xiaobaidebug.top/image/TCP%E5%88%86%E6%AE%B5.gif)
 
 类似的，传输层除了TCP外，还有UDP协议，但UDP本身不会分段，所以当数据量较大时，只能交给IP层去分片，然后传到底层进行发送。
 
@@ -174,7 +174,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 如果链路上还有设备有**更小的MTU**，那么还会再分片，最后所有的分片都会在**接收端**处进行组装。
 
-![IP分片再分片](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/IP%E5%88%86%E7%89%87%E5%86%8D%E5%88%86%E7%89%87.gif)
+![IP分片再分片](https://cdn.xiaobaidebug.top/image/IP%E5%88%86%E7%89%87%E5%86%8D%E5%88%86%E7%89%87.gif)
 
 
 
@@ -203,7 +203,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 
 原理比较简单，首先我们先回去看下IP的数据报头。
 
-![IP报头DF](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/ip%E6%8A%A5%E5%A4%B4DF1.png)
+![IP报头DF](https://cdn.xiaobaidebug.top/image/ip%E6%8A%A5%E5%A4%B4DF1.png)
 
 这里有个标红的标志位`DF`（Don't Fragment），当它置为1，意味着这个IP报文不分片。
 
@@ -220,13 +220,13 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 - 此时链路上有台**路由器**由于各种原因**MTU变小了**
 - IP消息到这台路由器了，路由器发现消息长度大于自己的MTU，且消息自带DF不让分片。就把消息丢弃。同时返回一个`ICMP`错误给发送端，同时带上自己的`MTU`。
 
-![获得pmtu](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%8E%B7%E5%BE%97pmtu.gif)
+![获得pmtu](https://cdn.xiaobaidebug.top/image/%E8%8E%B7%E5%BE%97pmtu.gif)
 
 - 发送端收到这个ICMP消息，会更新自己的MTU，同时记录到一个**PMTU表**中。
 - 因为TCP的可靠性，会尝试重传这个消息，同时以这个新MTU值计算出MSS进行分段，此时新的IP包就可以顺利被刚才的路由器转发。
 - 如果路径上还有更小的MTU的路由器，那上面发生的事情还会再发生一次。
 
-![获得pmtu后的TCP重传](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E8%8E%B7%E5%BE%97pmtu%E5%90%8E%E7%9A%84TCP%E9%87%8D%E4%BC%A0.gif)
+![获得pmtu后的TCP重传](https://cdn.xiaobaidebug.top/image/%E8%8E%B7%E5%BE%97pmtu%E5%90%8E%E7%9A%84TCP%E9%87%8D%E4%BC%A0.gif)
 
 
 
@@ -264,7 +264,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 
 欢迎大家加我微信（公众号里右下角“联系我”），互相围观朋友圈砍一刀啥的哈哈。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210513085507280.png)
+![](https://cdn.xiaobaidebug.top/image/image-20210513085507280.png)
 
 如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
 
@@ -273,7 +273,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 ###### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/默认标题_动态横版二维码_2021-03-19-0.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 
 

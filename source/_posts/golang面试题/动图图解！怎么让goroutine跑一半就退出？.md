@@ -6,7 +6,7 @@ categories: "golang面试题"
 ---
 
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/doutub_gif2.gif)
+![](https://cdn.xiaobaidebug.top/image/doutub_gif2.gif)
 
 光看标题，大家可能不太理解我说的是啥。
 <!-- more -->
@@ -148,7 +148,7 @@ func goexit0(gp *g) {
 
 简单描述下，Go语言里有个**GMP模型**的说法，`M`是内核线程，`G`也就是我们平时用的协程`goroutine`，`P`会在`G和M之间`做工具人，负责**调度**`G`到`M`上运行。
 
-![GMP图](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/GMP图.png)
+![GMP图](https://cdn.xiaobaidebug.top/image/GMP图.png)
 
 既然是**调度**，也就是说不是每个`G`都能一直处于运行状态，等G不能运行时，就把它存起来，再**调度**下一个能运行的G过来运行。
 
@@ -156,7 +156,7 @@ func goexit0(gp *g) {
 
 了解这个背景后，再回到 `goexit0` 方法看看，做的事情就是将当前的协程G置为`_Gdead`状态，然后把它从M上摘下来，尝试放回到P的本地队列中。然后重新调度一波，获取另一个能跑的G，拿出来跑。
 
-![goexit](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/goexit.gif)
+![goexit](https://cdn.xiaobaidebug.top/image/goexit.gif)
 
 所以简单总结一下，**只要执行 goexit 这个函数，当前协程就会退出，同时还能调度下一个可执行的协程出来跑。**
 
@@ -170,7 +170,7 @@ func goexit0(gp *g) {
 
 有个**小细节**，不知道大家平时debug的时候有没有关注过。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/0bec52deb6276987.jpeg)
+![](https://cdn.xiaobaidebug.top/image/0bec52deb6276987.jpeg)
 
 为了说明问题，这里先给出一段代码。
 
@@ -196,7 +196,7 @@ func main() {
 
 这里我们新启动的协程里，在`Foo()`函数内随便打个断点。然后`debug`一下。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20211024150223114.png)
+![](https://cdn.xiaobaidebug.top/image/image-20211024150223114.png)
 
 会发现，这个协程的堆栈底部是从`runtime.goexit()`里开始启动的。
 
@@ -255,7 +255,7 @@ func A() {
 
 上面的代码是main运行B函数，B函数再运行A函数，代码执行时就跟下面的动图那样。
 
-![函数堆栈执行顺序](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E5%87%BD%E6%95%B0%E5%A0%86%E6%A0%88.gif)
+![函数堆栈执行顺序](https://cdn.xiaobaidebug.top/image/%E5%87%BD%E6%95%B0%E5%A0%86%E6%A0%88.gif)
 
 这个是先进后出的过程，也就是我们常说的函数栈，执行完**子函数A()**后，就会回到**父函数B()**中，执行完**B()后**，最后就会回到**main()**。这里的栈底是`main()`，如果在**栈底**插入的是 `goexit` 的话，那么当程序执行结束的时候就都能跑到`goexit`里去。
 
@@ -297,7 +297,7 @@ func newproc1(fn *funcval, argp unsafe.Pointer, narg int32, callergp *g, callerp
 
 关于main函数栈底是不是也有个`goexit`，我们对下面代码断点看下。直接得出结果。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20211025073255360.png)
+![](https://cdn.xiaobaidebug.top/image/image-20211025073255360.png)
 
 main函数栈底也是`goexit()`。
 
@@ -418,7 +418,7 @@ func main() {
 <br>
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -426,7 +426,7 @@ func main() {
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有趣的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 
 

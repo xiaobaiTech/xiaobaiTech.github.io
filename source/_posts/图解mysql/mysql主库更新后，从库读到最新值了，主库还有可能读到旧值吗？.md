@@ -13,7 +13,7 @@ categories: "图解mysql"
 
 大家好，我是小白，好长时间没更新技术文了，相信大家看我写的水文也看烦了。
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/1539510639669-20220302001234401.jpg)
+![](https://cdn.xiaobaidebug.top/image/1539510639669-20220302001234401.jpg)
 <!-- more -->
 今天的文章，其实来自真实的面试题，而且还比较有趣，所以忍不住分享出来。
 
@@ -23,7 +23,7 @@ categories: "图解mysql"
 
 我们知道，mysql数据库，为了得到更高性能，一般会**读写分离**，主库用于写操作，比如用于执行`insert，update`操作，从库用于读，也就是最常见的`select`操作。像下面这个图这样。
 
-![mysql读写分离](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/mysql%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB2.drawio-20220419205818771.png)
+![mysql读写分离](https://cdn.xiaobaidebug.top/image/mysql%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB2.drawio-20220419205818771.png)
 
 虽然主库一般用于写操作，但也是**能读**的。那么今天的问题来了。
 
@@ -41,7 +41,7 @@ categories: "图解mysql"
 
 比如我在主库和从库都有张user表，此时有以下两条数据。
 
-![数据库原始状态](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81.png)
+![数据库原始状态](https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81.png)
 
 正常情况下，我们往主库执行写操作，比如更新一条数据，执行
 
@@ -88,7 +88,7 @@ mysql> show variables like "%log_bin%";
 
 可以在**主库**中通过 `show full processlist;` 查询到 binlog dump线程的存在。
 
-![主库的binlog dump线程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220301084729507.png)
+![主库的binlog dump线程](https://cdn.xiaobaidebug.top/image/image-20220301084729507.png)
 
 以上，主库的工作就结束了，我们说说从库的。
 
@@ -110,7 +110,7 @@ mysql> show variables like "%log_bin%";
 
 可以通过在**从库**中执行 `show full processlist;` 确认 io线程和sql线程的存在。
 
-![io线程和sql线程](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20220301102221753.png)
+![io线程和sql线程](https://cdn.xiaobaidebug.top/image/image-20220301102221753.png)
 
 因此总结起来，主从同步的步骤就是
 
@@ -202,7 +202,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 假设我们有两个线程同时对某行数据A(A=1)进行以下操作。
 
-![一个case解释隔离级别](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%B8%80%E4%B8%AAcase%E8%A7%A3%E9%87%8A%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.2drawio.png)
+![一个case解释隔离级别](https://cdn.xiaobaidebug.top/image/%E4%B8%80%E4%B8%AAcase%E8%A7%A3%E9%87%8A%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.2drawio.png)
 
 我们执行事务都像上面这样，begin可以开启事务，commit会提交事务，上面两个线程，各执行一个事务，且此时是并发执行。
 
@@ -234,7 +234,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 数据库原始状态如下，此时主从都一样。
 
-![数据库原始状态](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81-20220419205854846.png)
+![数据库原始状态](https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81-20220419205854846.png)
 
 
 
@@ -246,7 +246,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 所以从结论上来说，**出现了从库都读到最新值了，主库却读到了旧值的情况。**
 
-![从库读到最新值主库却读到旧值](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/2%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%B8%BB%E5%BA%93%E5%8D%B4%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC.drawio.png)
+![从库读到最新值主库却读到旧值](https://cdn.xiaobaidebug.top/image/2%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%B8%BB%E5%BA%93%E5%8D%B4%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC.drawio.png)
 
 
 
@@ -262,7 +262,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 那么问题又来了，这四个隔离级别是挺骚气的，那他们是怎么实现的呢？
 
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/1597215709606.gif)
+![](https://cdn.xiaobaidebug.top/image/1597215709606.gif)
 
 
 
@@ -283,7 +283,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 ###### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白debug】
-![](https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/小白debug动图二维码-20210908204913011.gif)
+![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
 
 <br>
 
@@ -291,7 +291,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就**超！开！心！**
 
-<img src="https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/image-20210814073504558.png" width = "50%"   align=center />
+<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 
 

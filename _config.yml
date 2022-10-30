@@ -137,13 +137,13 @@ plugins:
   readmore:
   blogId: 26611-1632556057073-469
   name:  小白debug
-  qrcode: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/%E4%BB%85%E4%BA%8C%E7%BB%B4%E5%90%971.png
+  qrcode: https://cdn.xiaobaidebug.top/image/%E4%BB%85%E4%BA%8C%E7%BB%B4%E5%90%971.png
   keyword: vip  
   
 
 
 
-# avatar: https://xiaobaidebug.oss-cn-hangzhou.aliyuncs.com/image/aaaaa%E5%A4%B4%E5%83%8F.png
+# avatar: https://cdn.xiaobaidebug.top/image/aaaaa%E5%A4%B4%E5%83%8F.png
 
 
 
