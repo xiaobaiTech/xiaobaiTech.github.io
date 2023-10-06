@@ -61,9 +61,9 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/dbdbee64f53762c2.jpeg">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/P%E5%88%86%E5%8C%85%E4%B8%8E%E9%87%8D%E7%BB%84.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/9150e4e5ly1frrh7t0l9jj20ey0cxq3a.jpg">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-03-19-0.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="article:published_time" content="2021-03-26T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:23:15.272Z">
+<meta property="article:modified_time" content="2023-10-06T04:11:00.723Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61616129034230.png">
 
@@ -233,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:23:15" itemprop="dateModified" datetime="2022-10-30T10:23:15+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:11:00" itemprop="dateModified" datetime="2023-10-06T12:11:00+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -275,9 +275,9 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%871.png" alt="数据分片"></p>
 <h3 id="MTU-和-MSS-有什么区别"><a href="#MTU-和-MSS-有什么区别" class="headerlink" title="MTU 和 MSS 有什么区别"></a>MTU 和 MSS 有什么区别</h3><p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%92%8CMTU%E7%9A%84%E5%8C%BA%E5%88%AB.png" alt="MSS和MTU的区别"></p>
 <ul>
-<li><p><strong>MTU: Maximum Transmit Unit</strong>，最大传输单元。  由<strong>网络接口层（数据链路层）</strong>提供给<strong>网络层</strong>最大一次传输数据的大小；一般 MTU=<strong>1500 Byte</strong>。<br>假设IP层有 &lt;= 1500 byte 需要发送，只需要一个 IP 包就可以完成发送任务；假设 IP 层有&gt; 1500 byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同。</p>
+<li><p><strong>MTU: Maximum Transmit Unit</strong>，最大传输单元。 由<strong>网络接口层（数据链路层）</strong>提供给<strong>网络层</strong>最大一次传输数据的大小；一般 MTU=<strong>1500 Byte</strong>。<br>假设 IP 层有 &lt;= 1500 byte 需要发送，只需要一个 IP 包就可以完成发送任务；假设 IP 层有&gt; 1500 byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同。</p>
 </li>
-<li><p><strong>MSS：Maximum Segment Size</strong> 。  TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。<br>假设 MTU= 1500 byte，那么 <strong>MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte</strong>，如果应用层有 <strong>2000 byte</strong> 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。</p>
+<li><p><strong>MSS：Maximum Segment Size</strong> 。 TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和 TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。<br>假设 MTU= 1500 byte，那么 <strong>MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte</strong>，如果应用层有 <strong>2000 byte</strong> 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。</p>
 </li>
 </ul>
 <h3 id="什么是粘包"><a href="#什么是粘包" class="headerlink" title="什么是粘包"></a>什么是粘包</h3><p>那么当李东在手机上键入”李东””亚健康终结者”的时候，在 TCP 中把消息分成 MSS 大小后，消息顺着网线顺利发出。</p>
@@ -306,7 +306,7 @@
 </ul>
 <p><img src="https://cdn.xiaobaidebug.top/image/negle2.png" alt="Nagle2"></p>
 <ul>
-<li>由于启动了<strong>Nagle算法</strong>， msg1 小于 mss ，此时等待<code>200ms</code>内来了一个 msg2 ，msg1 + msg2 &gt; MSS，因此把 msg2 分为 msg2(1) 和 msg2(2)，msg1 + msg2(1) 包的大小为<code>MSS</code>。此时发送出去。</li>
+<li>由于启动了<strong>Nagle 算法</strong>， msg1 小于 mss ，此时等待<code>200ms</code>内来了一个 msg2 ，msg1 + msg2 &gt; MSS，因此把 msg2 分为 msg2(1) 和 msg2(2)，msg1 + msg2(1) 包的大小为<code>MSS</code>。此时发送出去。</li>
 <li>剩余的 msg2(2) 也等到了 msg3， 同样 msg2(2) + msg3 &gt; MSS，因此把 msg3 分为 msg3(1) 和 msg3(2)，msg2(2) + msg3(1) 作为一个包发送。</li>
 <li>剩余的 msg3(2) 长度不足<code>mss</code>，同时在<code>200ms</code>内没有等到下一个包，等待超时，直接发送。</li>
 <li>此时三个包虽然在图里<strong>颜色不同</strong>，但是实际场景中，他们都是<strong>一整个 01 串</strong>，如果处理开发者把第一个收到的 msg1 + msg2(1) 就当做是一个完整消息进行处理，就会看上去就<strong>像是两个包粘在一起</strong>，就会导致<strong>粘包问题</strong>。</li>
@@ -346,13 +346,13 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E5%A4%B4%E5%B0%BE%E5%8A%A0%E6%A0%A1%E9%AA%8C%E6%A0%87%E5%BF%97.png" alt="消息边界头尾加校验标志"></p>
 <h3 id="UDP-会粘包吗"><a href="#UDP-会粘包吗" class="headerlink" title="UDP 会粘包吗"></a>UDP 会粘包吗</h3><p>跟 <code>TCP</code> 同为传输层的另一个协议，<strong>UDP，User Datagram Protocol</strong>。用户数据包协议，是面向无连接，不可靠的，基于<strong>数据报</strong>的传输层通信协议。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/udp%E6%98%AF%E4%BB%80%E4%B9%88.png" alt="UDP是什么"></p>
-<p>基于<strong>数据报</strong>是指无论应用层交给 UDP 多长的报文，UDP 都照样发送，即一次发送一个报文。至于如果数据包太长，需要分片，那也是IP层的事情，大不了效率低一些。UDP 对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。而接收方在接收数据报的时候，也不会像面对 TCP 无穷无尽的二进制流那样不清楚啥时候能结束。正因为<strong>基于数据报</strong>和<strong>基于字节流</strong>的差异，<strong>TCP 发送端发 10 次字节流数据，而这时候接收端可以分 100 次去取数据，每次取数据的长度可以根据处理能力作调整；但 UDP 发送端发了 10 次数据报，那接收端就要在 10 次收完，且发了多少，就取多少，确保每次都是一个完整的数据报。</strong></p>
-<p>我们先看下<strong>IP报头</strong></p>
+<p>基于<strong>数据报</strong>是指无论应用层交给 UDP 多长的报文，UDP 都照样发送，即一次发送一个报文。至于如果数据包太长，需要分片，那也是 IP 层的事情，大不了效率低一些。UDP 对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。而接收方在接收数据报的时候，也不会像面对 TCP 无穷无尽的二进制流那样不清楚啥时候能结束。正因为<strong>基于数据报</strong>和<strong>基于字节流</strong>的差异，<strong>TCP 发送端发 10 次字节流数据，而这时候接收端可以分 100 次去取数据，每次取数据的长度可以根据处理能力作调整；但 UDP 发送端发了 10 次数据报，那接收端就要在 10 次收完，且发了多少，就取多少，确保每次都是一个完整的数据报。</strong></p>
+<p>我们先看下<strong>IP 报头</strong></p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ip%E6%8A%A5%E5%A4%B42.png" alt="ip报头"></p>
 <p>注意这里面是有一个 16 位的总长度的，意味着 IP 报头里记录了整个 IP 包的总长度。接着我们再看下 <strong>UDP 的报头</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/udp%E6%8A%A5%E5%A4%B44.png" alt="UDP报头"></p>
 <p>在报头中有<code>16bit</code>用于指示 <strong>UDP 数据报文的长度</strong>，假设这个长度是 n ，以此作为<strong>数据边界</strong>。因此在接收端的应用层能清晰地将不同的数据报文区分开，从报头开始取 n 位，就是一个<strong>完整的</strong>数据报，从而避免粘包和拆包的问题。</p>
-<p>当然，就算没有这个位（<strong>16位 UDP 长度</strong>），因为 IP 的头部已经包含了数据的<strong>总长度</strong>信息，此时如果 IP 包（网络层）里放的数据使用的协议是 UDP（传输层），那么这个<strong>总长度</strong>其实就包含了 UDP 的头部和 UDP 的数据。</p>
+<p>当然，就算没有这个位（<strong>16 位 UDP 长度</strong>），因为 IP 的头部已经包含了数据的<strong>总长度</strong>信息，此时如果 IP 包（网络层）里放的数据使用的协议是 UDP（传输层），那么这个<strong>总长度</strong>其实就包含了 UDP 的头部和 UDP 的数据。</p>
 <p>因为 UDP 的头部长度固定为 8 字节（ 1 字节= 8 位，8 字节= 64 位，上图中除了<code>数据和选项</code>以外的部分），那么这样就很容易的算出 UDP 的数据的长度了。因此说 UDP 的长度信息其实是冗余的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/UDP%E6%95%B0%E6%8D%AE%E9%95%BF%E5%BA%A6-20210319074710451.png" alt="UDP数据长度"></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UDP Data 的长度 = IP 总长度 - IP Header 长度 - UDP Header 长度</span><br></pre></td></tr></table></figure>
@@ -360,13 +360,13 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/cb8849427e15334b.jpeg"></p>
 <p>可以再来看下 <strong>TCP 的报头</strong></p>
 <p><img src="https://cdn.xiaobaidebug.top/image/tcp%E6%8A%A5%E5%A4%B42.png" alt="tcp报头2"></p>
-<p>TCP首部里是没有长度这个信息的，跟UDP类似，同样可以通过下面的公式获得当前包的TCP数据长度。</p>
+<p>TCP 首部里是没有长度这个信息的，跟 UDP 类似，同样可以通过下面的公式获得当前包的 TCP 数据长度。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TCP Data 的长度 = IP 总长度 - IP Header 长度 - TCP Header 长度。</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.xiaobaidebug.top/image/tcp%E6%95%B0%E6%8D%AE%E9%95%BF%E5%BA%A6.png" alt="TCP数据长度"></p>
 <p>跟 UDP 不同在于，TCP 发送端在发的时候就<strong>不保证发的是一个完整的数据报</strong>，仅仅看成一连串无结构的字节流，这串字节流在接收端收到时哪怕知道长度也没用，因为它很可能只是某个完整消息的一部分。</p>
-<h3 id="为什么长度字段冗余还要加到-UDP-首部中"><a href="#为什么长度字段冗余还要加到-UDP-首部中" class="headerlink" title="为什么长度字段冗余还要加到 UDP 首部中"></a>为什么长度字段冗余还要加到 UDP 首部中</h3><p>关于这一点，查了很多资料，<code>《 TCP-IP 详解（卷2）》</code>里说可能是因为要用于计算校验和。也有的说是因为UDP底层使用的可以不是IP协议，毕竟 IP 头里带了总长度，正好可以用于计算 UDP 数据的长度，万一 UDP 的底层不是IP层协议，而是其他网络层协议，就不能继续这么计算了。</p>
-<p>但我觉得，最重要的原因是，IP 层是网络层的，而 UDP 是传输层的，到了传输层，数据包就已经不存在IP头信息了，那么此时的UDP数据会被放在 UDP 的  <code>Socket Buffer</code> 中。当应用层来不及取这个 UDP 数据报，那么两个数据报在数据层面其实都是一堆 01 串。此时读取第一个数据报的时候，会先读取到 UDP 头部，<strong>如果这时候 UDP 头不含 UDP 长度信息，那么应用层应该取多少数据才算完整的一个数据报呢</strong>？</p>
+<h3 id="为什么长度字段冗余还要加到-UDP-首部中"><a href="#为什么长度字段冗余还要加到-UDP-首部中" class="headerlink" title="为什么长度字段冗余还要加到 UDP 首部中"></a>为什么长度字段冗余还要加到 UDP 首部中</h3><p>关于这一点，查了很多资料，<code>《 TCP-IP 详解（卷2）》</code>里说可能是因为要用于计算校验和。也有的说是因为 UDP 底层使用的可以不是 IP 协议，毕竟 IP 头里带了总长度，正好可以用于计算 UDP 数据的长度，万一 UDP 的底层不是 IP 层协议，而是其他网络层协议，就不能继续这么计算了。</p>
+<p>但我觉得，最重要的原因是，IP 层是网络层的，而 UDP 是传输层的，到了传输层，数据包就已经不存在 IP 头信息了，那么此时的 UDP 数据会被放在 UDP 的 <code>Socket Buffer</code> 中。当应用层来不及取这个 UDP 数据报，那么两个数据报在数据层面其实都是一堆 01 串。此时读取第一个数据报的时候，会先读取到 UDP 头部，<strong>如果这时候 UDP 头不含 UDP 长度信息，那么应用层应该取多少数据才算完整的一个数据报呢</strong>？</p>
 <p>因此 UDP 头的这个长度其实跟 TCP 为了防止粘包而在消息体里加入的边界信息是起一样的作用的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%BA%E4%BB%80%E4%B9%88UDP%E8%A6%81%E5%86%97%E4%BD%99%E4%B8%80%E4%B8%AA%E9%95%BF%E5%BA%A6%E5%AD%97%E6%AE%B5.png" alt="为什么UDP要冗余一个长度字段"></p>
 <p>面试的时候咱就把这些全说出去，<strong>显得</strong>咱好像经过了深深的思考一样，面试官可能会觉得咱特别爱思考，<strong>加分加分</strong>。</p>
@@ -377,22 +377,22 @@
 <p>先看看 IP 层的切片分包是怎么回事。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/P%E5%88%86%E5%8C%85%E4%B8%8E%E9%87%8D%E7%BB%84.png" alt="P分包与重组"></p>
 <ul>
-<li><p>如果消息过长，<code>IP层</code>会按 <strong>MTU 长度</strong>把消息分成 <strong>N 个切片</strong>，每个切片带有自身在<strong>包里的位置（offset）</strong>和<strong>同样的IP头信息</strong>。</p>
+<li><p>如果消息过长，<code>IP层</code>会按 <strong>MTU 长度</strong>把消息分成 <strong>N 个切片</strong>，每个切片带有自身在<strong>包里的位置（offset）</strong>和<strong>同样的 IP 头信息</strong>。</p>
 </li>
 <li><p>各个切片在网络中进行传输。每个数据包切片可以在不同的路由中流转，然后<strong>在最后的终点汇合后再组装</strong>。</p>
 </li>
-<li><p>在接收端收到第一个切片包时会申请一块新内存，创建IP包的数据结构，等待其他切片分包数据到位。</p>
+<li><p>在接收端收到第一个切片包时会申请一块新内存，创建 IP 包的数据结构，等待其他切片分包数据到位。</p>
 </li>
 <li><p>等消息全部到位后就把整个消息包给到上层（传输层）进行处理。</p>
 </li>
 </ul>
 <p>可以看出整个过程，<code>IP 层</code>从按长度切片到把切片组装成一个数据包的过程中，都只管运输，都不需要在意消息的边界和内容，都不在意消息内容了，那就不会有粘包一说了。</p>
 <p><code>IP 层</code>表示：我只管把发送端给我的数据传到接收端就完了，我也不了解里头放了啥东西。</p>
-<p>听起来就像 “<strong>我不管产品的需求傻不傻X，我实现了就行，我不问，也懒得争了</strong>”，这思路值得每一位优秀的划水程序员学习，<strong>respect</strong>。</p>
+<p>听起来就像 “<strong>我不管产品的需求傻不傻 X，我实现了就行，我不问，也懒得争了</strong>”，这思路值得每一位优秀的划水程序员学习，<strong>respect</strong>。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>粘包这个问题的根因是由于开发人员没有正确理解 TCP 面向字节流的数据传输方式，本身并不是 TCP 的问题，是开发者的问题。</p>
 <ul>
 <li>TCP 不管发送端要发什么，都基于字节流把数据发到接收端。这个字节流里可能包含上一次想要发的数据的部分信息。接收端根据需要在消息里加上识别消息边界的信息。不加就可能出现粘包问题。</li>
-<li>TCP 粘包跟Nagle算法有关系，但关闭 Nagle 算法并不解决粘包问题。</li>
+<li>TCP 粘包跟 Nagle 算法有关系，但关闭 Nagle 算法并不解决粘包问题。</li>
 <li>UDP 是基于数据报的传输协议，不会有粘包问题。</li>
 <li>IP 层也切片，但是因为不关心消息里有啥，因此有不会有粘包问题。</li>
 <li><code>TCP</code> 发送端可以发 <code>10 次</code>字节流数据，接收端可以分 <code>100 次</code>去取；<code>UDP</code> 发送端发了 <code>10 次</code>数据报，那接收端就要在 <code>10 次</code>收完。</li>
@@ -401,14 +401,14 @@
 <p>最后，李东工作没了，而小白表示</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/9150e4e5ly1frrh7t0l9jj20ey0cxq3a.jpg"></p>
 <h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年 golang，我还是没答对这道内存泄漏题</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解HTTP知识点+面试题</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解 HTTP 知识点+面试题</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a></p>
 </li>
 </ul>
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98_%E5%8A%A8%E6%80%81%E6%A8%AA%E7%89%88%E4%BA%8C%E7%BB%B4%E7%A0%81_2021-03-19-0.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 
     </div>
 

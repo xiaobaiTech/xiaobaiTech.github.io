@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。  鸽了好长时间了，最近很忙。以前工作忙完，就抽空写文章。 现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要举手，拉到">
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  鸽了好长时间了，最近很忙。以前工作忙完，就抽空写文章。 现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要">
 <meta property="og:type" content="article">
 <meta property="og:title" content="连接一个 IP 不存在的主机时，握手过程是怎样的？">
 <meta property="og:url" content="https://xiaobaidebug.top/2021/07/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%BF%9E%E6%8E%A5%E4%B8%80%E4%B8%AAIP%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84/index.html">
 <meta property="og:site_name" content="小白debug">
-<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。  鸽了好长时间了，最近很忙。以前工作忙完，就抽空写文章。 现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要举手，拉到">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  鸽了好长时间了，最近很忙。以前工作忙完，就抽空写文章。 现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/12021625633784_.pic.jpg">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/12011625633784_.pic.jpg">
@@ -49,9 +49,9 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/image-20210619084158238.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E9%98%B2%E7%81%AB%E5%A2%99%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/12051625633785_.pic.jpg">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="article:published_time" content="2021-07-25T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:25:54.027Z">
+<meta property="article:modified_time" content="2023-10-06T04:07:47.078Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/12021625633784_.pic.jpg">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:25:54" itemprop="dateModified" datetime="2022-10-30T10:25:54+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,7 +245,7 @@
 
       
         <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
 </blockquote>
 <p>鸽了好长时间了，最近<strong>很忙</strong>。以前工作忙完，就抽空写文章。</p>
 <p>现在忙完工作，还要一三五学驾照，二四六看家具。有同感的老铁们不要举手，拉到右下角**点个”在看”**就好了。</p>
@@ -264,92 +264,87 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/12011625633784_.pic.jpg"></p>
 <br>
 
-
-<h2 id="正常情况的握手过程是怎么样的"><a href="#正常情况的握手过程是怎么样的" class="headerlink" title="正常情况的握手过程是怎么样的"></a>正常情况的握手过程是怎么样的</h2><p>上面提到的问题，其实是指<strong>TCP的三次握手流程</strong>。这绝对是面试八股文里的老股了。</p>
+<h2 id="正常情况的握手过程是怎么样的"><a href="#正常情况的握手过程是怎么样的" class="headerlink" title="正常情况的握手过程是怎么样的"></a>正常情况的握手过程是怎么样的</h2><p>上面提到的问题，其实是指<strong>TCP 的三次握手流程</strong>。这绝对是面试八股文里的老股了。</p>
 <p>我们<strong>简单回顾</strong>下基础知识点。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B1.png" alt="正常情况下的TCP三次握手"></p>
 <p>在<strong>服务端</strong>启动好后会调用 <code>listen()</code> 方法，进入到 <code>LISTEN</code> 状态，然后静静等待<strong>客户端</strong>的连接请求到来。</p>
-<p>而此时客户端主动调用 <code>connect(IP地址)</code> ，就会向某个IP地址发起<strong>第一次握手</strong>，发送<code>SYN</code> 到目的服务器。</p>
+<p>而此时客户端主动调用 <code>connect(IP地址)</code> ，就会向某个 IP 地址发起<strong>第一次握手</strong>，发送<code>SYN</code> 到目的服务器。</p>
 <p>服务器在收到第一次握手后就会响应客户端，这是<strong>第二次握手</strong>。</p>
 <p>客户端在收到第二次握手的消息后，响应服务的一个<code>ACK</code>，这算<strong>第三次</strong>握手，此时客户端 就会进入 <code>ESTABLISHED</code>状态，认为连接已经建立完成。</p>
 <p>通过抓包可以直观看出三次握手的流程。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210626164202297.png" alt="正常三次握手抓包"></p>
 <br>
 
-<h2 id="连一个-IP-不存在的主机时，握手过程是怎样的"><a href="#连一个-IP-不存在的主机时，握手过程是怎样的" class="headerlink" title="连一个 IP 不存在的主机时，握手过程是怎样的"></a>连一个 IP 不存在的主机时，握手过程是怎样的</h2><p>那不存在的IP，分两种，<strong>局域网内和局域网外</strong>的。</p>
+<h2 id="连一个-IP-不存在的主机时，握手过程是怎样的"><a href="#连一个-IP-不存在的主机时，握手过程是怎样的" class="headerlink" title="连一个 IP 不存在的主机时，握手过程是怎样的"></a>连一个 IP 不存在的主机时，握手过程是怎样的</h2><p>那不存在的 IP，分两种，<strong>局域网内和局域网外</strong>的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%AE%B6%E7%94%A8%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E4%BA%92%E8%81%94.png" alt="家用路由器局域网互联"></p>
 <p>我以我家里的情况举例。</p>
 <p>家里有一台<strong>家用路由器</strong>。本质上它的功能已经集成了我们常说的<strong>路由器，交换机和无线接入点</strong>的功能了。</p>
-<p>其中<strong>路由器和交换机</strong>在之前写过的 《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a>》里已经详细介绍过了，就不再说一遍了。<strong>无线接入点</strong>基本可以认为就是个放出 wifi 信号的组件。</p>
-<p>家用路由器下，连着我的N台设备，包括手机和电脑，他们的IP都有个<strong>共同点</strong>。都是 <code>192.168.31.xx</code>  形式的。其中，我的电脑的IP是<code>192.168.31.6</code> ，这个可以通过 <code>ifconfig</code>查到。</p>
-<p>符合这个形式的这些个设备，本质上就是通过各种设备（wifi或交换机等）接入到<strong>上图路由器的e2端口</strong>，他们共同构成一个<strong>局域网</strong>。</p>
-<p>因此，在我家，我们可以<strong>粗暴点</strong>认为只要是  <code>192.168.31.xx</code>  形式的IP，就是<strong>局域网内的IP</strong>。否则就是<strong>局域网外的IP</strong>，比如 <code>192.0.2.2</code> 。</p>
+<p>其中<strong>路由器和交换机</strong>在之前写过的 《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a>》里已经详细介绍过了，就不再说一遍了。<strong>无线接入点</strong>基本可以认为就是个放出 wifi 信号的组件。</p>
+<p>家用路由器下，连着我的 N 台设备，包括手机和电脑，他们的 IP 都有个<strong>共同点</strong>。都是 <code>192.168.31.xx</code> 形式的。其中，我的电脑的 IP 是<code>192.168.31.6</code> ，这个可以通过 <code>ifconfig</code>查到。</p>
+<p>符合这个形式的这些个设备，本质上就是通过各种设备（wifi 或交换机等）接入到<strong>上图路由器的 e2 端口</strong>，他们共同构成一个<strong>局域网</strong>。</p>
+<p>因此，在我家，我们可以<strong>粗暴点</strong>认为只要是 <code>192.168.31.xx</code> 形式的 IP，就是<strong>局域网内的 IP</strong>。否则就是<strong>局域网外的 IP</strong>，比如 <code>192.0.2.2</code> 。</p>
 <br>
 
-<h3 id="目的IP在局域网内"><a href="#目的IP在局域网内" class="headerlink" title="目的IP在局域网内"></a>目的IP在局域网内</h3><p>因为通过 ifconfig 可以查到我的局域网内IP是<code>192.168.31.6</code> ，这里<strong>盲猜</strong>末尾+1是不存在的 IP 。试了下，<code>192.168.31.7</code> 还真不存在。</p>
+<h3 id="目的-IP-在局域网内"><a href="#目的-IP-在局域网内" class="headerlink" title="目的 IP 在局域网内"></a>目的 IP 在局域网内</h3><p>因为通过 ifconfig 可以查到我的局域网内 IP 是<code>192.168.31.6</code> ，这里<strong>盲猜</strong>末尾+1 是不存在的 IP 。试了下，<code>192.168.31.7</code> 还真不存在。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping 192.168.31.7</span></span><br><span class="line">PING 192.168.31.7 (192.168.31.7): 56 data bytes</span><br><span class="line">Request timeout for icmp_seq 0</span><br><span class="line">Request timeout for icmp_seq 1</span><br><span class="line">Request timeout for icmp_seq 2</span><br><span class="line">Request timeout for icmp_seq 3</span><br><span class="line">^C</span><br><span class="line">--- 192.168.31.7 ping statistics ---</span><br><span class="line">5 packets transmitted, 0 packets received, 100.0% packet loss</span><br></pre></td></tr></table></figure>
 
-
-
-<p>于是写个程序尝试连这个IP 。下面的代码是 <code>golang</code> 写的，<strong>大家不看代码也没关系，放出来只是方便大家自己复现的时候用的。</strong></p>
+<p>于是写个程序尝试连这个 IP 。下面的代码是 <code>golang</code> 写的，<strong>大家不看代码也没关系，放出来只是方便大家自己复现的时候用的。</strong></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tcp客户端</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;io&quot;</span></span><br><span class="line">	<span class="string">&quot;net&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	client, err := net.Dial(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;192.168.31.7:8081&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;err:&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> client.Close()</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		input := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			n, err := os.Stdin.Read(input)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				fmt.Println(<span class="string">&quot;input err:&quot;</span>, err)</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			client.Write([]<span class="keyword">byte</span>(input[:n]))</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		n, err := client.Read(buf)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			fmt.Println(<span class="string">&quot;read err:&quot;</span>, err)</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Println(<span class="keyword">string</span>(buf[:n]))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
 
 <p>然后尝试抓包。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210619112642833.png" alt="连一个不存在的IP(局域网内)抓包"></p>
 <p>可以发现根本没有三次握手的包，只有一些 ARP 包，在询问“谁是 <code>192.168.31.7</code>，告诉一下 <code>192.168.31.6</code>” 。</p>
 <p>这里有三个问题</p>
 <ul>
-<li>为什么会发ARP请求？</li>
-<li>为什么没有TCP握手包？</li>
-<li>ARP本身是没有重试机制的，为什么ARP请求会发那么多遍？</li>
+<li>为什么会发 ARP 请求？</li>
+<li>为什么没有 TCP 握手包？</li>
+<li>ARP 本身是没有重试机制的，为什么 ARP 请求会发那么多遍？</li>
 </ul>
 <p>首先我们看下正常情况下执行<code>connect</code>，也就是第一次握手 的流程。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%AD%A3%E5%B8%B8connect%E7%9A%84%E6%B5%81%E7%A8%8B.png" alt="正常connect的流程"></p>
-<p>应用层执行<code>connect</code>过后，会通过socket层，操作系统接口，进程会从<strong>用户态进入到内核态</strong>，此时进入 <strong>传输层</strong>，因为是<strong>TCP第一次握手</strong>，会加入<strong>TCP头</strong>，且置<strong>SYN</strong>标志。</p>
+<p>应用层执行<code>connect</code>过后，会通过 socket 层，操作系统接口，进程会从<strong>用户态进入到内核态</strong>，此时进入 <strong>传输层</strong>，因为是<strong>TCP 第一次握手</strong>，会加入<strong>TCP 头</strong>，且置<strong>SYN</strong>标志。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/tcp%E6%8A%A5%E5%A4%B4%E7%9A%84SYN.png" alt="tcp报头的SYN"></p>
-<p>然后进入<strong>网络层</strong>，我想要连的是 <code>192.168.31.7</code> ，虽然它是我瞎编的，但<strong>IP头</strong>还是得老老实实把它加进去。</p>
-<p>此时需要重点介绍的是<strong>邻居子系统</strong>，它在<strong>网络层和数据链路层之间</strong>。可以通过<strong>ARP协议将目的IP转为对应的MAC地址</strong>，然后<strong>数据链路层</strong>就可以用这个MAC地址组装<strong>帧头</strong>。</p>
-<p>我们看下那么<strong>ARP协议的流程</strong>是</p>
+<p>然后进入<strong>网络层</strong>，我想要连的是 <code>192.168.31.7</code> ，虽然它是我瞎编的，但<strong>IP 头</strong>还是得老老实实把它加进去。</p>
+<p>此时需要重点介绍的是<strong>邻居子系统</strong>，它在<strong>网络层和数据链路层之间</strong>。可以通过<strong>ARP 协议将目的 IP 转为对应的 MAC 地址</strong>，然后<strong>数据链路层</strong>就可以用这个 MAC 地址组装<strong>帧头</strong>。</p>
+<p>我们看下那么<strong>ARP 协议的流程</strong>是</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ARP%E6%B5%81%E7%A8%8B3.png" alt="ARP流程"></p>
-<p>1.先到本地ARP表查一下有没有 <code>192.168.31.7</code> 对应的 <strong>mac地址</strong>，有的话就返回，这里显然是不可能会有的。</p>
+<p>1.先到本地 ARP 表查一下有没有 <code>192.168.31.7</code> 对应的 <strong>mac 地址</strong>，有的话就返回，这里显然是不可能会有的。</p>
 <blockquote>
-<p>可以通过 arp -a 命令查看本机的 arp表都记录了哪些信息</p>
+<p>可以通过 arp -a 命令查看本机的 arp 表都记录了哪些信息</p>
 </blockquote>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> arp -a</span></span><br><span class="line">? (192.168.31.1) at 88:c1:97:59:d1:c3 on en0 ifscope [ethernet]</span><br><span class="line">? (224.0.0.251) at 1:0:4e:0:1:fb on en0 ifscope permanent [ethernet]</span><br><span class="line">? (239.255.255.250) at 1:0:3e:7f:ff:fb on en0 ifscope permanent [ethernet]</span><br></pre></td></tr></table></figure>
 
-<p>2.看下 <code>192.168.31.7</code>  跟本机IP  <code>192.168.31.6 </code>在不在一个局域网下。如果在的话，就在局域网内发一个 arp 广播，内容就是 前面提到的 “谁是 <code>192.168.31.7</code>，告诉一下 <code>192.168.31.6</code>”。</p>
-<p>3.如果目的IP跟本机IP不在同一个局域网下，那么会去获取<strong>默认网关的MAC地址</strong>，这里就是指获取<strong>家用路由器的MAC地址</strong>。然后把消息发给家用路由器，让路由器发到互联网，找到下一跳路由器，一跳一跳的发送数据，<strong>直到把消息发到目的IP上，又或者找不到目的地最终被丢弃。</strong></p>
-<p>4.第2和第3点都是本地没有查到 ARP 缓存记录的情况，这时候会<strong>把SYN报文放进一个队列（叫unresolved_queue）里暂存起来</strong>，然后发起ARP请求；等ARP层收到ARP回应报文之后，会再从缓存中取出 SYN 报文，组装 MAC 帧头，完成刚刚没完成的发送流程。</p>
+<p>2.看下 <code>192.168.31.7</code> 跟本机 IP <code>192.168.31.6 </code>在不在一个局域网下。如果在的话，就在局域网内发一个 arp 广播，内容就是 前面提到的 “谁是 <code>192.168.31.7</code>，告诉一下 <code>192.168.31.6</code>”。</p>
+<p>3.如果目的 IP 跟本机 IP 不在同一个局域网下，那么会去获取<strong>默认网关的 MAC 地址</strong>，这里就是指获取<strong>家用路由器的 MAC 地址</strong>。然后把消息发给家用路由器，让路由器发到互联网，找到下一跳路由器，一跳一跳的发送数据，<strong>直到把消息发到目的 IP 上，又或者找不到目的地最终被丢弃。</strong></p>
+<p>4.第 2 和第 3 点都是本地没有查到 ARP 缓存记录的情况，这时候会<strong>把 SYN 报文放进一个队列（叫 unresolved_queue）里暂存起来</strong>，然后发起 ARP 请求；等 ARP 层收到 ARP 回应报文之后，会再从缓存中取出 SYN 报文，组装 MAC 帧头，完成刚刚没完成的发送流程。</p>
 <p>如果经过 ARP 流程能正常返回 MAC 地址，那皆大欢喜，直接给<strong>数据链路层</strong>，经过 <code>ring buffer</code> 后传到网卡，发出去。</p>
-<p>但因为现在这个IP是瞎编的，因此不可能得到目的地址 MAC ，所以消息也一直没法到数据链路层。<strong>整个流程卡在了ARP流程中。</strong></p>
-<p>而<strong>抓包是在数据链路层之后进行的</strong>，因此 TCP 第一次握手的包一直没能抓到，只能抓到为了获得  <code>192.168.31.7</code> 的MAC地址的ARP请求。</p>
+<p>但因为现在这个 IP 是瞎编的，因此不可能得到目的地址 MAC ，所以消息也一直没法到数据链路层。<strong>整个流程卡在了 ARP 流程中。</strong></p>
+<p>而<strong>抓包是在数据链路层之后进行的</strong>，因此 TCP 第一次握手的包一直没能抓到，只能抓到为了获得 <code>192.168.31.7</code> 的 MAC 地址的 ARP 请求。</p>
 <blockquote>
-<p>发送数据时，是在经过数据链路层之后的  dev_queue_xmit_nit 方法执行抓包操作的，这是属于网卡驱动层的方法了。</p>
-<p>顺带一提，接收端抓包是在  __netif_receive_skb_core 方法里执行的，也属于网卡驱动层。感兴趣的朋友们可以以这个为关键词搜索相关知识点哈</p>
+<p>发送数据时，是在经过数据链路层之后的 dev_queue_xmit_nit 方法执行抓包操作的，这是属于网卡驱动层的方法了。</p>
+<p>顺带一提，接收端抓包是在 __netif_receive_skb_core 方法里执行的，也属于网卡驱动层。感兴趣的朋友们可以以这个为关键词搜索相关知识点哈</p>
 </blockquote>
 <p>此时 因为 TCP 协议是可靠的协议，对于 TCP 层来说，第一次握手的消息，已经发出去了，但是一直没有收到 ACK。也不知道消息是出去后是遇到什么事了。为了保证可靠性，它会不断重发。</p>
 <p>而每一次重发，都会因为同样的原因（没有目的 MAC 地址）而尬在了 ARP 那个流程里。因此，才看到好几次重复的 ARP 消息。</p>
 <p>那回到刚刚的三个问题</p>
 <ul>
 <li><p>为什么会发 ARP 请求？</p>
-<p>因为目的地址是瞎编的，本地ARP表没有目的机器的MAC地址，因此发出ARP消息。</p>
+<p>因为目的地址是瞎编的，本地 ARP 表没有目的机器的 MAC 地址，因此发出 ARP 消息。</p>
 </li>
 <li><p>为什么没有 TCP 握手包？</p>
-<p>因为协议栈的数据到了网络层后，在数据链路层前，就因为没有目的MAC地址，没法发出。因此抓包软件抓不到相关数据。</p>
+<p>因为协议栈的数据到了网络层后，在数据链路层前，就因为没有目的 MAC 地址，没法发出。因此抓包软件抓不到相关数据。</p>
 </li>
 <li><p>为什么 ARP 请求会发那么多遍？</p>
-<p>因为 TCP 协议的可靠性，会重发第一次握手的消息，但每一次都因为没有目的 MAC 地址而失败，每次都会发出ARP请求。</p>
+<p>因为 TCP 协议的可靠性，会重发第一次握手的消息，但每一次都因为没有目的 MAC 地址而失败，每次都会发出 ARP 请求。</p>
 </li>
 </ul>
 <br>
 
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>连一个 IP 不存在的主机时，如果<strong>目的IP在局域网内</strong>，则第一次握手会失败，接着不断尝试重发握手的请求。同时，本机会不断发出ARP请求，企图获得目的机器的 MAC 地址。并且，因为没能获得目的 MAC 地址，这些 TCP 握手请求最终都发不出去，</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>连一个 IP 不存在的主机时，如果<strong>目的 IP 在局域网内</strong>，则第一次握手会失败，接着不断尝试重发握手的请求。同时，本机会不断发出 ARP 请求，企图获得目的机器的 MAC 地址。并且，因为没能获得目的 MAC 地址，这些 TCP 握手请求最终都发不出去，</p>
 <br>
 
-<h3 id="目的IP在局域网外"><a href="#目的IP在局域网外" class="headerlink" title="目的IP在局域网外"></a>目的IP在局域网外</h3><p>上面提到的是，目的 IP 在<strong>局域网内</strong>的情况，下面讨论目的IP在<strong>局域网外</strong>的情况。</p>
-<p>瞎编一个不是  <code>192.168.31.xx</code> 形式的 IP 作为这次要用的局域网外IP， 比如 <code>10.225.31.11</code>。</p>
+<h3 id="目的-IP-在局域网外"><a href="#目的-IP-在局域网外" class="headerlink" title="目的 IP 在局域网外"></a>目的 IP 在局域网外</h3><p>上面提到的是，目的 IP 在<strong>局域网内</strong>的情况，下面讨论目的 IP 在<strong>局域网外</strong>的情况。</p>
+<p>瞎编一个不是 <code>192.168.31.xx</code> 形式的 IP 作为这次要用的局域网外 IP， 比如 <code>10.225.31.11</code>。</p>
 <p>先抓包看一下。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210619111302173.png" alt="连一个不存在的IP(局域网外)抓包"></p>
 <p>这次的现象是能发出 TCP 第一次握手的 <code>SYN包</code>。</p>
@@ -360,109 +355,106 @@
 </ul>
 <br>
 
-<h4 id="为什么连局域网外的IP现象跟连局域网内不一致？"><a href="#为什么连局域网外的IP现象跟连局域网内不一致？" class="headerlink" title="为什么连局域网外的IP现象跟连局域网内不一致？"></a>为什么连局域网外的IP现象跟连局域网内不一致？</h4><p>这个问题的答案其实在上面 <strong>ARP 的流程</strong>里已经提到过了，如果目的 IP 跟本机 IP 不在同一个局域网下，那么会去获取<strong>默认网关的 MAC 地址</strong>，这里就是指获取<strong>家用路由器的MAC地址</strong>。</p>
-<p>此时ARP流程成功返回<strong>家用路由器的 MAC 地址</strong>，数据链路层加入帧头，消息通过网卡发到了<strong>家用路由器上</strong>。</p>
-<p>消息会通过互联网一直传递到某个局域网为  <code>10.225.31.xx</code> 的路由器上，那个路由器 发出ARP 请求，询问他们局域网内的机器有没有叫 <code>10.225.31.11</code>的 （结果当然没有）。</p>
+<h4 id="为什么连局域网外的-IP-现象跟连局域网内不一致？"><a href="#为什么连局域网外的-IP-现象跟连局域网内不一致？" class="headerlink" title="为什么连局域网外的 IP 现象跟连局域网内不一致？"></a>为什么连局域网外的 IP 现象跟连局域网内不一致？</h4><p>这个问题的答案其实在上面 <strong>ARP 的流程</strong>里已经提到过了，如果目的 IP 跟本机 IP 不在同一个局域网下，那么会去获取<strong>默认网关的 MAC 地址</strong>，这里就是指获取<strong>家用路由器的 MAC 地址</strong>。</p>
+<p>此时 ARP 流程成功返回<strong>家用路由器的 MAC 地址</strong>，数据链路层加入帧头，消息通过网卡发到了<strong>家用路由器上</strong>。</p>
+<p>消息会通过互联网一直传递到某个局域网为 <code>10.225.31.xx</code> 的路由器上，那个路由器 发出 ARP 请求，询问他们局域网内的机器有没有叫 <code>10.225.31.11</code>的 （结果当然没有）。</p>
 <p>最终没能发送成功，发送端也就迟迟收不到目的机的第二次握手响应。</p>
-<p>因此触发TCP重传。</p>
+<p>因此触发 TCP 重传。</p>
 <br>
 
-<h4 id="TCP第一次握手的重试规律好像不太对？"><a href="#TCP第一次握手的重试规律好像不太对？" class="headerlink" title="TCP第一次握手的重试规律好像不太对？"></a>TCP第一次握手的重试规律好像不太对？</h4><p>在 Linux 中，第一次握手的 <code>SYN</code> 重传次数，是通过 <code>tcp_syn_retries</code> 参数控制的。可以通过下面的方式查看</p>
+<h4 id="TCP-第一次握手的重试规律好像不太对？"><a href="#TCP-第一次握手的重试规律好像不太对？" class="headerlink" title="TCP 第一次握手的重试规律好像不太对？"></a>TCP 第一次握手的重试规律好像不太对？</h4><p>在 Linux 中，第一次握手的 <code>SYN</code> 重传次数，是通过 <code>tcp_syn_retries</code> 参数控制的。可以通过下面的方式查看</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">cat /proc/sys/net/ipv4/tcp_syn_retries</span></span><br><span class="line">6</span><br></pre></td></tr></table></figure>
 
-<p>这里的含义是指 <code>syn重传</code> 会发生6次。</p>
+<p>这里的含义是指 <code>syn重传</code> 会发生 6 次。</p>
 <p>而每次重试都会间隔一定的时间，这里的间隔一般是 1s，2s，4s，8s, 16s, 32s .</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/SYN%E9%87%8D%E4%BC%A0.png" alt="SYN重传"></p>
-<p>而事实上，看我的截图，是先重试4次，每次都是1s，之后才是 1s，2s，4s，8s, 16s, 32s 的重试。</p>
+<p>而事实上，看我的截图，是先重试 4 次，每次都是 1s，之后才是 1s，2s，4s，8s, 16s, 32s 的重试。</p>
 <p>这跟我们知道的不太一样。</p>
-<p>这个是因为<strong>我用的是macOS抓的包，跟linux就不是一个系统</strong>，各自的TCP协议栈在sync重传方面的实现都可能会有一定的差异。</p>
-<p>我还听说 <code>oppo</code> 和 <code>vivo</code> 的 syn重传 是0.5s起步的。而 <code>windows</code> 的 syn重传 还有自己的专利。</p>
-<p>这些冷知识大家可以不用在意。面试的时候知道linux的就够了，剩下的可以用来装逼。毕竟面试官不在意”茴”字到底有几种写法。</p>
+<p>这个是因为<strong>我用的是 macOS 抓的包，跟 linux 就不是一个系统</strong>，各自的 TCP 协议栈在 sync 重传方面的实现都可能会有一定的差异。</p>
+<p>我还听说 <code>oppo</code> 和 <code>vivo</code> 的 syn 重传 是 0.5s 起步的。而 <code>windows</code> 的 syn 重传 还有自己的专利。</p>
+<p>这些冷知识大家可以不用在意。面试的时候知道 linux 的就够了，剩下的可以用来装逼。毕竟面试官不在意”茴”字到底有几种写法。</p>
 <br>
 
-
-
-<h2 id="连IP-地址存在但端口号不存在的主机的握手过程"><a href="#连IP-地址存在但端口号不存在的主机的握手过程" class="headerlink" title="连IP 地址存在但端口号不存在的主机的握手过程"></a>连IP 地址存在但端口号不存在的主机的握手过程</h2><p>前面提到的是IP地址压根就不存在的情况。假如<strong>IP地址存在但端口号是瞎编的</strong>呢？</p>
-<h3 id="目的IP是回环地址"><a href="#目的IP是回环地址" class="headerlink" title="目的IP是回环地址"></a>目的IP是回环地址</h3><p><img src="https://cdn.xiaobaidebug.top/image/image-20210627090037348.png" alt="连回环地址，端口不存在抓包"></p>
-<p>现象也比较简单，已经IP地址是存在的，也就是在互联网中这个机器是存在的。</p>
-<p>那么我们可以正常发消息到目的IP，因为对应的MAC地址和IP都是正确的，所以，数据从数据链路层到网络层都很OK。</p>
-<p>直到传输层，TCP协议在识别到这个端口号对应的进程根本不存在时，就会把数据丢弃，响应一个RST消息给发送端。</p>
+<h2 id="连-IP-地址存在但端口号不存在的主机的握手过程"><a href="#连-IP-地址存在但端口号不存在的主机的握手过程" class="headerlink" title="连 IP 地址存在但端口号不存在的主机的握手过程"></a>连 IP 地址存在但端口号不存在的主机的握手过程</h2><p>前面提到的是 IP 地址压根就不存在的情况。假如<strong>IP 地址存在但端口号是瞎编的</strong>呢？</p>
+<h3 id="目的-IP-是回环地址"><a href="#目的-IP-是回环地址" class="headerlink" title="目的 IP 是回环地址"></a>目的 IP 是回环地址</h3><p><img src="https://cdn.xiaobaidebug.top/image/image-20210627090037348.png" alt="连回环地址，端口不存在抓包"></p>
+<p>现象也比较简单，已经 IP 地址是存在的，也就是在互联网中这个机器是存在的。</p>
+<p>那么我们可以正常发消息到目的 IP，因为对应的 MAC 地址和 IP 都是正确的，所以，数据从数据链路层到网络层都很 OK。</p>
+<p>直到传输层，TCP 协议在识别到这个端口号对应的进程根本不存在时，就会把数据丢弃，响应一个 RST 消息给发送端。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E8%BF%9E%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png" alt="连回环地址时端口不存在"></p>
 <br>
 
-<h4 id="RST是什么？"><a href="#RST是什么？" class="headerlink" title="RST是什么？"></a>RST是什么？</h4><p>我们都是到TCP正常情况下断开连接是用四次挥手，那是<strong>正常时候</strong>的优雅做法。</p>
+<h4 id="RST-是什么？"><a href="#RST-是什么？" class="headerlink" title="RST 是什么？"></a>RST 是什么？</h4><p>我们都是到 TCP 正常情况下断开连接是用四次挥手，那是<strong>正常时候</strong>的优雅做法。</p>
 <p>但<strong>异常情况</strong>下，收发双方都不一定正常，连挥手这件事本身都可能做不到，所以就需要一个机制去强行关闭连接。</p>
-<p><strong>RST</strong> 就是用于这种情况，一般用来<strong>异常地</strong>关闭一个连接。它在TCP包头中，在收到置了这个标志位的数据包后，连接就会被关闭，此时接收到 RST的一方，一般会看到一个 <code>connection reset</code> 或  <code>connection refused</code> 的报错。</p>
+<p><strong>RST</strong> 就是用于这种情况，一般用来<strong>异常地</strong>关闭一个连接。它在 TCP 包头中，在收到置了这个标志位的数据包后，连接就会被关闭，此时接收到 RST 的一方，一般会看到一个 <code>connection reset</code> 或 <code>connection refused</code> 的报错。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/tcp%E6%8A%A5%E5%A4%B4RST%E4%BD%8D.png" alt="TCP报头RST位"></p>
 <br>
 
-<h3 id="目的IP在局域网内-1"><a href="#目的IP在局域网内-1" class="headerlink" title="目的IP在局域网内"></a>目的IP在局域网内</h3><p>刚刚提到我的本机IP是 <code>192.168.31.6</code> ，局域网内有台 <code>192.168.31.1</code> 。同样尝试连一个不存在的端口。</p>
+<h3 id="目的-IP-在局域网内-1"><a href="#目的-IP-在局域网内-1" class="headerlink" title="目的 IP 在局域网内"></a>目的 IP 在局域网内</h3><p>刚刚提到我的本机 IP 是 <code>192.168.31.6</code> ，局域网内有台 <code>192.168.31.1</code> 。同样尝试连一个不存在的端口。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210619113503022.png" alt="连存在的局域网内IP，端口不存在抓包"></p>
 <p>此时现象跟前者一致。</p>
-<p>唯一不同的是，前者是回环地址，RST数据是从本机的传输层返回的。而这次的情况，RST数据是从目的机器的传输层返回的。</p>
+<p>唯一不同的是，前者是回环地址，RST 数据是从本机的传输层返回的。而这次的情况，RST 数据是从目的机器的传输层返回的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E8%BF%9E%E5%A4%96%E7%BD%91%E5%9C%B0%E5%9D%80%E6%97%B6%E7%AB%AF%E5%8F%A3%E4%B8%8D%E5%AD%98%E5%9C%A8.png" alt="连外网地址时端口不存在"></p>
 <br>
 
-<h3 id="目的IP在局域网外-1"><a href="#目的IP在局域网外-1" class="headerlink" title="目的IP在局域网外"></a>目的IP在局域网外</h3><p>找一个存在的外网ip，这里我拿了<strong>最近刚白嫖的阿里云服务器</strong>地址 <code> 47.102.221.141</code> 。（炫耀） </p>
-<p>进行连接连接，发现与前面两种情况是一致的，目的机器在收到我的请求后，立马就通过 <strong>RST标志位</strong> 断开了这次的连接。</p>
+<h3 id="目的-IP-在局域网外-1"><a href="#目的-IP-在局域网外-1" class="headerlink" title="目的 IP 在局域网外"></a>目的 IP 在局域网外</h3><p>找一个存在的外网 ip，这里我拿了<strong>最近刚白嫖的阿里云服务器</strong>地址 <code> 47.102.221.141</code> 。（炫耀）</p>
+<p>进行连接连接，发现与前面两种情况是一致的，目的机器在收到我的请求后，立马就通过 <strong>RST 标志位</strong> 断开了这次的连接。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210619182034584.png" alt="连存在的局域网外IP，端口不存在抓包"></p>
 <p>这一点跟前面两种情况一致。</p>
-<p>熟悉小白的朋友们都知道，每次搞事情做测试，都会用  <code>baidu.com</code> 。</p>
-<p>这次也不例外，ping 一下 <code>baidu.com</code> ,获得它的 <code>IP: 220.181.38.148</code>  。</p>
+<p>熟悉小白的朋友们都知道，每次搞事情做测试，都会用 <code>baidu.com</code> 。</p>
+<p>这次也不例外，ping 一下 <code>baidu.com</code> ,获得它的 <code>IP: 220.181.38.148</code> 。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping baidu.com</span></span><br><span class="line">PING baidu.com (220.181.38.148): 56 data bytes</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=0 ttl=48 time=35.728 ms</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=1 ttl=48 time=38.052 ms</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=2 ttl=48 time=37.845 ms</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=3 ttl=48 time=37.210 ms</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=4 ttl=48 time=38.402 ms</span><br><span class="line">64 bytes from 220.181.38.148: icmp_seq=5 ttl=48 time=37.692 ms</span><br><span class="line">^C</span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">6 packets transmitted, 6 packets received, 0.0% packet loss</span><br><span class="line">round-trip min/avg/max/stddev = 35.728/37.488/38.402/0.866 ms</span><br></pre></td></tr></table></figure>
 
 <p>发消息到给百度域名背后的 IP，且瞎随机指定一个端口 <strong>8080</strong>， 抓包。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210619084158238.png" alt="连baidu，端口不存在抓包"></p>
 <p>现象却不一致。没有 <code>RST</code> 。而且触发了第一次握手的重试消息。这是为什么？</p>
-<p>这是因为baidu的机器，作为线上生产的机器，会设置一系列安全策略，比如只对外暴露某些端口，除此之外的端口，都一律拒绝。</p>
-<p>所以很多发到 8080端口的消息都<strong>在防火墙这一层就被拒绝掉了</strong>，根本到不了目的主机里，而<strong>RST是在目的主机的TCP/IP协议栈里发出</strong>的，都还没到这一层，就更不可能发RST了。因此发送端发现消息没有回应（因为被防火墙丢了），就会重传。所以才会出现上述抓包里的现象。</p>
+<p>这是因为 baidu 的机器，作为线上生产的机器，会设置一系列安全策略，比如只对外暴露某些端口，除此之外的端口，都一律拒绝。</p>
+<p>所以很多发到 8080 端口的消息都<strong>在防火墙这一层就被拒绝掉了</strong>，根本到不了目的主机里，而<strong>RST 是在目的主机的 TCP/IP 协议栈里发出</strong>的，都还没到这一层，就更不可能发 RST 了。因此发送端发现消息没有回应（因为被防火墙丢了），就会重传。所以才会出现上述抓包里的现象。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%98%B2%E7%81%AB%E5%A2%99%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5.png" alt="防火墙安全策略"></p>
 <br>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>连一个 IP 不存在的主机时</p>
 <ul>
-<li><p>如果IP在局域网内，会发送N次ARP请求获得目的主机的MAC地址，同时不能发出TCP握手消息。</p>
+<li><p>如果 IP 在局域网内，会发送 N 次 ARP 请求获得目的主机的 MAC 地址，同时不能发出 TCP 握手消息。</p>
 </li>
-<li><p>如果IP在局域网外，会将消息通过路由器发出，但因为最终找不到目的地，触发TCP重试流程。</p>
+<li><p>如果 IP 在局域网外，会将消息通过路由器发出，但因为最终找不到目的地，触发 TCP 重试流程。</p>
 </li>
 </ul>
-<p>连IP 地址存在但端口号不存在的主机时</p>
+<p>连 IP 地址存在但端口号不存在的主机时</p>
 <ul>
-<li><p>不管目的IP是回环地址还是局域网内外的IP地址，目的主机的传输层都会在收到握手消息后，发现端口不正确，发出RST消息断开连接。</p>
+<li><p>不管目的 IP 是回环地址还是局域网内外的 IP 地址，目的主机的传输层都会在收到握手消息后，发现端口不正确，发出 RST 消息断开连接。</p>
 </li>
 <li><p>当然如果目的机器设置了防火墙策略，限制他人将消息发到不对外暴露的端口，那么这种情况，发送端就会不断重试第一次握手。</p>
 </li>
 </ul>
-<p>最后留个问题，连一个 <strong>不存在的局域网外IP</strong>的主机时，我们可以看到TCP的重发规律是：开始时，每隔1s重发五次 <code>TCP SYN</code>消息，接着2s,4s,8s,16s,32s都重发一次；</p>
-<p>对比连一个 <strong>不存在的局域网内IP</strong>的主机时，却是每隔1s重发了4次<code>ARP请求</code>，接着过了32s后才再发出一次ARP请求。已知ARP请求是没有重传机制的，它的重试就是TCP重试触发的，但两者规律不一致，是为什么？</p>
+<p>最后留个问题，连一个 <strong>不存在的局域网外 IP</strong>的主机时，我们可以看到 TCP 的重发规律是：开始时，每隔 1s 重发五次 <code>TCP SYN</code>消息，接着 2s,4s,8s,16s,32s 都重发一次；</p>
+<p>对比连一个 <strong>不存在的局域网内 IP</strong>的主机时，却是每隔 1s 重发了 4 次<code>ARP请求</code>，接着过了 32s 后才再发出一次 ARP 请求。已知 ARP 请求是没有重传机制的，它的重试就是 TCP 重试触发的，但两者规律不一致，是为什么？</p>
 <br>
 
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>欢迎大家加我微信（公众号里右下角“联系我”），互相围观朋友圈砍一刀啥的哈哈。</p>
 <p>如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（<strong>点两下</strong>）支持一下。（**<del>卑微</del>疯狂暗示，拜托拜托，这对我真的很重要！**）</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/12051625633785_.pic.jpg"></p>
 <p>我是小白，我们下期见。</p>
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
-
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg">程序员防猝死指南</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0H8WL6QeZ2VbO1hHPkn8Ug">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0H8WL6QeZ2VbO1hHPkn8Ug">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ">动图图解！GMP模型里为什么要有P？背后的原因让人暖心</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ">动图图解！GMP 模型里为什么要有 P？背后的原因让人暖心</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q">i/o timeout，希望你不要踩到这个net/http包的坑</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q">i/o timeout，希望你不要踩到这个 net/http 包的坑</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ">妙啊! 程序猿的第一本互联网黑话指南</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ">妙啊! 程序猿的第一本互联网黑话指南</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA">我感觉，我可能要拿图灵奖了。。。</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA">我感觉，我可能要拿图灵奖了。。。</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg">给大家丢脸了，用了三年 golang，我还是没答对这道内存泄漏题</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解HTTP知识点+面试题</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA">硬核！漫画图解 HTTP 知识点+面试题</a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a> </p>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a></p>
 </li>
 </ul>
 
@@ -585,7 +577,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E7%9A%84%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">正常情况的握手过程是怎么样的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E4%B8%80%E4%B8%AA-IP-%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">连一个 IP 不存在的主机时，握手过程是怎样的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84IP%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.1.</span> <span class="nav-text">目的IP在局域网内</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.1.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84IP%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96"><span class="nav-number">2.2.</span> <span class="nav-text">目的IP在局域网外</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%9E%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96%E7%9A%84IP%E7%8E%B0%E8%B1%A1%E8%B7%9F%E8%BF%9E%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="nav-number">2.2.1.</span> <span class="nav-text">为什么连局域网外的IP现象跟连局域网内不一致？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E9%87%8D%E8%AF%95%E8%A7%84%E5%BE%8B%E5%A5%BD%E5%83%8F%E4%B8%8D%E5%A4%AA%E5%AF%B9%EF%BC%9F"><span class="nav-number">2.2.2.</span> <span class="nav-text">TCP第一次握手的重试规律好像不太对？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9EIP-%E5%9C%B0%E5%9D%80%E5%AD%98%E5%9C%A8%E4%BD%86%E7%AB%AF%E5%8F%A3%E5%8F%B7%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E7%9A%84%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">连IP 地址存在但端口号不存在的主机的握手过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84IP%E6%98%AF%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80"><span class="nav-number">3.1.</span> <span class="nav-text">目的IP是回环地址</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RST%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.1.1.</span> <span class="nav-text">RST是什么？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84IP%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85-1"><span class="nav-number">3.2.</span> <span class="nav-text">目的IP在局域网内</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84IP%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96-1"><span class="nav-number">3.3.</span> <span class="nav-text">目的IP在局域网外</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">文章推荐：</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E7%9A%84%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">正常情况的握手过程是怎么样的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E4%B8%80%E4%B8%AA-IP-%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E6%97%B6%EF%BC%8C%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">连一个 IP 不存在的主机时，握手过程是怎样的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-IP-%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.1.</span> <span class="nav-text">目的 IP 在局域网内</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.1.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-IP-%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96"><span class="nav-number">2.2.</span> <span class="nav-text">目的 IP 在局域网外</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%9E%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96%E7%9A%84-IP-%E7%8E%B0%E8%B1%A1%E8%B7%9F%E8%BF%9E%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E4%B8%8D%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="nav-number">2.2.1.</span> <span class="nav-text">为什么连局域网外的 IP 现象跟连局域网内不一致？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E9%87%8D%E8%AF%95%E8%A7%84%E5%BE%8B%E5%A5%BD%E5%83%8F%E4%B8%8D%E5%A4%AA%E5%AF%B9%EF%BC%9F"><span class="nav-number">2.2.2.</span> <span class="nav-text">TCP 第一次握手的重试规律好像不太对？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E-IP-%E5%9C%B0%E5%9D%80%E5%AD%98%E5%9C%A8%E4%BD%86%E7%AB%AF%E5%8F%A3%E5%8F%B7%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%BB%E6%9C%BA%E7%9A%84%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">连 IP 地址存在但端口号不存在的主机的握手过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-IP-%E6%98%AF%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80"><span class="nav-number">3.1.</span> <span class="nav-text">目的 IP 是回环地址</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RST-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.1.1.</span> <span class="nav-text">RST 是什么？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-IP-%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85-1"><span class="nav-number">3.2.</span> <span class="nav-text">目的 IP 在局域网内</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-IP-%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%A4%96-1"><span class="nav-number">3.3.</span> <span class="nav-text">目的 IP 在局域网外</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">文章推荐：</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
