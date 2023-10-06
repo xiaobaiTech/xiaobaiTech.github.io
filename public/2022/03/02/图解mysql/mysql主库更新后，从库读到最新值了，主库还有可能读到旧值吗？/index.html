@@ -39,10 +39,10 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81-20220419205854846.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/2%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%B8%BB%E5%BA%93%E5%8D%B4%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC.drawio.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/1597215709606.gif">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="article:published_time" content="2022-03-02T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:28:13.643Z">
+<meta property="article:modified_time" content="2023-10-06T04:07:47.774Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/1539510639669-20220302001234401.jpg">
 
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,11 +240,12 @@
 <p>大家好，我是小白，好长时间没更新技术文了，相信大家看我写的水文也看烦了。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/1539510639669-20220302001234401.jpg"></p>
 <span id="more"></span>
+
 <p>今天的文章，其实来自真实的面试题，而且还比较有趣，所以忍不住分享出来。</p>
 <p>直接开始吧。</p>
 <br>
 
-<p>我们知道，mysql数据库，为了得到更高性能，一般会<strong>读写分离</strong>，主库用于写操作，比如用于执行<code>insert，update</code>操作，从库用于读，也就是最常见的<code>select</code>操作。像下面这个图这样。</p>
+<p>我们知道，mysql 数据库，为了得到更高性能，一般会<strong>读写分离</strong>，主库用于写操作，比如用于执行<code>insert，update</code>操作，从库用于读，也就是最常见的<code>select</code>操作。像下面这个图这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/mysql%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB2.drawio-20220419205818771.png" alt="mysql读写分离"></p>
 <p>虽然主库一般用于写操作，但也是<strong>能读</strong>的。那么今天的问题来了。</p>
 <ul>
@@ -254,7 +255,7 @@
 </li>
 </ul>
 <p>毕竟面试官都这么问了，那当然是有可能的，那至于是为啥，以及怎么做到的，今天我们来好好聊聊。</p>
-<h3 id="正常的主从更新流程"><a href="#正常的主从更新流程" class="headerlink" title="正常的主从更新流程"></a>正常的主从更新流程</h3><p>比如我在主库和从库都有张user表，此时有以下两条数据。</p>
+<h3 id="正常的主从更新流程"><a href="#正常的主从更新流程" class="headerlink" title="正常的主从更新流程"></a>正常的主从更新流程</h3><p>比如我在主库和从库都有张 user 表，此时有以下两条数据。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81.png" alt="数据库原始状态"></p>
 <p>正常情况下，我们往主库执行写操作，比如更新一条数据，执行</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update <span class="keyword">user</span> <span class="keyword">set</span> age <span class="operator">=</span> <span class="number">50</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
@@ -262,95 +263,91 @@
 <p>虽然这是一个单条写操作，但本质上可以理解为单条语句的事务。等同于下面这样</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span>;</span><br><span class="line">update <span class="keyword">user</span> <span class="keyword">set</span> age <span class="operator">=</span> <span class="number">50</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
 
-<p>这个事务如果执行成功了，数据会先写入到主库的binlog文件中，然后再刷入磁盘。</p>
-<p><strong>binlog文件</strong>是mysql的server层日志，记录了用户对数据库有哪些变更操作，比如建数据库表加字段，对某些行的增删改等。</p>
+<p>这个事务如果执行成功了，数据会先写入到主库的 binlog 文件中，然后再刷入磁盘。</p>
+<p><strong>binlog 文件</strong>是 mysql 的 server 层日志，记录了用户对数据库有哪些变更操作，比如建数据库表加字段，对某些行的增删改等。</p>
 <p>它的位置可以通过下面的查询语句看到。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> &quot;%log_bin%&quot;;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+--------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                   <span class="operator">|</span> <span class="keyword">Value</span>                                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+--------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> log_bin                         <span class="operator">|</span> <span class="keyword">ON</span>                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_basename                <span class="operator">|</span> <span class="operator">/</span>var<span class="operator">/</span>lib<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>slave<span class="operator">-</span>bin       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_index                   <span class="operator">|</span> <span class="operator">/</span>var<span class="operator">/</span>lib<span class="operator">/</span>mysql<span class="operator">/</span>mysql<span class="operator">-</span>slave<span class="operator">-</span>bin.index <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_trust_function_creators <span class="operator">|</span> OFF                                  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> log_bin_use_v1_row_events       <span class="operator">|</span> OFF                                  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> sql_log_bin                     <span class="operator">|</span> <span class="keyword">ON</span>                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------+--------------------------------------+</span></span><br><span class="line"><span class="number">6</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.04</span> sec)</span><br></pre></td></tr></table></figure>
 
-<p>其中binlog在 <code>/var/lib/mysql/</code> 下，命名会类似<code>mysql-bin.00000x</code>。感兴趣的可以到这个目录下直接查看文件内容长什么样子。</p>
+<p>其中 binlog 在 <code>/var/lib/mysql/</code> 下，命名会类似<code>mysql-bin.00000x</code>。感兴趣的可以到这个目录下直接查看文件内容长什么样子。</p>
 <br>
 
-<p>如果两个mysql配置好了主从的关系，那么他们之间会建立一个<strong>tcp长连接</strong>，主要用于传输同步数据。</p>
-<p>除此之外，主库还会再起一个<strong>binlog dump线程</strong>将binlog文件的变更发给从库。</p>
-<p>可以在<strong>主库</strong>中通过 <code>show full processlist;</code> 查询到 binlog dump线程的存在。</p>
+<p>如果两个 mysql 配置好了主从的关系，那么他们之间会建立一个<strong>tcp 长连接</strong>，主要用于传输同步数据。</p>
+<p>除此之外，主库还会再起一个<strong>binlog dump 线程</strong>将 binlog 文件的变更发给从库。</p>
+<p>可以在<strong>主库</strong>中通过 <code>show full processlist;</code> 查询到 binlog dump 线程的存在。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220301084729507.png" alt="主库的binlog dump线程"></p>
 <p>以上，主库的工作就结束了，我们说说从库的。</p>
-<p>从库在收到binlog后，会有一个<strong>io线程</strong>负责把收到的数据写入到<strong>relay log（中继日志）</strong>中。</p>
-<p>然后再有一个<strong>sql 线程</strong>，来读取relay log的内容，然后对从库执行sql语句操作，从结果上来看就是将主库执行过的写操作，在从库上也重放一遍，这样主从数据就一致了。</p>
+<p>从库在收到 binlog 后，会有一个<strong>io 线程</strong>负责把收到的数据写入到<strong>relay log（中继日志）</strong>中。</p>
+<p>然后再有一个<strong>sql 线程</strong>，来读取 relay log 的内容，然后对从库执行 sql 语句操作，从结果上来看就是将主库执行过的写操作，在从库上也重放一遍，这样主从数据就一致了。</p>
 <br>
 
-<p>是不是感觉relay log有些多余？</p>
+<p>是不是感觉 relay log 有些多余？</p>
 <br>
 
-<p><strong>为什么要先写一遍relay log然后再写从库，直接将数据写入到从库不好吗？</strong></p>
-<p>在这里relay log的作用就类似于一个<strong>中间层</strong>，<strong>主库是多线程并发写的，从库的sql线程是单线程串行执行的，所以这两边的生产和消费速度肯定不同。</strong>当主库发的binlog消息过多时，从库的relay log可以起到暂存主库数据的作用，接着从库的sql线程再慢慢消费这些relay log数据，这样既不会限制主库发消息的速度，也不会给从库造成过大压力。</p>
-<p>可以通过在<strong>从库</strong>中执行 <code>show full processlist;</code> 确认 io线程和sql线程的存在。</p>
+<p><strong>为什么要先写一遍 relay log 然后再写从库，直接将数据写入到从库不好吗？</strong></p>
+<p>在这里 relay log 的作用就类似于一个<strong>中间层</strong>，<strong>主库是多线程并发写的，从库的 sql 线程是单线程串行执行的，所以这两边的生产和消费速度肯定不同。</strong>当主库发的 binlog 消息过多时，从库的 relay log 可以起到暂存主库数据的作用，接着从库的 sql 线程再慢慢消费这些 relay log 数据，这样既不会限制主库发消息的速度，也不会给从库造成过大压力。</p>
+<p>可以通过在<strong>从库</strong>中执行 <code>show full processlist;</code> 确认 io 线程和 sql 线程的存在。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220301102221753.png" alt="io线程和sql线程"></p>
 <p>因此总结起来，主从同步的步骤就是</p>
-<p><strong>1.执行更新sql语句。</strong></p>
-<p><strong>2.主库写成功时，binlog会更新。</strong></p>
-<p><strong>3.主库binlog dump 线程将binlog的更新部分发给从库</strong></p>
-<p><strong>4.从库io线程收到binlog更新部分，然后写入到relay log中</strong></p>
-<p><strong>5.从库sql线程读取relay log内容，重放执行sql，最后主从一致。</strong></p>
+<p><strong>1.执行更新 sql 语句。</strong></p>
+<p><strong>2.主库写成功时，binlog 会更新。</strong></p>
+<p><strong>3.主库 binlog dump 线程将 binlog 的更新部分发给从库</strong></p>
+<p><strong>4.从库 io 线程收到 binlog 更新部分，然后写入到 relay log 中</strong></p>
+<p><strong>5.从库 sql 线程读取 relay log 内容，重放执行 sql，最后主从一致。</strong></p>
 <p><img src="https://gitee.com/xiaobaiTech/image/raw/master/mysql%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5.png" alt="mysql主从同步"></p>
 <p>到这里，我们可以开始回答文章开头的第一个问题。</p>
 <br>
 
-<h3 id="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"><a href="#主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？" class="headerlink" title="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"></a>主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</h3><p>这是可能的，上面提到的主从同步的5个步骤里，第3到第5步骤，都需要时间去执行，而这些步骤的执行时间总和，就是我们常说的<strong>主从延迟</strong>。</p>
+<h3 id="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"><a href="#主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？" class="headerlink" title="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"></a>主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</h3><p>这是可能的，上面提到的主从同步的 5 个步骤里，第 3 到第 5 步骤，都需要时间去执行，而这些步骤的执行时间总和，就是我们常说的<strong>主从延迟</strong>。</p>
 <p>当更新一行数据后，立马去读主库，主库的数据肯定是最新值，这点没什么好说的，但<strong>如果此时主从延迟过大，这时候读从库，同步可能还没完成，因此读到的就是旧值。</strong></p>
-<p>在实际的开发当中，主从延迟也非常常见，当数据库压力稍微大点，主从延迟就能到100ms甚至1s以上。</p>
+<p>在实际的开发当中，主从延迟也非常常见，当数据库压力稍微大点，主从延迟就能到 100ms 甚至 1s 以上。</p>
 <p>具体的主从延迟时间可以在从库中执行 <code>show slave status \G;</code>来查看，其中里面的<code>Seconds_Behind_Master</code>则是主从延迟的时间，单位是秒。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> slave status \G;</span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="number">1.</span> <span class="type">row</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">               Slave_IO_State: Waiting <span class="keyword">for</span> master <span class="keyword">to</span> send event</span><br><span class="line">                  Master_Host: <span class="number">172.17</span><span class="number">.0</span><span class="number">.2</span></span><br><span class="line">                  Master_User: slave</span><br><span class="line">                Connect_Retry: <span class="number">30</span></span><br><span class="line">              Master_Log_File: mysql<span class="operator">-</span>bin<span class="number">.000002</span></span><br><span class="line">          Read_Master_Log_Pos: <span class="number">756</span></span><br><span class="line">               Relay_Log_File: edu<span class="operator">-</span>mysql<span class="operator">-</span>relay<span class="operator">-</span>bin<span class="number">.000004</span></span><br><span class="line">                Relay_Log_Pos: <span class="number">969</span></span><br><span class="line">        Relay_Master_Log_File: mysql<span class="operator">-</span>bin<span class="number">.000002</span></span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line">            Slave_SQL_Running: Yes</span><br><span class="line">        Seconds_Behind_Master: <span class="number">2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
 <p>所以如果你有<strong>写数据后就立马要读数据</strong>的场景，要是此时读的是从库，很有可能会读到<strong>更新前</strong>的旧数据，如果你对数据一致性有较高要求，这种时候<strong>建议读主库</strong>。</p>
 <br>
-
-
 
 <h3 id="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"><a href="#主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？" class="headerlink" title="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"></a>主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</h3><p>那另一个问题就来了，如果从库都读到最新值了，那说明<strong>主库肯定已经更新完成了</strong>，那此时读主库是不是只能读到最新值呢？</p>
 <p><strong>还真不是的</strong>，待会我给大家复现下，但在这之前我们了解一些<strong>前置知识点</strong>。</p>
 <br>
 
-<h4 id="mysql的四种隔离级别"><a href="#mysql的四种隔离级别" class="headerlink" title="mysql的四种隔离级别"></a>mysql的四种隔离级别</h4><p>这个绝对是面试八股文老股了。mysql有四种隔离级别，分别是<strong>读未提交（Read uncommitted），读提交（Read committed），可重复读（Repeatable read）和串行化（Serializable）</strong>。在不同的隔离级别下，并发读写效果会不太一样。</p>
+<h4 id="mysql-的四种隔离级别"><a href="#mysql-的四种隔离级别" class="headerlink" title="mysql 的四种隔离级别"></a>mysql 的四种隔离级别</h4><p>这个绝对是面试八股文老股了。mysql 有四种隔离级别，分别是<strong>读未提交（Read uncommitted），读提交（Read committed），可重复读（Repeatable read）和串行化（Serializable）</strong>。在不同的隔离级别下，并发读写效果会不太一样。</p>
 <p>当前数据库处于什么隔离级别可以通过执行 <code>select @@tx_isolation;</code> 查看到。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@tx</span>_isolation;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> @<span class="variable">@tx</span>_isolation  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
 
 <p>也可以通过下面的语句去修改隔离级别。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> TRANSACTION ISOLATION LEVEL REPEATABLE<span class="operator">-</span>READ;</span><br></pre></td></tr></table></figure>
 
-<p>下面用一个case来让大家直观点的理解这四个隔离级别的区别。</p>
-<p>假设我们有两个线程同时对某行数据A(A=1)进行以下操作。</p>
+<p>下面用一个 case 来让大家直观点的理解这四个隔离级别的区别。</p>
+<p>假设我们有两个线程同时对某行数据 A(A=1)进行以下操作。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%80%E4%B8%AAcase%E8%A7%A3%E9%87%8A%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.2drawio.png" alt="一个case解释隔离级别"></p>
-<p>我们执行事务都像上面这样，begin可以开启事务，commit会提交事务，上面两个线程，各执行一个事务，且此时是并发执行。</p>
-<p>线程1会将某行的A这个字段从1更新为2。</p>
-<p>线程2啥也不干，就读A。重点关注2线程的三次读A的行为，它们会根据隔离级别的不同，读到不同的值。</p>
-<p><strong>第1次读A：</strong></p>
+<p>我们执行事务都像上面这样，begin 可以开启事务，commit 会提交事务，上面两个线程，各执行一个事务，且此时是并发执行。</p>
+<p>线程 1 会将某行的 A 这个字段从 1 更新为 2。</p>
+<p>线程 2 啥也不干，就读 A。重点关注 2 线程的三次读 A 的行为，它们会根据隔离级别的不同，读到不同的值。</p>
+<p><strong>第 1 次读 A：</strong></p>
 <ul>
-<li>如果是<strong>读未提交</strong>，那么会读到2，顾名思义，就算线程1未提交，线程2也能读到最新的值。</li>
-<li>如果是读提交或者可重复读，那读到的都是1，<strong>读提交</strong>只认事务提交后的数据，而<strong>可重复读</strong>只要线程2的事务内没有执行对A的更新sql语句，那读A的数据就会一直不变。</li>
+<li>如果是<strong>读未提交</strong>，那么会读到 2，顾名思义，就算线程 1 未提交，线程 2 也能读到最新的值。</li>
+<li>如果是读提交或者可重复读，那读到的都是 1，<strong>读提交</strong>只认事务提交后的数据，而<strong>可重复读</strong>只要线程 2 的事务内没有执行对 A 的更新 sql 语句，那读 A 的数据就会一直不变。</li>
 </ul>
-<p><strong>第2次读A：时机正好在线程1提交了事务之后</strong></p>
+<p><strong>第 2 次读 A：时机正好在线程 1 提交了事务之后</strong></p>
 <ul>
-<li>如果是读未提交，前面都读到2了，现在读到的还是2，这个没啥好说的。</li>
-<li>如果是<strong>读提交</strong>，那读到的都是2了，因为线程1的事务提交了，<strong>读提交</strong>只认提交后的数据，所以此时线程2能读到最新数据。</li>
-<li>如果是可重复读那就还是1，理由跟上面一样。</li>
+<li>如果是读未提交，前面都读到 2 了，现在读到的还是 2，这个没啥好说的。</li>
+<li>如果是<strong>读提交</strong>，那读到的都是 2 了，因为线程 1 的事务提交了，<strong>读提交</strong>只认提交后的数据，所以此时线程 2 能读到最新数据。</li>
+<li>如果是可重复读那就还是 1，理由跟上面一样。</li>
 </ul>
-<p><strong>第3次读A：时机正好在线程2提交了事务之后</strong></p>
+<p><strong>第 3 次读 A：时机正好在线程 2 提交了事务之后</strong></p>
 <ul>
-<li>如果是读未提交或读已经提交，结果跟前面一样，还是2。</li>
-<li>如果是<strong>可重复读</strong>，那就变成了2，因为线程2前面的事务结束了，在<strong>同一个事务内A的值重复多次读都是一致的</strong>，但当事务结束了之后，新的查询不再需要受限于上一次开事务时的值。</li>
+<li>如果是读未提交或读已经提交，结果跟前面一样，还是 2。</li>
+<li>如果是<strong>可重复读</strong>，那就变成了 2，因为线程 2 前面的事务结束了，在<strong>同一个事务内 A 的值重复多次读都是一致的</strong>，但当事务结束了之后，新的查询不再需要受限于上一次开事务时的值。</li>
 </ul>
-<p>上面的情况没有将<strong>串行化</strong>纳入讨论范围，只讨论了<strong>读未提交，读提交和可重复读</strong>这三个隔离级别，因为在这三个隔离级别下都有可能出现两个事务<strong>并发执行</strong>的场景，而在<strong>串行化的隔离级别</strong>中则不会出现，多个事务只会一个挨着一个依次<strong>串行执行</strong>，比如线程1的事务执行完了之后，线程2的事务才执行，因此不会产生并发查询更新的问题。</p>
+<p>上面的情况没有将<strong>串行化</strong>纳入讨论范围，只讨论了<strong>读未提交，读提交和可重复读</strong>这三个隔离级别，因为在这三个隔离级别下都有可能出现两个事务<strong>并发执行</strong>的场景，而在<strong>串行化的隔离级别</strong>中则不会出现，多个事务只会一个挨着一个依次<strong>串行执行</strong>，比如线程 1 的事务执行完了之后，线程 2 的事务才执行，因此不会产生并发查询更新的问题。</p>
 <br>
 
 <p>有了这个知识背景之后，我们就可以回到第二个问题里了。</p>
 <p>数据库原始状态如下，此时主从都一样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81-20220419205854846.png" alt="数据库原始状态"></p>
-<p>假设当前的数据库事务隔离级别是<strong>可重复读</strong>，现在主库有A，B两个线程，同时执行begin，开启事务。</p>
-<p>此时主库的线程2，<strong>先读一次id=1的数据</strong>，发现age=72，<strong>由于当前事务隔离级别是可重复读</strong>，那么只要线程2在事务内不做更新操作的话，那么<strong>不管重复读多少次，age都是72</strong>。在这之后主库的线程1将age更新为100且执行commit提交了事务。</p>
-<p>主库线程1的事务提交成功之后binlog就会顺利产生，然后同步给从库。此时<strong>从库去查询就能查到最新值age=100</strong>。回过头来，此时主库的线程2因为还没提交事务，所以一直读到的都是旧值age=72。但如果这时候线程2执行commit提交了事务，那么再查询，就能拿到最新值age=100了。</p>
+<p>假设当前的数据库事务隔离级别是<strong>可重复读</strong>，现在主库有 A，B 两个线程，同时执行 begin，开启事务。</p>
+<p>此时主库的线程 2，<strong>先读一次 id=1 的数据</strong>，发现 age=72，<strong>由于当前事务隔离级别是可重复读</strong>，那么只要线程 2 在事务内不做更新操作的话，那么<strong>不管重复读多少次，age 都是 72</strong>。在这之后主库的线程 1 将 age 更新为 100 且执行 commit 提交了事务。</p>
+<p>主库线程 1 的事务提交成功之后 binlog 就会顺利产生，然后同步给从库。此时<strong>从库去查询就能查到最新值 age=100</strong>。回过头来，此时主库的线程 2 因为还没提交事务，所以一直读到的都是旧值 age=72。但如果这时候线程 2 执行 commit 提交了事务，那么再查询，就能拿到最新值 age=100 了。</p>
 <p>所以从结论上来说，<strong>出现了从库都读到最新值了，主库却读到了旧值的情况。</strong></p>
 <p><img src="https://cdn.xiaobaidebug.top/image/2%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%B8%BB%E5%BA%93%E5%8D%B4%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC.drawio.png" alt="从库读到最新值主库却读到旧值"></p>
 <br>
@@ -367,20 +364,17 @@
 <p>算了。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
 <p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就<strong>超！开！心！</strong></p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-
-
-
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -502,7 +496,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9B%B4%E6%96%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">正常的主从更新流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%B8%BB%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">mysql的四种隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9B%B4%E6%96%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">正常的主从更新流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%B8%BB%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql-%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">mysql 的四种隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -518,7 +512,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">54</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

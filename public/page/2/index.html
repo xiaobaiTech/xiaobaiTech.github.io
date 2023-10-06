@@ -166,255 +166,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/06/09/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E5%8F%AA%E6%94%AF%E6%8C%81batch_call%E7%9A%84%E6%9C%8D%E5%8A%A1%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小白debug">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/09/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E5%8F%AA%E6%94%AF%E6%8C%81batch_call%E7%9A%84%E6%9C%8D%E5%8A%A1%EF%BC%9F/" class="post-title-link" itemprop="url">如何调用一个只支持batch_call的服务？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-06-09 22:57:55" itemprop="dateCreated datePublished" datetime="2022-06-09T22:57:55+08:00">2022-06-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:34:18" itemprop="dateModified" datetime="2022-10-30T10:34:18+08:00">2022-10-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">golang面试题</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
-</blockquote>
-<p>我们先来说下标题是什么意思。</p>
-<br>
-
-<p>为了更好的理解我说的是啥，我们来举个例子。</p>
-<p>假设你现在在做一个<strong>类似B站</strong>的系统，里面放了各种视频。</p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220529201338638.png"></p>
-<p>用户每天在里头上传各种视频。</p>
-<p>按理说每个视频都要去<strong>审查</strong>一下有没有搞颜色，但总不能人眼挨个看吧。</p>
-<p>毕竟唐老哥表示这玩意看多了，看太阳都是绿色的，所以会有专门训练过的<strong>算法服务</strong>去做检测。</p>
-<p>但也不能上来就整个视频每一帧都拿去做审查吧，所以会在每个视频里根据<strong>时长</strong>和<strong>视频类型</strong>随机抽出好几张图片去做审查，比如视频标签是美女的，算法爱看，那多抽几张。标签是编程的，狗都不看，就少抽几张。</p>
-<p>将这些抽出来的图片，送去审查。</p>
-<br>
-
-<p>为了实现这个功能，我们会以<strong>视频为维度</strong>去做审核，而每个视频里都会有N张<strong>数量不定的图片</strong>，下游服务是个使用<strong>GPU</strong>去检测图片的<strong>算法服务</strong>。</p>
-<p><strong>现在问题来了</strong>，下游服务的算法开发告诉你，这些个下游服务，它<strong>不支持很高的并发</strong>，但请求传参里给你加了个数组，你可以<strong>批量（batch）传入</strong>一个比较大的图片数组，通过这个方式可以提升点图片处理量。</p>
-<br>
-
-<p>于是，我们的场景就变成。</p>
-<p><strong>上游服务</strong>的<strong>入参</strong>是<strong>一个</strong>视频和它的N张图片，<strong>出参</strong>是这个视频是否审核通过。</p>
-<p><strong>下游服务</strong>的<strong>入参</strong>是N张图片的，<strong>出参</strong>是这个视频是否审核通过。</p>
-<p><img src="https://cdn.xiaobaidebug.top/batch_call%E4%B8%8A%E4%B8%8B%E6%B8%B8.drawio.png" alt="batch_call上下游"></p>
-<br>
-
-<p><strong>现在我们想要用上游服务接入下游服务。</strong>该怎么办？</p>
-<p>看上去挺好办的，一把梭不就完事了吗？</p>
-<p>当一个视频进来，就拿着视频的十多张图片作为一个batch去进行调用。</p>
-<p><strong>有几个视频进来，就开几个这样的并发。</strong></p>
-<p>这么做的结果就是，当并发大一点时，你会发现性能很差，并且性能非常不稳定，比如像下面的监控图一样一会3qps，一会15qps。处理的图片也只支持20qps左右。</p>
-<p><strong>狗看了都得摇头。</strong></p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220528224806387.png" alt="图1-直接调用时qps很低"></p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220528225037987.png"></p>
-<p>这可如何是好？</p>
-<br>
-
-<h3 id="为什么下游需要batch-call"><a href="#为什么下游需要batch-call" class="headerlink" title="为什么下游需要batch call"></a>为什么下游需要batch call</h3><p>本着<strong>先问是不是，再问为什么</strong>的精神，我们先看看为啥下游的要求会如此别致。</p>
-<p>为什么同样都是处理多张图片，下游不搞成支持并发而要搞成批量调用（batch call）？</p>
-<p>这个设定有点奇怪？</p>
-<p>其实不奇怪，在算法服务中<strong>甚至很常见</strong>，举个例子你就明白了。</p>
-<p>同样是处理多张图片，为了简单，我就假设是三张吧。如果是用<strong>单个cpu</strong>去处理的话。那不管是并发还是batch进来，由于cpu内部的<strong>计算单元有限</strong>，所以你可以简单理解为，这三张图片，就是<strong>串行</strong>去计算的。</p>
-<p><img src="https://cdn.xiaobaidebug.top/cpu%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B2.drawio.png" alt="cpu处理图片时的流程"></p>
-<p>我计算第一张图片是否能审核通过，跟第二张图片是否能审核通过，这两者没有逻辑关联，因此按道理两张图片是可以<strong>并行</strong>计算。</p>
-<p>奈何我CPU计算单元有限啊，做不到啊。</p>
-<p>但是。</p>
-<p><strong>如果我打破计算单元有限的这个条件，给CPU加入超多计算单元，并且弱化一些对于计算没啥用处的组件，比如cache和控制单元。</strong>那我们就有足够的算力可以让这些图片的计算<strong>并行</strong>起来了。</p>
-<p><img src="https://cdn.xiaobaidebug.top/%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87.drawio.png" alt="并行处理图片"></p>
-<p>是的，把CPU这么一整，它其实就变成了GPU。</p>
-<p><img src="https://cdn.xiaobaidebug.top/GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB2.drawio.png" alt="GPU和CPU的区别"></p>
-<p>上面的讲解只是为了方便理解，实际上，gpu会以更细的粒度去做并发计算，比如可以细到图片里的<strong>像素</strong>级别。</p>
-<p>这也是为什么如果我们跑一些3d游戏的时候，需要用到显卡，因为它可以快速的并行计算画面里每个地方的光影，远近效果啥的，然后渲染出画面。</p>
-<br>
-
-<p><strong>回到为什么要搞成batch call的问题中。</strong></p>
-<p>其实一次算法服务调用中，在数据真正进入GPU前，其实也使用了CPU做一些前置处理。</p>
-<p>因此，我们可以简单的将一次调用的时间理解成做了下面这些事情。</p>
-<p><img src="https://cdn.xiaobaidebug.top/GPU%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B.drawio.png" alt="GPU处理图片时的流程"></p>
-<p>服务由CPU逻辑和GPU处理逻辑组成，调用进入服务后，会有一些前置逻辑，它需要CPU来完成，然后才使用GPU去进行并行计算，将结果返回后又有一些后置的CPU处理逻辑。中间的GPU部分，管是计算1张图，还是计算100张图，只要算力支持，那它们都是并行计算的，耗时都差不多。</p>
-<p>如果把这多张图片拆开，<strong>并发去调用</strong>这个算法服务，那就有 N组这样的CPU+GPU的消耗，而中间的并行计算，其实没有利用到位。</p>
-<p>并且还会多了前置和后置的CPU逻辑部分，算法服务一般都是python服务，主流的一些web框架几乎都是以<strong>多进程</strong>，<strong>而不是多线程</strong>的方式去处理外部请求，这就有可能导致额外的<strong>进程间切换消耗</strong>。</p>
-<p>当并发的请求多了，请求处理不过来，后边来的请求就需要等前边的处理完才能被处理，后面的请求耗时看起来就会变得特别大。这也是上面图1里，接口延时（latency）像过山车那样往上涨的原因。</p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220602225740411.png" alt="还是上面的图1的截图，一张图用两次哈哈"></p>
-<p>按理说<strong>减少并发，增大每次调用时的图片数量</strong>，就可以解决这个问题。</p>
-<p>这就是推荐batch call的原因。</p>
-<p>但问题又来了。</p>
-<p>每次调用，上游服务输入的是一个视频以及它的几张图片，调用下游时，batch的数量按道理就只能是这几张图片的数量，<strong>怎么才能增大batch的数量呢？</strong></p>
-<p>这里的调用，就需要分为<strong>同步调用和异步调用</strong>了。</p>
-<br>
-
-<h3 id="同步调用和异步调用的区别"><a href="#同步调用和异步调用的区别" class="headerlink" title="同步调用和异步调用的区别"></a>同步调用和异步调用的区别</h3><p>同步调用，意思是上游发起请求后，<strong>阻塞等待</strong>，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的http调用一样。</p>
-<p><img src="https://cdn.xiaobaidebug.top/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="同步调用"></p>
-<p>异步调用，意思是上游发起请求后<strong>立马返回</strong>，下游收到消息后慢慢处理，处理完之后再通过某个形式通知上游。常见的形式是使用消息队列，也就是mq。将消息发给mq后，下游消费mq消息，触发处理逻辑，然后再把处理结果发到mq，上游消费mq的结果。</p>
-<p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="异步调用"></p>
-<br>
-
-<h3 id="异步调用的形式接入"><a href="#异步调用的形式接入" class="headerlink" title="异步调用的形式接入"></a>异步调用的形式接入</h3><p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png" alt="异步调用的实现方式"></p>
-<p>回到我们文章开头提到的例子，当上游服务收到一个请求（一个视频和它对应的图片），这时候上游服务作为生产者将这个数据写入到mq中，请求返回。然后新造一个C服务，负责批量消费mq里的消息。这时候服务C就可以根据下游服务的性能控制自己的消费速度，比如一次性消费10条数据（视频），每个数据下面挂了10个图片，那我一次batch的图片数量就是10*10=100张，原来的10次请求就变为了1次请求。这对下游就相当的友好了。</p>
-<p>下游返回结果后，服务C将结果写入到mq的另外一个topic下，由上游去做消费，这样就结束了整个调用流程。</p>
-<br>
-
-<p>当然上面的方案，如果你把mq换成数据库，一样是ok的，这时候服务C就可以不断的定时轮询数据库表，看下哪些请求没处理，把没处理的请求批量捞出来再batch call下游。不管是mq还是数据库，它们的作用无非就是<strong>作为中转，暂存数据，让服务C根据下游的消费能力，去消费这些数据。</strong></p>
-<p>这样不管后续要加入多少个新服务，它们都可以在原来的基础上做扩展，如果是mq，加topic，如果是数据库，则加数据表，每个新服务都可以根据自己的消费能力去调整消费速度。</p>
-<p><img src="https://cdn.xiaobaidebug.top/mq%E4%B8%B2%E8%81%94%E5%A4%9A%E4%B8%AA%E4%B8%8D%E5%90%8C%E6%80%A7%E8%83%BD%E7%9A%84%E6%9C%8D%E5%8A%A1.drawio.png" alt="mq串联多个不同性能的服务"></p>
-<p><strong>其实对于这种上下游服务处理性能不一致的场景，最适合用的就是异步调用。而且涉及到的服务性能差距越大，服务个数越多，这个方案的优势就越明显。</strong></p>
-<br>
-
-<h3 id="同步调用的方式接入"><a href="#同步调用的方式接入" class="headerlink" title="同步调用的方式接入"></a>同步调用的方式接入</h3><p>虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。</p>
-<p>这就需要采用同步调用的方案，但怎么才能把同步接口改造得更适合这种调用场景，这也是这篇文章的重点。</p>
-<br>
-
-<h4 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h4><p>如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。</p>
-<p><strong>这样的组件一般也不需要你自己写，几乎任何一个语言里都会有现成的。</strong></p>
-<p>比如golang里可以用<code>golang.org/x/time/rate</code>库，它其实是用令牌桶算法实现的限流器。如果不知道令牌桶是啥也没关系，不影响理解。</p>
-<p><img src="https://cdn.xiaobaidebug.top/%E9%99%90%E6%B5%81%E5%99%A8%E9%80%BB%E8%BE%91.png" alt="限流器逻辑"></p>
-<p>当然，这个限制的是<strong>当前这个服务</strong>调用下游的qps，也就是所谓的<strong>单节点限流</strong>。如果是多个服务的话，网上也有不少现成的<strong>分布式限流</strong>框架。但是，还是那句话，<strong>够用就好</strong>。</p>
-<p>限流只能保证下游算法服务不被压垮，并不能提升单次调用batch的图片数量，有没有什么办法可以解决这个问题呢？</p>
-<br>
-
-<h4 id="参考Nagle算法的做法"><a href="#参考Nagle算法的做法" class="headerlink" title="参考Nagle算法的做法"></a>参考Nagle算法的做法</h4><p>我们熟悉的TCP协议里，有个算法叫Nagle算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。</p>
-<p>当我们想要发送一些数据包时，数据包会被放入到一个缓冲区中，不立刻发送，那什么时候会发送呢？</p>
-<p>数据包会在以下两个情况被发送：</p>
-<ul>
-<li>缓冲区的数据包长度达到某个长度（MSS）时。</li>
-<li>或者等待超时（一般为<code>200ms</code>）。在超时之前，来的那么多个数据包，就是凑不齐MSS长度，现在超时了，不等了，立即发送。</li>
-</ul>
-<p>这个思路就非常值得我们参考。我们完全可以自己在代码层实现一波，实现也非常简单。</p>
-<p>1.我们定义一个带锁的全局队列（链表）。</p>
-<p>2.当上游服务输入一个视频和它对应的N张图片时，就加锁将这N张<strong>图片数据</strong>和一个<strong>用来存放返回结果的结构体</strong>放入到全局队列中。然后死循环读这个结构体，直到它有结果。就有点像阻塞等待了。</p>
-<p>3.同时在服务启动时就起一个<strong>线程A</strong>专门用于<strong>收集</strong>这个全局队列的图片数据。<strong>线程A</strong>负责发起调用下游服务的请求，但只有在下面两个情况下会发起请求</p>
-<ul>
-<li>当收集的图片数量达到xx张的时候</li>
-<li>距离上次发起请求过了xx毫秒（超时）</li>
-</ul>
-<p>4.调用下游结束后，再根据一开始传入的数据，将调用结果拆开来，送回到刚刚提到的<strong>用于存放结果的结构体</strong>中。</p>
-<p>5.第2步里的死循环因为<strong>存放返回结果的结构体</strong>，有值了，就可以跳出死循环，继续执行后面的逻辑。</p>
-<p><img src="https://cdn.xiaobaidebug.top/batch_call%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E6%94%B9%E9%80%A0.drawio%20(1).png" alt="batch_call同步调用改造"></p>
-<p>这就像公交车站一样，公交车站不可能每来一个顾客就发一辆公交车，当然是希望车里顾客越多越好。上游每来一个请求，就把请求里的图片，也就是乘客，塞到公交车里，公交车要么到点发车（向下游服务发起请求），要么车满了，也没必要等了，直接发车。这样就保证了每次发车的时候公交车里的顾客数量足够多，发车的次数尽量少。</p>
-<br>
-
-<p>大体思路就跟上面一样，如果是用go来实现的话，就会更加简单。</p>
-<p>比如第1步里的<strong>加锁全局队列</strong>可以改成<strong>有缓冲长度的channel</strong>。第2步里的”<strong>用来存放结果的结构体</strong>“，也可以改成<strong>另一个无缓冲channel</strong>。执行 res := &lt;-ch， 就可以做到<strong>阻塞等待</strong>的效果。</p>
-<p>而核心的仿Nagle的代码也大概长下面这样。当然<strong>不看也没关系，反正你已经知道思路了</strong>。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CallAPI</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	size := <span class="number">100</span></span><br><span class="line">	<span class="comment">// 这个数组用于收集视频里的图片，每个 IVideoInfo 下都有N张图片</span></span><br><span class="line">	videoInfos := <span class="built_in">make</span>([]IVideoInfo, <span class="number">0</span>, size)</span><br><span class="line">	<span class="comment">// 设置一个200ms定时器</span></span><br><span class="line">	tick := time.NewTicker(<span class="number">200</span> * time.Microsecond)</span><br><span class="line">	<span class="keyword">defer</span> tick.Stop()</span><br><span class="line">  <span class="comment">// 死循环</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="comment">// 由于定时器，每200ms，都会执行到这一行</span></span><br><span class="line">		<span class="keyword">case</span> &lt;-tick.C:</span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">len</span>(videoInfos) &gt; <span class="number">0</span> &#123;</span><br><span class="line">				<span class="comment">// 200ms超时，去请求下游</span></span><br><span class="line">				limitStartFunc(videoInfos, <span class="literal">true</span>)</span><br><span class="line">				<span class="comment">// 请求结束后把之前收集的数据清空，重新开始收集。</span></span><br><span class="line">				videoInfos = <span class="built_in">make</span>([]IVideoInfo, <span class="number">0</span>, size)</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="comment">// AddChan就是所谓的全局队列</span></span><br><span class="line">		<span class="keyword">case</span> videoInfo, ok := &lt;-AddChan:</span><br><span class="line">			<span class="keyword">if</span> !ok &#123;</span><br><span class="line">				<span class="comment">// 通道关闭时，如果还有数据没有去发起请求，就请求一波下游服务</span></span><br><span class="line">				limitStartFunc(videoInfos, <span class="literal">false</span>)</span><br><span class="line">				videoInfos = <span class="built_in">make</span>([]IVideoInfo, <span class="number">0</span>, size)</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				videoInfos = <span class="built_in">append</span>(videoInfos, videoInfo)</span><br><span class="line">				<span class="keyword">if</span> videoInfos 内的图片满足xx数量 &#123;</span><br><span class="line">					limitStartFunc(videoInfos, <span class="literal">false</span>)</span><br><span class="line">					videoInfos = <span class="built_in">make</span>([]IVideoInfo, <span class="number">0</span>, size)</span><br><span class="line">					<span class="comment">// 重置定时器</span></span><br><span class="line">					tick.Reset(<span class="number">200</span> * time.Microsecond)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<br>
-
-<p>通过这一操作，上游每来一个请求，都会将视频里的图片收集起来，堆到一定张数的时候再统一请求，大大提升了每次batch call的图片数量，同时也减少了调用下游服务的次数。<strong>真·一举两得</strong>。</p>
-<p>优化的效果也比较明显，上游服务支持的qps从原来不稳定的3q~15q变成稳定的90q。下游的接口耗时也变得稳定多了，从原来的过山车似的飙到15s变成稳定的500ms左右。处理的图片的速度也从原来20qps提升到350qps。</p>
-<p>到这里就已经大大超过业务需求的预期（40qps）了，够用就好，多一个qps都是浪费。</p>
-<p>可以了，下班吧。</p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220528215806920.png"></p>
-<p><img src="https://cdn.xiaobaidebug.top/image-20220529171810510.png"></p>
-<br>
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>为了充分利用<strong>GPU</strong>并行计算的能力，不少算法服务会希望上游通过加大<strong>batch</strong>的同时减少并发的方式进行接口调用。</li>
-<li>对于上下游性能差距明显的服务，建议配合<strong>mq</strong>采用<strong>异步调用</strong>的方式将服务串联起来。</li>
-<li>如果非得使用<strong>同步调用</strong>的方式进行调用，建议模仿<strong>Nagle算法</strong>的形式，攒一批数据再发起请求，这样既可以增大batch，同时减少并发，真·一举两得，<strong>亲测有效</strong>。</li>
-</ul>
-<br>
-
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。</p>
-<p>性能不够？<strong>下游加机器，gpu卡，买！</strong></p>
-<p>然后下个季度再提起一个技术优化，<strong>性能提升xx%，cpu，gpu减少xx%。</strong></p>
-<p>有没有闻到？</p>
-<p>这是kpi的味道。</p>
-<p>又是一个小细节，学到了的兄弟们评论区打个【<strong>学到了</strong>】。</p>
-<br>
-
-<hr>
-<p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
-<p>我有个不成熟的请求。</p>
-<img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
-
-<br>
-
-<p><strong>离开广东好长时间了，好久没人叫我靓仔了。</strong></p>
-<p>大家可以在<strong>评论区</strong>里，叫我一靓仔吗？</p>
-<p>我这么善良质朴的愿望，能被满足吗？</p>
-<p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
-<br>
-
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png"></p>
-<br>
-
-<p>不满足于在留言区说骚话？</p>
-<p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就<strong>超！开！心！</strong></p>
-<img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
-
-<p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/05/25/%E5%9B%BE%E8%A7%A3mysql/%E5%95%A5%EF%BC%9F%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%BC%9A%E5%B8%A6%E6%9D%A5%E8%AF%BB%E6%89%A9%E6%95%A3%E9%97%AE%E9%A2%98%EF%BC%9F%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F%EF%BC%9F%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -446,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:23:15" itemprop="dateModified" datetime="2022-10-30T10:23:15+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -541,7 +292,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -566,13 +317,11 @@
       
           <br>
 
-
-
 <p>那天，我还在外面吃成都六姐的冒菜。</p>
 <p>牛肉丸裹上麻酱后，狠狠嘬一口，都要入嘴了。</p>
 <p>产品经理突然发来消息。</p>
 <p><strong>“线上有些用户不能注册了”</strong></p>
-<p>心想着”关我x事，又不是我做的模块”，放下手机。</p>
+<p>心想着”关我 x 事，又不是我做的模块”，放下手机。</p>
 <p>不对，那老哥上礼拜刚离职了，想到这里，夹住毛肚的手<strong>微微颤抖</strong>。</p>
 <p>对面继续发：**”还有些用户不能改名”**</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/a6a681ebgy1gpfzfr4ikdj20520523yf.jpg"></p>
@@ -634,7 +383,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -719,7 +468,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -744,12 +493,9 @@
       
           <br>
 
-
-
-
 <p>假设当前数据库里有下面这张表。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%814.drawio.png" alt="user表数据库原始状态"></p>
-<p>老规矩，以下内容还是默认发生在innodb引擎的<strong>可重复读隔离级别</strong>下。</p>
+<p>老规矩，以下内容还是默认发生在 innodb 引擎的<strong>可重复读隔离级别</strong>下。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%83%BD%E6%98%AFselect%E7%BB%93%E6%9E%9C%E5%8D%B4%E4%B8%8D%E5%90%8C1.drawio.png" alt="都是select结果却不同"></p>
           <!--noindex-->
             <div class="post-button">
@@ -808,7 +554,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -831,48 +577,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="mysql的索引为什么使用B-树而不使用跳表？"><a href="#mysql的索引为什么使用B-树而不使用跳表？" class="headerlink" title="mysql的索引为什么使用B+树而不使用跳表？"></a>mysql的索引为什么使用B+树而不使用跳表？</h2><br>
+          <h2 id="mysql-的索引为什么使用-B-树而不使用跳表？"><a href="#mysql-的索引为什么使用-B-树而不使用跳表？" class="headerlink" title="mysql 的索引为什么使用 B+树而不使用跳表？"></a>mysql 的索引为什么使用 B+树而不使用跳表？</h2><br>
 
-<p>在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。</p>
-<p>直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了**O(lg(n))**。</p>
-<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的<strong>跳表</strong>，也是**lg(n)**，并且实现还贼简单。</p>
-<p><strong>那为什么mysql的索引，不使用跳表呢？</strong></p>
+<p>在我们的印象中，mysql 数据表里无非就是存储一行行的数据。跟个 excel 似的。</p>
+<p>直接遍历这一行行数据，性能就是 O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了**O(lg(n))**。</p>
+<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如 redis 的 zset 里用到的<strong>跳表</strong>，也是**lg(n)**，并且实现还贼简单。</p>
+<p><strong>那为什么 mysql 的索引，不使用跳表呢？</strong></p>
 <p>我们今天就来聊聊这个话题。</p>
 <br>
 
 <h3 id="B-树的结构"><a href="#B-树的结构" class="headerlink" title="B+树的结构"></a>B+树的结构</h3><p>之前的一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>里，已经提到过<strong>B+树的结构</strong>了。文章不长，如果没看过，建议先看下。</p>
 <p><strong>当然，不看也行。</strong></p>
-<p>在这里，<del>为了混点字数</del>，我简单总结下B+树的结构。</p>
-<p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png" alt="B+树查询过程"><br>如上图，一般B+树是由多个页组成的<strong>多层级</strong>结构，每个页<code>16Kb</code>，对于主键索引来说，最末级的<strong>叶子结点</strong>放行数据，<strong>非叶子结点</strong>放的则是索引信息（主键id和页号），用于加速查询。</p>
-<p>比方说我们想要查找行数据5。会先从顶层页的record们入手。<strong>record里包含了主键id和页号（页地址）</strong>。关注黄色的箭头，向左最小id是1，向右最小id是7。那id=5的数据如果存在，那必定在左边箭头。于是顺着的record的页地址就到了<code>6号</code>数据页里，再判断id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。</p>
-<p>在<code>105号数据页</code>里，虽然有多行数据，但也<strong>不是挨个遍历的</strong>，数据页内还有个<strong>页目录</strong>的信息，它可以通过<strong>二分查找</strong>的方式加速查询行数据，于是找到id=5的数据行，完成查询。</p>
-<p>从上面可以看出，B+树利用了<strong>空间换时间</strong>的方式（构造了一批非叶子结点用于存放索引信息），**将查询时间复杂度从O(n)优化为O(lg(n))**。</p>
+<p>在这里，<del>为了混点字数</del>，我简单总结下 B+树的结构。</p>
+<p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png" alt="B+树查询过程"><br>如上图，一般 B+树是由多个页组成的<strong>多层级</strong>结构，每个页<code>16Kb</code>，对于主键索引来说，最末级的<strong>叶子结点</strong>放行数据，<strong>非叶子结点</strong>放的则是索引信息（主键 id 和页号），用于加速查询。</p>
+<p>比方说我们想要查找行数据 5。会先从顶层页的 record 们入手。<strong>record 里包含了主键 id 和页号（页地址）</strong>。关注黄色的箭头，向左最小 id 是 1，向右最小 id 是 7。那 id=5 的数据如果存在，那必定在左边箭头。于是顺着的 record 的页地址就到了<code>6号</code>数据页里，再判断 id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。</p>
+<p>在<code>105号数据页</code>里，虽然有多行数据，但也<strong>不是挨个遍历的</strong>，数据页内还有个<strong>页目录</strong>的信息，它可以通过<strong>二分查找</strong>的方式加速查询行数据，于是找到 id=5 的数据行，完成查询。</p>
+<p>从上面可以看出，B+树利用了<strong>空间换时间</strong>的方式（构造了一批非叶子结点用于存放索引信息），**将查询时间复杂度从 O(n)优化为 O(lg(n))**。</p>
 <br>
 
-<h3 id="跳表的结构"><a href="#跳表的结构" class="headerlink" title="跳表的结构"></a>跳表的结构</h3><p>看完B+树，我们再来看下跳表是怎么来的。</p>
+<h3 id="跳表的结构"><a href="#跳表的结构" class="headerlink" title="跳表的结构"></a>跳表的结构</h3><p>看完 B+树，我们再来看下跳表是怎么来的。</p>
 <p>同样的，还是为了存储一行行的数据。</p>
 <p>我们可以将它们用<strong>链表</strong>串起来。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%8D%95%E9%93%BE%E8%A1%A8.png" alt="单链表"></p>
-<p>想要查询链表中的其中一个结点，时间复杂度是O(n)，这谁顶得住，于是将<strong>部分</strong>链表结点提出来，再构建出一个新的链表。</p>
+<p>想要查询链表中的其中一个结点，时间复杂度是 O(n)，这谁顶得住，于是将<strong>部分</strong>链表结点提出来，再构建出一个新的链表。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8.png" alt="两层跳表"></p>
 <p>这样当我想要查询一个数据的时候，我先查上层的链表，就很容易知道数据落在<strong>哪个范围</strong>，然后<strong>跳到下一个层级里进行查询。</strong>这样就把搜索范围一下子缩小了一大半。</p>
-<p>比如查询id=10的数据，我们先在上层遍历，依次判断1,6,12，很快就可以判断出10在6到12之间，然后往下一跳，就可以在遍历6,7,8,9,10之后，确定id=10的位置。直接将查询范围从原来的1到10，变成现在的1,6,7,8,9,10，算是砍半了。</p>
+<p>比如查询 id=10 的数据，我们先在上层遍历，依次判断 1,6,12，很快就可以判断出 10 在 6 到 12 之间，然后往下一跳，就可以在遍历 6,7,8,9,10 之后，确定 id=10 的位置。直接将查询范围从原来的 1 到 10，变成现在的 1,6,7,8,9,10，算是砍半了。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BEid%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png" alt="两层跳表查找id为10的数据"></p>
 <p>既然两层链表就直接将查询范围砍半了，那我<strong>多加几层</strong>，岂不妙哉？</p>
 <p>于是跳表就这样变成了多层。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8.png" alt="三层跳表"></p>
-<p>如果还是查询id=10的数据，就只需要查询1,6,9,10就能找到，比两层的时候更快一些。</p>
+<p>如果还是查询 id=10 的数据，就只需要查询 1,6,9,10 就能找到，比两层的时候更快一些。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E8%AF%A2id%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.png" alt="三层跳表查询id为10的数据"></p>
-<p>可以看出，跳表也是通过<strong>牺牲空间换取时间</strong>的方式提升查询性能。**时间复杂度都是lg(n)**。</p>
+<p>可以看出，跳表也是通过<strong>牺牲空间换取时间</strong>的方式提升查询性能。**时间复杂度都是 lg(n)**。</p>
 <br>
 
 <h3 id="B-树和跳表的区别"><a href="#B-树和跳表的区别" class="headerlink" title="B+树和跳表的区别"></a>B+树和跳表的区别</h3><p>从上面可以看到，B+树和跳表的<strong>最下面一层，都包含了所有的数据</strong>，且都是<strong>顺序的，适合用于范围查询</strong>。往上的层级都是构建出来用于提升搜索性能的。这两者实在是太像了。但他们两者在<strong>新增和删除数据</strong>时，还是有些区别的。下面我们以新增数据为例聊一下。</p>
 <br>
 
 <h4 id="B-树新增数据会怎么样"><a href="#B-树新增数据会怎么样" class="headerlink" title="B+树新增数据会怎么样"></a>B+树新增数据会怎么样</h4><p>B+树本质上是一种多叉平衡二叉树。关键在于”<strong>平衡</strong>“这两个字，对于多叉树结构来说，它的含义是子树们的高度层级尽量一致（一般最多差一个层级），这样在搜索的时候，不管是到哪个子树分支，搜索次数都差不了太多。</p>
-<p>当数据库表不断插入新的数据时，为了维持B+树的平衡，B+树会不断分裂调整数据页。</p>
-<p>我们知道B+树分为<strong>叶子结点和非叶子结点</strong>。</p>
-<p>当插入一条数据时，叶子结点和它上层的索引结点（非叶子结点）最大容量都是16k，它们都有可能会满。</p>
+<p>当数据库表不断插入新的数据时，为了维持 B+树的平衡，B+树会不断分裂调整数据页。</p>
+<p>我们知道 B+树分为<strong>叶子结点和非叶子结点</strong>。</p>
+<p>当插入一条数据时，叶子结点和它上层的索引结点（非叶子结点）最大容量都是 16k，它们都有可能会满。</p>
 <p>为了简化问题，我们<strong>假设</strong>一个数据页只能放三条行数据或索引。</p>
 <p>加入一条数据，根据数据页会不会满，分为三种情况。</p>
 <ul>
@@ -888,7 +634,7 @@
 </ul>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%BB%A1%E4%BA%86.png" alt="叶子和非叶子都满了"></p>
 <p>从上面可以看到，只有在叶子和索引结点<strong>都满了</strong>的情况下，B+树才会考虑加入一层新的结点。</p>
-<p>而从之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>知道，要把三层B+树塞满，那大概需要2kw左右的数据。</p>
+<p>而从之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>知道，要把三层 B+树塞满，那大概需要 2kw 左右的数据。</p>
 <br>
 
 <h4 id="跳表新增数据"><a href="#跳表新增数据" class="headerlink" title="跳表新增数据"></a>跳表新增数据</h4><p>跳表同样也是很多层，新增一个数据时，最底层的链表需要插入数据。</p>
@@ -896,46 +642,42 @@
 <p>这个就纯靠<strong>随机函数</strong>了。</p>
 <p>理论上为了达到<strong>二分的效果</strong>，每一层的结点数需要是下一层结点数的二分之一。</p>
 <p>也就是说现在有一个新的数据插入了，它有<code>50%</code>的概率需要在<code>第二层</code>加入索引，有<code>25%</code>的概率需要在<code>第三层</code>加个索引，以此类推，直到<code>最顶层</code>。</p>
-<p>举个例子，如果跳表中插入数据id=6，且随机函数返回第三层（有25%的概率），那就需要在跳表的最底层到第三层都插入数据。</p>
+<p>举个例子，如果跳表中插入数据 id=6，且随机函数返回第三层（有 25%的概率），那就需要在跳表的最底层到第三层都插入数据。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.drawio.png" alt="跳表插入数据"></p>
 <p>如果这个随机函数设计成上面这样，当<strong>数据量样本足够大</strong>的时候，数据的分布就符合我们理想中的”二分”。</p>
-<p>跟上面B+树不一样，跳表是否新增层数，纯粹靠随机函数，根本不关心前后上下结点。</p>
+<p>跟上面 B+树不一样，跳表是否新增层数，纯粹靠随机函数，根本不关心前后上下结点。</p>
 <br>
-
-
-
-
 
 <p>好了，基础科普也结束了，我们可以进入正题了。</p>
 <br>
 
-<h3 id="mysql的索引为什么使用B-树而不使用跳表？-1"><a href="#mysql的索引为什么使用B-树而不使用跳表？-1" class="headerlink" title="mysql的索引为什么使用B+树而不使用跳表？"></a>mysql的索引为什么使用B+树而不使用跳表？</h3><p><strong>B+树</strong>是多叉树结构，每个结点都是一个16k的数据页，能存放较多索引信息，所以<strong>扇出很高</strong>。<strong>三层</strong>左右就可以存储<code>2kw</code>左右的数据（知道结论就行，想知道原因可以看之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>）。也就是说查询一次数据，如果这些数据页都在磁盘里，那么最多需要查询<strong>三次磁盘IO</strong>。</p>
+<h3 id="mysql-的索引为什么使用-B-树而不使用跳表？-1"><a href="#mysql-的索引为什么使用-B-树而不使用跳表？-1" class="headerlink" title="mysql 的索引为什么使用 B+树而不使用跳表？"></a>mysql 的索引为什么使用 B+树而不使用跳表？</h3><p><strong>B+树</strong>是多叉树结构，每个结点都是一个 16k 的数据页，能存放较多索引信息，所以<strong>扇出很高</strong>。<strong>三层</strong>左右就可以存储<code>2kw</code>左右的数据（知道结论就行，想知道原因可以看之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>）。也就是说查询一次数据，如果这些数据页都在磁盘里，那么最多需要查询<strong>三次磁盘 IO</strong>。</p>
 <br>
 
-<p><strong>跳表</strong>是链表结构，一条数据一个结点，如果最底层要存放<code>2kw</code>数据，且每次查询都要能达到<strong>二分查找</strong>的效果，<code>2kw</code>大概在<code>2的24次方</code>左右，所以，跳表大概高度在<strong>24层</strong>左右。最坏情况下，这24层数据会分散在不同的数据页里，也即是查一次数据会经历<strong>24次磁盘IO</strong>。</p>
-<p>因此存放同样量级的数据，B+树的高度比跳表的要少，如果放在mysql数据库上来说，就是<strong>磁盘IO次数更少，因此B+树查询更快</strong>。</p>
-<p>而针对<strong>写操作</strong>，B+树需要拆分合并索引数据页，跳表则独立插入，并根据随机函数确定层数，没有旋转和维持平衡的开销，因此<strong>跳表的写入性能会比B+树要好。</strong></p>
-<p>其实，mysql的<strong>存储引擎是可以换的</strong>，以前是<code>myisam</code>，后来才有的<code>innodb</code>，它们底层索引用的都是<strong>B+树</strong>。也就是说，你完全可以造一个索引为跳表的存储引擎装到mysql里。事实上，<code>facebook</code>造了个<code>rocksDB</code>的存储引擎，里面就用了<strong>跳表</strong>。直接说结论，它的<strong>写入性能</strong>确实是比innodb要好，但<strong>读性能</strong>确实比innodb要差不少。感兴趣的话，可以在文章最后面的<strong>参考资料</strong>里看到他们的性能对比数据。</p>
+<p><strong>跳表</strong>是链表结构，一条数据一个结点，如果最底层要存放<code>2kw</code>数据，且每次查询都要能达到<strong>二分查找</strong>的效果，<code>2kw</code>大概在<code>2的24次方</code>左右，所以，跳表大概高度在<strong>24 层</strong>左右。最坏情况下，这 24 层数据会分散在不同的数据页里，也即是查一次数据会经历<strong>24 次磁盘 IO</strong>。</p>
+<p>因此存放同样量级的数据，B+树的高度比跳表的要少，如果放在 mysql 数据库上来说，就是<strong>磁盘 IO 次数更少，因此 B+树查询更快</strong>。</p>
+<p>而针对<strong>写操作</strong>，B+树需要拆分合并索引数据页，跳表则独立插入，并根据随机函数确定层数，没有旋转和维持平衡的开销，因此<strong>跳表的写入性能会比 B+树要好。</strong></p>
+<p>其实，mysql 的<strong>存储引擎是可以换的</strong>，以前是<code>myisam</code>，后来才有的<code>innodb</code>，它们底层索引用的都是<strong>B+树</strong>。也就是说，你完全可以造一个索引为跳表的存储引擎装到 mysql 里。事实上，<code>facebook</code>造了个<code>rocksDB</code>的存储引擎，里面就用了<strong>跳表</strong>。直接说结论，它的<strong>写入性能</strong>确实是比 innodb 要好，但<strong>读性能</strong>确实比 innodb 要差不少。感兴趣的话，可以在文章最后面的<strong>参考资料</strong>里看到他们的性能对比数据。</p>
 <br>
 
-<h3 id="redis为什么使用跳表而不使用B-树或二叉树呢？"><a href="#redis为什么使用跳表而不使用B-树或二叉树呢？" class="headerlink" title="redis为什么使用跳表而不使用B+树或二叉树呢？"></a>redis为什么使用跳表而不使用B+树或二叉树呢？</h3><p>redis支持多种数据结构，里面有个<strong>有序集合</strong>，也叫<strong>ZSET</strong>。内部实现就是<strong>跳表</strong>。那为什么要<strong>用跳表而不用B+树等结构呢？</strong></p>
+<h3 id="redis-为什么使用跳表而不使用-B-树或二叉树呢？"><a href="#redis-为什么使用跳表而不使用-B-树或二叉树呢？" class="headerlink" title="redis 为什么使用跳表而不使用 B+树或二叉树呢？"></a>redis 为什么使用跳表而不使用 B+树或二叉树呢？</h3><p>redis 支持多种数据结构，里面有个<strong>有序集合</strong>，也叫<strong>ZSET</strong>。内部实现就是<strong>跳表</strong>。那为什么要<strong>用跳表而不用 B+树等结构呢？</strong></p>
 <p>这个几乎每次面试都要被问一下。</p>
 <p>虽然已经很熟了，但每次都要装作之前没想过，现场思考一下才知道答案。</p>
 <p>真的，很考验演技。</p>
 <p>大家知道，redis 是纯纯的内存数据库。</p>
-<p>进行读写数据都是操作内存，跟磁盘没啥关系，因此也<strong>不存在磁盘IO</strong>了，所以层高就不再是跳表的劣势了。</p>
-<p>并且前面也提到B+树是有一系列合并拆分操作的，换成红黑树或者其他AVL树的话也是各种旋转，目的也是<strong>为了保持树的平衡</strong>。</p>
+<p>进行读写数据都是操作内存，跟磁盘没啥关系，因此也<strong>不存在磁盘 IO</strong>了，所以层高就不再是跳表的劣势了。</p>
+<p>并且前面也提到 B+树是有一系列合并拆分操作的，换成红黑树或者其他 AVL 树的话也是各种旋转，目的也是<strong>为了保持树的平衡</strong>。</p>
 <p>而跳表插入数据时，只需要随机一下，就知道自己要不要往上加索引，根本不用考虑前后结点的感受，也就<strong>少了旋转平衡的开销</strong>。</p>
-<p>因此，redis选了跳表，而不是B+树。</p>
+<p>因此，redis 选了跳表，而不是 B+树。</p>
 <br>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>B+树是多叉平衡搜索树，扇出高，只需要3层左右就能存放2kw左右的数据，同样情况下跳表则需要24层左右，假设层高对应<strong>磁盘IO</strong>，那么B+树的读性能会比跳表要好，因此mysql选了B+树做索引。</li>
-<li>redis的读写全在内存里进行操作，不涉及磁盘IO，同时跳表实现简单，相比B+树、AVL树、少了旋转树结构的开销，因此redis使用跳表来实现ZSET，而不是树结构。</li>
-<li>存储引擎RocksDB内部使用了跳表，对比使用B+树的innodb，虽然写性能更好，但读性能属实差了些。在读多写少的场景下，B+树依旧YYDS。</li>
+<li>B+树是多叉平衡搜索树，扇出高，只需要 3 层左右就能存放 2kw 左右的数据，同样情况下跳表则需要 24 层左右，假设层高对应<strong>磁盘 IO</strong>，那么 B+树的读性能会比跳表要好，因此 mysql 选了 B+树做索引。</li>
+<li>redis 的读写全在内存里进行操作，不涉及磁盘 IO，同时跳表实现简单，相比 B+树、AVL 树、少了旋转树结构的开销，因此 redis 使用跳表来实现 ZSET，而不是树结构。</li>
+<li>存储引擎 RocksDB 内部使用了跳表，对比使用 B+树的 innodb，虽然写性能更好，但读性能属实差了些。在读多写少的场景下，B+树依旧 YYDS。</li>
 </ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL内核：INNODB存储引擎 卷1》</p>
-<p>《RocksDB和Innodb引擎性能PK胜负难料？》</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL 内核：INNODB 存储引擎 卷 1》</p>
+<p>《RocksDB 和 Innodb 引擎性能 PK 胜负难料？》</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1813695">https://cloud.tencent.com/developer/article/1813695</a></p>
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><br>
 
@@ -945,7 +687,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220404094330264.png"></p>
 <p>这么说吧，一个颜值出众，身材火辣的姐姐，还是个世界顶级的武术高手，穿着旗袍，踩着高跟，做着各种让牛顿棺材板都快要按不住的动作，只为手把手教会你武术基本功。</p>
 <p>这时候，剧情还重要吗？</p>
-<p>不得不说，当我看到姐姐穿成这样用木棍顶起400斤的汞球时。</p>
+<p>不得不说，当我看到姐姐穿成这样用木棍顶起 400 斤的汞球时。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220404094549469.png"></p>
 <br>
 
@@ -978,7 +720,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -987,9 +729,9 @@
 
 <p><img src="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1041,7 +783,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:15" itemprop="dateModified" datetime="2022-10-30T10:28:15+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1067,11 +809,11 @@
           <br>
 
 <p>故事从好多年前说起。</p>
-<p>想必大家也听说过数据库单表<strong>建议最大2kw</strong>条数据这个说法。如果超过了，性能就会下降得比较厉害。</p>
+<p>想必大家也听说过数据库单表<strong>建议最大 2kw</strong>条数据这个说法。如果超过了，性能就会下降得比较厉害。</p>
 <p>巧了。</p>
 <p>我也听说过。</p>
-<p><strong>但我不接受它的建议，硬是单表装了1亿条数据。</strong></p>
-<p>这时候，我们组里新来的实习生看到了之后，天真无邪的问我：”单表不是建议最大两千万吗？为什么这个表都<strong>放了1个亿还不分库分表</strong>“？</p>
+<p><strong>但我不接受它的建议，硬是单表装了 1 亿条数据。</strong></p>
+<p>这时候，我们组里新来的实习生看到了之后，天真无邪的问我：”单表不是建议最大两千万吗？为什么这个表都<strong>放了 1 个亿还不分库分表</strong>“？</p>
 <p>我能说我是<strong>因为懒</strong>吗？我当初设计时哪里想到这表竟然能涨这么快。。。</p>
 <p>我不能。</p>
 <p>说了等于承认自己是<strong>开发组里的毒瘤</strong>，虽然我确实是，但我<strong>不能承认</strong>。</p>
@@ -1079,135 +821,135 @@
 <p>开始了一波骚操作。</p>
 <p>“我这么做是有道理的”</p>
 <p>“虽然这个表很大，但你有没有发现它查询其实还是很快”</p>
-<p>“这个2kw是个建议值，我们要来看下这个2kw是怎么来的”</p>
+<p>“这个 2kw 是个建议值，我们要来看下这个 2kw 是怎么来的”</p>
 <br>
 
 <h3 id="数据库单表行数最大多大？"><a href="#数据库单表行数最大多大？" class="headerlink" title="数据库单表行数最大多大？"></a>数据库单表行数最大多大？</h3><p>我们先看下单表行数理论最大值是多少。</p>
-<p>建表的SQL是这么写的，</p>
+<p>建表的 SQL 是这么写的，</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">100037</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
 
-<p>其中id就是主键。主键本身唯一，也就是说主键的大小可以限制表的上限。</p>
-<p>如果主键声明为<code>int</code>大小，也就是32位，那么能支持2^32-1，也就是<strong>21个亿</strong>左右。</p>
-<p>如果是<code>bigint</code>，那就是2^64-1，但这个<strong>数字太大</strong>，一般还没到这个限制之前，<strong>磁盘先受不了</strong>。</p>
+<p>其中 id 就是主键。主键本身唯一，也就是说主键的大小可以限制表的上限。</p>
+<p>如果主键声明为<code>int</code>大小，也就是 32 位，那么能支持 2^32-1，也就是<strong>21 个亿</strong>左右。</p>
+<p>如果是<code>bigint</code>，那就是 2^64-1，但这个<strong>数字太大</strong>，一般还没到这个限制之前，<strong>磁盘先受不了</strong>。</p>
 <p>搞离谱点。</p>
-<p>如果我把主键声明为 <code>tinyint</code>，一个字节，8位，最大2^8-1，也就是<code>255</code>。</p>
+<p>如果我把主键声明为 <code>tinyint</code>，一个字节，8 位，最大 2^8-1，也就是<code>255</code>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` tinyint(<span class="number">2</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">0</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
 
-<p>如果我想插入一个id=256的数据，那<strong>就会报错</strong>。</p>
+<p>如果我想插入一个 id=256 的数据，那<strong>就会报错</strong>。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> `tmp` (`id`, `name`, `age`) <span class="keyword">VALUES</span> (<span class="number">256</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">60</span>);</span><br><span class="line">ERROR <span class="number">1264</span> (<span class="number">22003</span>): <span class="keyword">Out</span> <span class="keyword">of</span> <span class="keyword">range</span> <span class="keyword">value</span> <span class="keyword">for</span> <span class="keyword">column</span> <span class="string">&#x27;id&#x27;</span> <span class="keyword">at</span> <span class="type">row</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
-<p>也就是说，<code>tinyint</code>主键限制表内最多255条数据。</p>
+<p>也就是说，<code>tinyint</code>主键限制表内最多 255 条数据。</p>
 <p>那除了主键，还有哪些因素会影响行数？</p>
 <br>
 
-<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引内部是用的B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
+<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引内部是用的 B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
 <p>为了不让大家有过于强烈的审丑疲劳，今天我尝试从另外一个角度给大家讲讲这玩意。</p>
 <br>
 
-<h4 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h4><p>假设我们有这么一张user数据表。</p>
+<h4 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h4><p>假设我们有这么一张 user 数据表。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
-<p>其中id是<strong>唯一主键</strong>。</p>
+<p>其中 id 是<strong>唯一主键</strong>。</p>
 <p>这看起来的一行行数据，为了方便，我们后面就叫它们<strong>record</strong>吧。</p>
-<p>这张表看起来就跟个excel表格一样。excel的数据在硬盘上是一个xx.excel的文件。</p>
-<p>而上面user表数据，在硬盘上其实也是类似，放在了user.<strong>ibd</strong>文件下。含义是user表的innodb data文件，专业点，又叫<strong>表空间</strong>。</p>
-<p>虽然在数据表里，它们看起来是挨在一起的。但实际上在user.ibd里他们被分成很多小份的<strong>数据页</strong>，每份大小16k。</p>
+<p>这张表看起来就跟个 excel 表格一样。excel 的数据在硬盘上是一个 xx.excel 的文件。</p>
+<p>而上面 user 表数据，在硬盘上其实也是类似，放在了 user.<strong>ibd</strong>文件下。含义是 user 表的 innodb data 文件，专业点，又叫<strong>表空间</strong>。</p>
+<p>虽然在数据表里，它们看起来是挨在一起的。但实际上在 user.ibd 里他们被分成很多小份的<strong>数据页</strong>，每份大小 16k。</p>
 <p>类似于下面这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ibd%E6%96%87%E4%BB%B6%E5%86%85%E9%83%A8%E6%9C%89%E5%A4%A7%E9%87%8F%E7%9A%84%E9%A1%B5.png" alt="ibd文件内部有大量的页"></p>
 <p>我们把视角聚焦一下，放到页上面。</p>
-<p>整个页<code>16k</code>，不大，但record这么多，一页肯定放不下，所以会分开放到很多页里。并且这16k，也不可能全用来放record对吧。</p>
-<p>因为record们被分成好多份，放到好多页里了，为了唯一标识具体是哪一页，那就需要引入<strong>页号</strong>（其实是一个表空间的地址偏移量）。同时为了把这些数据页给关联起来，于是引入了<strong>前后指针</strong>，用于指向前后的页。这些都被加到了<strong>页头</strong>里。</p>
-<p>页是需要读写的，16k说小也不小，写一半电源线被拔了也是有可能发生的，所以为了保证数据页的正确性，还引入了校验码。这个被加到了<strong>页尾</strong>。</p>
-<p>那剩下的空间，才是用来放我们的record的。而record如果行数特别多的话，进入到页内时挨个遍历，效率也不太行，所以为这些数据生成了一个<strong>页目录</strong>，具体实现细节不重要。只需要知道，它可以通过<strong>二分查找</strong>的方式将查找效率**从O(n) 变成O(lgn)**。</p>
+<p>整个页<code>16k</code>，不大，但 record 这么多，一页肯定放不下，所以会分开放到很多页里。并且这 16k，也不可能全用来放 record 对吧。</p>
+<p>因为 record 们被分成好多份，放到好多页里了，为了唯一标识具体是哪一页，那就需要引入<strong>页号</strong>（其实是一个表空间的地址偏移量）。同时为了把这些数据页给关联起来，于是引入了<strong>前后指针</strong>，用于指向前后的页。这些都被加到了<strong>页头</strong>里。</p>
+<p>页是需要读写的，16k 说小也不小，写一半电源线被拔了也是有可能发生的，所以为了保证数据页的正确性，还引入了校验码。这个被加到了<strong>页尾</strong>。</p>
+<p>那剩下的空间，才是用来放我们的 record 的。而 record 如果行数特别多的话，进入到页内时挨个遍历，效率也不太行，所以为这些数据生成了一个<strong>页目录</strong>，具体实现细节不重要。只需要知道，它可以通过<strong>二分查找</strong>的方式将查找效率**从 O(n) 变成 O(lgn)**。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png" alt="页结构"><br></p>
-<h4 id="从页到索引"><a href="#从页到索引" class="headerlink" title="从页到索引"></a>从页到索引</h4><p>如果想查一条record，我们可以把表空间里每一页都捞出来，再把里面的record捞出来挨个判断是不是我们要找的。</p>
+<h4 id="从页到索引"><a href="#从页到索引" class="headerlink" title="从页到索引"></a>从页到索引</h4><p>如果想查一条 record，我们可以把表空间里每一页都捞出来，再把里面的 record 捞出来挨个判断是不是我们要找的。</p>
 <p>行数量小的时候，这么操作也没啥问题。</p>
-<p><strong>行数量大了，性能就慢了</strong>，于是为了加速搜索，我们可以在每个数据页里选出<strong>主键id最小</strong>的record，而且只需要它们的<strong>主键id和所在页的页号</strong>。组成<strong>新的record</strong>，放入到一个新生成的一个数据页中，这个<strong>新数据页跟之前的页结构没啥区别，而且大小还是16k。</strong></p>
-<p>但为了跟之前的数据页进行区分。数据页里加入了<strong>页层级（page level）</strong>的信息，从0开始往上算。于是页与页之间就有了<strong>上下层级</strong>的概念，就像下面这样。</p>
+<p><strong>行数量大了，性能就慢了</strong>，于是为了加速搜索，我们可以在每个数据页里选出<strong>主键 id 最小</strong>的 record，而且只需要它们的<strong>主键 id 和所在页的页号</strong>。组成<strong>新的 record</strong>，放入到一个新生成的一个数据页中，这个<strong>新数据页跟之前的页结构没啥区别，而且大小还是 16k。</strong></p>
+<p>但为了跟之前的数据页进行区分。数据页里加入了<strong>页层级（page level）</strong>的信息，从 0 开始往上算。于是页与页之间就有了<strong>上下层级</strong>的概念，就像下面这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%A4%E5%B1%82B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%84.png" alt="两层B+树结构"></p>
 <p>突然页跟页之间看起来就像是一棵倒过来的树了。也就是我们常说的<strong>B+树</strong>索引。</p>
-<p>最下面那一层，<strong>page level 为0</strong>，也就是所谓的<strong>叶子结点</strong>，其余都叫<strong>非叶子结点</strong>。</p>
+<p>最下面那一层，<strong>page level 为 0</strong>，也就是所谓的<strong>叶子结点</strong>，其余都叫<strong>非叶子结点</strong>。</p>
 <p>上面展示的是<strong>两层</strong>的树，如果数据变多了，我们还可以再通过类似的方法，再往上构建一层。就成了<strong>三层</strong>的树。</p>
 <p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E7%BB%93%E6%9E%847.drawio.png" alt="B加树结构7.drawio"></p>
 <br>
 
-<p>那现在我们就可以通过这样一棵B+树加速查询。举个例子。</p>
-<p>比方说我们想要查找行数据5。会先从顶层页的record们入手。<strong>record里包含了主键id和页号（页地址）</strong>。看下图黄色的箭头，向左最小id是1，向右最小id是7。那id=5的数据如果存在，那必定在左边箭头。于是顺着的record的页地址就到了<code>6号</code>数据页里，再判断id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。在数据页里找到id=5的数据行，完成查询。</p>
+<p>那现在我们就可以通过这样一棵 B+树加速查询。举个例子。</p>
+<p>比方说我们想要查找行数据 5。会先从顶层页的 record 们入手。<strong>record 里包含了主键 id 和页号（页地址）</strong>。看下图黄色的箭头，向左最小 id 是 1，向右最小 id 是 7。那 id=5 的数据如果存在，那必定在左边箭头。于是顺着的 record 的页地址就到了<code>6号</code>数据页里，再判断 id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。在数据页里找到 id=5 的数据行，完成查询。</p>
 <p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png" alt="B+树查询过程"></p>
 <p>另外需要注意的是，上面的页的页号并不是连续的，它们在磁盘里也不一定是挨在一起的。</p>
-<p>这个过程中查询了三个页，如果这三个页都在磁盘中（没有被提前加载到内存中），那么<strong>最多</strong>需要经历三次<strong>磁盘IO查询</strong>，它们才能被加载到内存中。</p>
+<p>这个过程中查询了三个页，如果这三个页都在磁盘中（没有被提前加载到内存中），那么<strong>最多</strong>需要经历三次<strong>磁盘 IO 查询</strong>，它们才能被加载到内存中。</p>
 <br>
 
-<h3 id="B-树承载的记录数量"><a href="#B-树承载的记录数量" class="headerlink" title="B+树承载的记录数量"></a>B+树承载的记录数量</h3><p>从上面的结构里可以看出B+树的<strong>最末级叶子结点</strong>里放了record数据。而<strong>非叶子结点</strong>里则放了用来加速查询的索引数据。</p>
+<h3 id="B-树承载的记录数量"><a href="#B-树承载的记录数量" class="headerlink" title="B+树承载的记录数量"></a>B+树承载的记录数量</h3><p>从上面的结构里可以看出 B+树的<strong>最末级叶子结点</strong>里放了 record 数据。而<strong>非叶子结点</strong>里则放了用来加速查询的索引数据。</p>
 <p>也就是说</p>
-<p>同样一个16k的页，非叶子节点里每一条数据都指向一个新的页，而新的页有两种可能。</p>
+<p>同样一个 16k 的页，非叶子节点里每一条数据都指向一个新的页，而新的页有两种可能。</p>
 <ul>
-<li>如果是末级叶子节点的话，那么里面放的就是一行行record数据。</li>
+<li>如果是末级叶子节点的话，那么里面放的就是一行行 record 数据。</li>
 <li>如果是非叶子节点，那么就会循环继续指向新的数据页。</li>
 </ul>
 <p>假设</p>
 <ul>
 <li>非叶子结点内指向其他内存页的指针数量为<code>x</code></li>
-<li>叶子节点内能容纳的record数量为<code>y</code></li>
+<li>叶子节点内能容纳的 record 数量为<code>y</code></li>
 <li>B+树的层数为<code>z</code></li>
 </ul>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%80%BB%E8%A1%8C%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95.png" alt="总行数的计算方法"></p>
-<p>那这棵B+树放的<strong>行数据总量</strong>等于 <code>(x ^ (z-1)) * y</code>。</p>
+<p>那这棵 B+树放的<strong>行数据总量</strong>等于 <code>(x ^ (z-1)) * y</code>。</p>
 <br>
 
-<h4 id="x怎么算"><a href="#x怎么算" class="headerlink" title="x怎么算"></a>x怎么算</h4><p>我们回去看数据页的结构。</p>
+<h4 id="x-怎么算"><a href="#x-怎么算" class="headerlink" title="x 怎么算"></a>x 怎么算</h4><p>我们回去看数据页的结构。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png" alt="页结构"></p>
 <p>非叶子节点里主要放索引查询相关的数据，放的是主键和指向页号。</p>
 <p>主键假设是<code>bigint（8Byte）</code>，而页号在源码里叫<code>FIL_PAGE_OFFSET（4Byte）</code>，那么非叶子节点里的一条数据是<code>12Byte</code>左右。</p>
-<p>整个数据页<code>16k</code>， 页头页尾那部分数据全加起来大概<code>128Byte</code>，加上页目录毛估占<code>1k</code>吧。那剩下的<strong>15k</strong>除以<code>12Byte</code>，等于<code>1280</code>，也就是可以指向<strong>x=1280页</strong>。</p>
-<p>我们常说的二叉树指的是一个结点可以发散出两个新的结点。m叉树一个节点能指向m个新的结点。这个指向新节点的操作就叫<strong>扇出（fanout）</strong>。</p>
-<p>而上面的B+树，它能指向1280个新的节点，恐怖如斯，可以说<strong>扇出非常高</strong>了。</p>
+<p>整个数据页<code>16k</code>， 页头页尾那部分数据全加起来大概<code>128Byte</code>，加上页目录毛估占<code>1k</code>吧。那剩下的<strong>15k</strong>除以<code>12Byte</code>，等于<code>1280</code>，也就是可以指向<strong>x=1280 页</strong>。</p>
+<p>我们常说的二叉树指的是一个结点可以发散出两个新的结点。m 叉树一个节点能指向 m 个新的结点。这个指向新节点的操作就叫<strong>扇出（fanout）</strong>。</p>
+<p>而上面的 B+树，它能指向 1280 个新的节点，恐怖如斯，可以说<strong>扇出非常高</strong>了。</p>
 <br>
 
-<h4 id="y的计算"><a href="#y的计算" class="headerlink" title="y的计算"></a>y的计算</h4><p>叶子节点和非叶子节点的数据结构是一样的，所以也假设剩下<code>15kb</code>可以发挥。</p>
-<p>叶子节点里放的是真正的行数据。假设一条行数据<code>1kb</code>，所以一页里能放<strong>y=15行</strong>。</p>
+<h4 id="y-的计算"><a href="#y-的计算" class="headerlink" title="y 的计算"></a>y 的计算</h4><p>叶子节点和非叶子节点的数据结构是一样的，所以也假设剩下<code>15kb</code>可以发挥。</p>
+<p>叶子节点里放的是真正的行数据。假设一条行数据<code>1kb</code>，所以一页里能放<strong>y=15 行</strong>。</p>
 <br>
 
-<h4 id="行总数计算"><a href="#行总数计算" class="headerlink" title="行总数计算"></a>行总数计算</h4><p>回到  <code>(x ^ (z-1)) * y </code>   这个公式。</p>
+<h4 id="行总数计算"><a href="#行总数计算" class="headerlink" title="行总数计算"></a>行总数计算</h4><p>回到 <code>(x ^ (z-1)) * y </code> 这个公式。</p>
 <p>已知<code>x=1280</code>，<code>y=15</code>。</p>
-<p>假设B+树是<strong>两层</strong>，那<code>z=2</code>。则是<code>(1280 ^ (2-1)) * 15 ≈ 2w </code> </p>
-<p>假设B+树是<strong>三层</strong>，那<code>z=3</code>。则是<code>(1280 ^ (3-1)) * 15 ≈ 2.5kw</code></p>
-<p><strong>这个2.5kw，就是我们常说的单表建议最大行数2kw的由来。</strong>毕竟再加一层，数据就大得有点离谱了。三层数据页对应最多三次磁盘IO，也比较合理。</p>
+<p>假设 B+树是<strong>两层</strong>，那<code>z=2</code>。则是<code>(1280 ^ (2-1)) * 15 ≈ 2w </code></p>
+<p>假设 B+树是<strong>三层</strong>，那<code>z=3</code>。则是<code>(1280 ^ (3-1)) * 15 ≈ 2.5kw</code></p>
+<p><strong>这个 2.5kw，就是我们常说的单表建议最大行数 2kw 的由来。</strong>毕竟再加一层，数据就大得有点离谱了。三层数据页对应最多三次磁盘 IO，也比较合理。</p>
 <br>
 
-<h3 id="行数超一亿就慢了吗？"><a href="#行数超一亿就慢了吗？" class="headerlink" title="行数超一亿就慢了吗？"></a>行数超一亿就慢了吗？</h3><p>上面假设单行数据用了1kb，所以一个数据页能放个15行数据。</p>
-<p>如果我单行数据用不了这么多，比如只用了<code>250byte</code>。那么单个数据页能放60行数据。</p>
-<p>那同样是三层B+树，单表支持的行数就是 <code>(1280 ^ (3-1)) * 60 ≈ 1个亿</code>。</p>
-<p>你看我一个亿的数据，其实也就三层B+树，在这个B+树里要查到某行数据，最多也是三次磁盘IO。所以并不慢。</p>
-<p>这就很好的解释了文章开头，为什么我单表1个亿，但查询性能没啥大毛病。</p>
+<h3 id="行数超一亿就慢了吗？"><a href="#行数超一亿就慢了吗？" class="headerlink" title="行数超一亿就慢了吗？"></a>行数超一亿就慢了吗？</h3><p>上面假设单行数据用了 1kb，所以一个数据页能放个 15 行数据。</p>
+<p>如果我单行数据用不了这么多，比如只用了<code>250byte</code>。那么单个数据页能放 60 行数据。</p>
+<p>那同样是三层 B+树，单表支持的行数就是 <code>(1280 ^ (3-1)) * 60 ≈ 1个亿</code>。</p>
+<p>你看我一个亿的数据，其实也就三层 B+树，在这个 B+树里要查到某行数据，最多也是三次磁盘 IO。所以并不慢。</p>
+<p>这就很好的解释了文章开头，为什么我单表 1 个亿，但查询性能没啥大毛病。</p>
 <br>
 
-<h3 id="B树承载的记录数量"><a href="#B树承载的记录数量" class="headerlink" title="B树承载的记录数量"></a>B树承载的记录数量</h3><p>既然都聊到这里了，我们就顺着这个话题多聊一些吧。</p>
-<p>我们都知道，现在mysql的索引都是B+树，而有一种树，跟B+树很像，叫<strong>B树，也叫B-树</strong>。</p>
-<p>它跟B+树最大的区别在于，<strong>B+树只在末级叶子结点处放数据表行数据，而B树则会在叶子和非叶子结点上都放。</strong></p>
-<p>于是，B树的结构就类似这样</p>
+<h3 id="B-树承载的记录数量-1"><a href="#B-树承载的记录数量-1" class="headerlink" title="B 树承载的记录数量"></a>B 树承载的记录数量</h3><p>既然都聊到这里了，我们就顺着这个话题多聊一些吧。</p>
+<p>我们都知道，现在 mysql 的索引都是 B+树，而有一种树，跟 B+树很像，叫<strong>B 树，也叫 B-树</strong>。</p>
+<p>它跟 B+树最大的区别在于，<strong>B+树只在末级叶子结点处放数据表行数据，而 B 树则会在叶子和非叶子结点上都放。</strong></p>
+<p>于是，B 树的结构就类似这样</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/B%E6%A0%91%E7%BB%93%E6%9E%84.png" alt="B树结构"></p>
-<p>B树将行数据都存在非叶子节点上，假设每个数据页还是16kb，掐头去尾每页剩15kb，并且一条数据表行数据还是占1kb，就算不考虑各种页指针的情况下，也只能放个15条数据。<strong>数据页扇出明显变少了。</strong></p>
+<p>B 树将行数据都存在非叶子节点上，假设每个数据页还是 16kb，掐头去尾每页剩 15kb，并且一条数据表行数据还是占 1kb，就算不考虑各种页指针的情况下，也只能放个 15 条数据。<strong>数据页扇出明显变少了。</strong></p>
 <p>计算可承载的总行数的公式也变成了一个<strong>等比数列</strong>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15 + 15^2 +15^3 + ... + 15^z</span><br></pre></td></tr></table></figure>
 
-<p>其中<strong>z还是层数</strong>的意思。</p>
-<p>为了能放<code>2kw</code>左右的数据，需要<code>z&gt;=6</code>。也就是树需要有6层，查一次要访问6个页。假设这6个页并不连续，为了查询其中一条数据，最坏情况需要进行<strong>6次磁盘IO</strong>。</p>
-<p>而B+树同样情况下放2kw数据左右，查一次最多是<strong>3次磁盘IO。</strong></p>
-<p>磁盘IO越多则越慢，这两者在性能上差距略大。</p>
-<p>为此，<strong>B+树比B树更适合成为mysql的索引。</strong></p>
+<p>其中<strong>z 还是层数</strong>的意思。</p>
+<p>为了能放<code>2kw</code>左右的数据，需要<code>z&gt;=6</code>。也就是树需要有 6 层，查一次要访问 6 个页。假设这 6 个页并不连续，为了查询其中一条数据，最坏情况需要进行<strong>6 次磁盘 IO</strong>。</p>
+<p>而 B+树同样情况下放 2kw 数据左右，查一次最多是<strong>3 次磁盘 IO。</strong></p>
+<p>磁盘 IO 越多则越慢，这两者在性能上差距略大。</p>
+<p>为此，<strong>B+树比 B 树更适合成为 mysql 的索引。</strong></p>
 <br>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>B+树叶子和非叶子结点的数据页都是16k，且数据结构一致，区别在于叶子节点放的是真实的行数据，而非叶子结点放的是主键和下一个页的地址。</li>
-<li>B+树一般有两到三层，由于其高扇出，三层就能支持2kw以上的数据，且一次查询最多1~3次磁盘IO，性能也还行。</li>
-<li>存储同样量级的数据，B树比B+树层级更高，因此磁盘IO也更多，所以B+树更适合成为mysql索引。</li>
-<li>索引结构不会影响单表最大行数，2kw也只是推荐值，超过了这个值可能会导致B+树层级更高，影响查询性能。</li>
+<li>B+树叶子和非叶子结点的数据页都是 16k，且数据结构一致，区别在于叶子节点放的是真实的行数据，而非叶子结点放的是主键和下一个页的地址。</li>
+<li>B+树一般有两到三层，由于其高扇出，三层就能支持 2kw 以上的数据，且一次查询最多 1~3 次磁盘 IO，性能也还行。</li>
+<li>存储同样量级的数据，B 树比 B+树层级更高，因此磁盘 IO 也更多，所以 B+树更适合成为 mysql 索引。</li>
+<li>索引结构不会影响单表最大行数，2kw 也只是推荐值，超过了这个值可能会导致 B+树层级更高，影响查询性能。</li>
 <li>单表最大值还受主键大小和磁盘大小限制。</li>
 </ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL内核：INNODB存储引擎 卷1》</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL 内核：INNODB 存储引擎 卷 1》</p>
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><br>
 
-<p>虽然我在单表里塞了1亿条数据，但这个操作的前提是，我很清楚这不会太影响性能。</p>
+<p>虽然我在单表里塞了 1 亿条数据，但这个操作的前提是，我很清楚这不会太影响性能。</p>
 <p>这波解释，毫无破绽，无懈可击。</p>
 <p>到这里，连我自己都被自己说服了。想必实习生也是。</p>
 <p>可恶，这该死的毒瘤竟然有些”知识渊博”。</p>
@@ -1225,7 +967,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -1234,9 +976,9 @@
 
 <p><img src="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1288,7 +1030,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1313,11 +1055,11 @@
       
           <br>
 
-<p>我熟练应用ctrl c和ctrl v 开发curd代码好多年了。</p>
-<p>mysql查询为什么会慢，关于这个问题，在实际开发经常会遇到，而面试中，也是个高频题。</p>
+<p>我熟练应用 ctrl c 和 ctrl v 开发 curd 代码好多年了。</p>
+<p>mysql 查询为什么会慢，关于这个问题，在实际开发经常会遇到，而面试中，也是个高频题。</p>
 <p>遇到这种问题，我们一般也会想到是因为索引。</p>
 <p><strong>那除开索引之外，还有哪些因素会导致数据库查询变慢呢？</strong></p>
-<p><strong>有哪些操作，可以提升mysql的查询能力呢？</strong></p>
+<p><strong>有哪些操作，可以提升 mysql 的查询能力呢？</strong></p>
 <p>今天这篇文章，我们就来聊聊会导致数据库查询变慢的场景有哪些，并给出原因和解决方案。</p>
 <br>
 
@@ -1325,14 +1067,14 @@
 <p>比如我们有一张数据库表</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  `gender` <span class="type">int</span>(<span class="number">8</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;性别&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`),</span><br><span class="line">  KEY `idx_gender` (`gender`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
 
-<p>我们平常写的应用代码（go或C++之类的），这时候就叫<strong>客户端</strong>了。</p>
-<p>客户端底层会带着账号密码，尝试向mysql建立一条TCP长链接。</p>
-<p>mysql的<strong>连接管理模块</strong>会对这条连接进行管理。</p>
-<p>建立连接后，客户端执行一条查询sql语句。 比如：</p>
+<p>我们平常写的应用代码（go 或 C++之类的），这时候就叫<strong>客户端</strong>了。</p>
+<p>客户端底层会带着账号密码，尝试向 mysql 建立一条 TCP 长链接。</p>
+<p>mysql 的<strong>连接管理模块</strong>会对这条连接进行管理。</p>
+<p>建立连接后，客户端执行一条查询 sql 语句。 比如：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> gender <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> age <span class="operator">=</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
 
-<p>客户端会将sql语句通过网络连接给mysql。</p>
-<p>mysql收到sql语句后，会在<strong>分析器</strong>中先判断下SQL语句有没有语法错误，比如select，如果少打一个<code>l</code>，写成<code>slect</code>，则会报错<code>You have an error in your SQL syntax; </code>。这个报错对于我这样的手残党来说可以说是很熟悉了。</p>
+<p>客户端会将 sql 语句通过网络连接给 mysql。</p>
+<p>mysql 收到 sql 语句后，会在<strong>分析器</strong>中先判断下 SQL 语句有没有语法错误，比如 select，如果少打一个<code>l</code>，写成<code>slect</code>，则会报错<code>You have an error in your SQL syntax; </code>。这个报错对于我这样的手残党来说可以说是很熟悉了。</p>
 <p>接下来是<strong>优化器</strong>，在这里会<strong>根据一定的规则选择该用什么索引</strong>。</p>
 <p>之后，才是通过<strong>执行器</strong>去调用<strong>存储引擎</strong>的接口函数。</p>
 <p><img src="https://cdn.xiaobaidebug.top/Mysql%E6%9E%B6%E6%9E%8456.drawio.png" alt="Mysql架构"></p>
@@ -1393,7 +1135,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1478,7 +1220,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:48" itemprop="dateModified" datetime="2023-10-06T12:07:48+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1502,10 +1244,94 @@
 
       
           <p><img src="https://cdn.xiaobaidebug.top/image/421646663617_.pic_hd.jpg"></p>
-<p>关于32位和64位，这个概念一直让人比较懵。</p>
+<p>关于 32 位和 64 位，这个概念一直让人比较懵。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/03/09/%E5%9B%BE%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BB%9932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%A3%858g%E5%86%85%E5%AD%98%E6%9D%A1%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaobaidebug.top/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.xiaobaidebug.top/image/aaaaaa%E5%A4%B4%E5%83%8F.png">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="有时骚话连篇，有时硬核图解">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小白debug">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">mysql主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-02 22:57:55" itemprop="dateCreated datePublished" datetime="2022-03-02T22:57:55+08:00">2022-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E8%A7%A3mysql/" itemprop="url" rel="index"><span itemprop="name">图解mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <br>
+
+<p>大家好，我是小白，好长时间没更新技术文了，相信大家看我写的水文也看烦了。</p>
+<p><img src="https://cdn.xiaobaidebug.top/image/1539510639669-20220302001234401.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/02/%E5%9B%BE%E8%A7%A3mysql/mysql%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1596,7 +1422,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">54</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

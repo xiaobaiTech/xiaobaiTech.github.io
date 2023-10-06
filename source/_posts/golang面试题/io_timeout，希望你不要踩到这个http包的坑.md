@@ -1,20 +1,20 @@
 ---
-title:  i/o timeout ， 希望你不要踩到这个net/http包的坑
+title: i/o timeout ， 希望你不要踩到这个net/http包的坑
 date: 2021-05-18 22:57:55
 tags:
 categories: "golang面试题"
 ---
 
-
-
-> 文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
 <br>
 
 ### 问题
 
 我们来看一段日常代码。
+
 <!-- more -->
+
 ```go
 package main
 
@@ -109,15 +109,13 @@ func Get(url string) ([]byte, error) {
 
 ![五层网络协议对应的消息体变化分析](https://cdn.xiaobaidebug.top/image/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%AF%B9%E5%BA%94%E7%9A%84%E6%B6%88%E6%81%AF%E4%BD%93%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90.png)
 
-
-
-就很奇怪了，明明服务端显示处理耗时才`100ms`，且客户端超时设的是`3s`, 怎么就出现超时报错 `i/o timeout` 呢？ 
+就很奇怪了，明明服务端显示处理耗时才`100ms`，且客户端超时设的是`3s`, 怎么就出现超时报错 `i/o timeout` 呢？
 
 <br>
 
 这里推测有两个可能。
 
-- 因为服务端打印的日志其实只是**服务端应用层**打印的日志。但客户端应用层发出数据后，中间还经过**客户端的传输层，网络层，数据链路层和物理层**，再经过**服务端的物理层，数据链路层，网络层，传输层到服务端的应用层**。服务端应用层处耗时**100ms**，再原路返回。那剩下的`3s-100ms`**可能是**耗在了整个流程里的各个层上。比如网络不好的情况下，传输层TCP使劲丢包重传之类的原因。
+- 因为服务端打印的日志其实只是**服务端应用层**打印的日志。但客户端应用层发出数据后，中间还经过**客户端的传输层，网络层，数据链路层和物理层**，再经过**服务端的物理层，数据链路层，网络层，传输层到服务端的应用层**。服务端应用层处耗时**100ms**，再原路返回。那剩下的`3s-100ms`**可能是**耗在了整个流程里的各个层上。比如网络不好的情况下，传输层 TCP 使劲丢包重传之类的原因。
 
 - 网络没问题，客户端到服务端链路整个收发流程大概耗时就是`100ms`左右。客户端处理逻辑问题导致超时。
 
@@ -135,7 +133,7 @@ func Get(url string) ([]byte, error) {
 
 `80`端口是服务端的端口。换句话说就是客户端`3s`超时**主动**断开链接的。
 
-但是再仔细看下**第一行**三次握手到**最后**客户端超时主动断开连接的中间，其实有**非常多次HTTP请求**。
+但是再仔细看下**第一行**三次握手到**最后**客户端超时主动断开连接的中间，其实有**非常多次 HTTP 请求**。
 
 回去看代码设置超时的方式。
 
@@ -160,7 +158,7 @@ func Get(url string) ([]byte, error) {
 
 看注释里写的是
 
->  SetDeadline sets the read and write deadlines associated with the **connection**.
+> SetDeadline sets the read and write deadlines associated with the **connection**.
 
 <br>
 
@@ -170,17 +168,17 @@ func Get(url string) ([]byte, error) {
 
 大家知道`HTTP`是应用层协议，传输层用的是`TCP`协议。
 
-HTTP协议从`1.0`以前，默认用的是`短连接`，每次发起请求都会建立TCP连接。收发数据。然后断开连接。
+HTTP 协议从`1.0`以前，默认用的是`短连接`，每次发起请求都会建立 TCP 连接。收发数据。然后断开连接。
 
-TCP连接每次都是三次握手。每次断开都要四次挥手。
+TCP 连接每次都是三次握手。每次断开都要四次挥手。
 
 其实没必要每次都建立新连接，建立的连接不断开就好了，每次发送数据都复用就好了。
 
-于是乎，HTTP协议从`1.1`之后就默认使用`长连接`。具体相关信息可以看之前的 [这篇文章](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA)。
+于是乎，HTTP 协议从`1.1`之后就默认使用`长连接`。具体相关信息可以看之前的 [这篇文章](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA)。
 
 那么`golang标准库`里也兼容这种实现。
 
-通过建立一个连接池，针对`每个域名`建立一个TCP长连接，比如`http://baidu.com`和`http://golang.com` 就是两个不同的域名。
+通过建立一个连接池，针对`每个域名`建立一个 TCP 长连接，比如`http://baidu.com`和`http://golang.com` 就是两个不同的域名。
 
 第一次访问`http://baidu.com` 域名的时候会建立一个连接，用完之后放到空闲连接池里，下次再要访问`http://baidu.com` 的时候会重新从连接池里把这个连接捞出来`复用`。
 
@@ -188,7 +186,7 @@ TCP连接每次都是三次握手。每次断开都要四次挥手。
 
 <br>
 
-> 插个题外话：这也解释了之前[这篇文章](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)里最后的疑问，为什么要强调是同一个域名：一个域名会建立一个连接，一个连接对应**一个读goroutine和一个写goroutine**。正因为是同一个域名，所以最后才会泄漏`3`个goroutine，如果不同域名的话，那就会泄漏 `1+2*N` 个协程，`N`就是域名数。
+> 插个题外话：这也解释了之前[这篇文章](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)里最后的疑问，为什么要强调是同一个域名：一个域名会建立一个连接，一个连接对应**一个读 goroutine 和一个写 goroutine**。正因为是同一个域名，所以最后才会泄漏`3`个 goroutine，如果不同域名的话，那就会泄漏 `1+2*N` 个协程，`N`就是域名数。
 
 <br>
 
@@ -199,8 +197,6 @@ TCP连接每次都是三次握手。每次断开都要四次挥手。
 虽然这时候服务端其实才花了`100ms`，但耐不住前面`29次`加起来的耗时已经很长。
 
 也就是说只要通过 `http.Transport` 设置了 `err = conn.SetDeadline(time.Now().Add(time.Second * 3)) `，并且你用了**长连接**，哪怕服务端处理再快，客户端设置的超时再长，总有一刻，你的程序会报超时错误。
-
-
 
 ### 正确姿势
 
@@ -257,7 +253,7 @@ func Get(url string) ([]byte, error) {
 		Transport: tr,
 		Timeout: 3*time.Second,  // 超时加在这里，是每次调用的超时
 	}
-	res, err := client.Do(req) 
+	res, err := client.Do(req)
 	if res != nil {
 		defer res.Body.Close()
 	}
@@ -287,7 +283,7 @@ func main() {
 
 - `http.Transport`里的建立连接时的一些超时设置干掉了。
 
-- 在发起http请求的时候会场景`http.Client`，此时加入超时设置，这里的超时就可以理解为单次请求的超时了。同样可以看下注释
+- 在发起 http 请求的时候会场景`http.Client`，此时加入超时设置，这里的超时就可以理解为单次请求的超时了。同样可以看下注释
 
   > Timeout specifies a time limit for **requests** made by this Client.
 
@@ -301,19 +297,15 @@ Get http://www.baidu.com/: EOF
 
 这个是因为调用得太猛了，`http://www.baidu.com` 那边主动断开的连接，可以理解为一个限流措施，目的是为了保护服务器，**毕竟每个人都像这么搞，服务器是会炸的**。。。
 
-解决方案很简单，每次HTTP调用中间加个`sleep`间隔时间就好。
+解决方案很简单，每次 HTTP 调用中间加个`sleep`间隔时间就好。
 
 <br>
 
 到这里，其实问题已经解决了，下面会在源码层面分析出现问题的原因。对读源码不感兴趣的朋友们可以不用接着往下看，直接拉到文章底部**右下角**，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
 
-
-
-
-
 ### 源码分析
 
-**用的go版本是1.12.7**。
+**用的 go 版本是 1.12.7**。
 
 从发起一个网络请求开始跟。
 
@@ -328,13 +320,13 @@ func (c *Client) do(req *Request) {
 	if resp, didTimeout, err = c.send(req, deadline); err != nil {
     // ...
   }
-	// ...  
-}  
+	// ...
+}
 func send(ireq *Request, rt RoundTripper, deadline time.Time) {
-	// ...    
+	// ...
 	resp, err = rt.RoundTrip(req)
- 	// ...  
-} 
+ 	// ...
+}
 
 // 从这里进入 RoundTrip 逻辑
 /src/net/http/roundtrip.go: 16
@@ -356,7 +348,7 @@ func (t *Transport) getConn(treq *transportRequest, cm connectMethod) (*persistC
 
   // 没有创建连接
   pc, err := t.dialConn(ctx, cm)
-  
+
 }
 
 
@@ -392,7 +384,7 @@ func (t *Transport) dialConn() {
 }
 ```
 
-当**第一次**发起一个http请求时，这时候肯定没有空闲连接，会建立一个新连接。同时会创建一个**读goroutine和一个写goroutine**。 
+当**第一次**发起一个 http 请求时，这时候肯定没有空闲连接，会建立一个新连接。同时会创建一个**读 goroutine 和一个写 goroutine**。
 
 ![读写协程](https://cdn.xiaobaidebug.top/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B.png)
 
@@ -448,16 +440,14 @@ func poll_runtime_pollSetDeadline(pd *pollDesc, d int64, mode int) {
   rtf = netpollDeadline
 	// 并将事件注册到定时器里
   modtimer(&pd.rt, pd.rd, 0, rtf, pd, pd.rseq)
-}  
+}
 ```
 
 上面的源码，简单来说就是，当第一次调用请求的，会建立个连接，这时候还会注册一个**定时器事件**，假设时间设了`3s`，那么这个事件会在`3s`后发生，然后执行注册事件的逻辑。而这个注册事件就是`netpollDeadline`。 **注意这个`netpollDeadline`，待会会提到。**
 
 ![读写协程定时器事件](https://cdn.xiaobaidebug.top/image/%E8%AF%BB%E5%86%99%E5%8D%8F%E7%A8%8B%E5%AE%9A%E6%97%B6%E5%99%A8%E4%BA%8B%E4%BB%B6.png)
 
-
-
-设置了超时事件，且超时事件是3s后之后，发生。再次期间正常收发数据。一切如常。
+设置了超时事件，且超时事件是 3s 后之后，发生。再次期间正常收发数据。一切如常。
 
 直到`3s`过后，这时候看`读goroutine`，会等待网络数据返回。
 
@@ -477,8 +467,8 @@ func (pc *persistConn) readLoop() {
 src/bufio/bufio.go: 129
 func (b *Reader) Peek(n int) ([]byte, error) {
    // ...
-   b.fill() 
-   // ...   
+   b.fill()
+   // ...
 }
 
 func (b *Reader) fill() {
@@ -506,7 +496,7 @@ func (fd *netFD) Read(p []byte) (n int, err error) {
 	// ...
 }
 
-/src/internal/poll/fd_unix.go: 
+/src/internal/poll/fd_unix.go:
 func (fd *FD) Read(p []byte) (int, error) {
 	//...
   if err = fd.pd.waitRead(fd.isFile); err == nil {
@@ -532,7 +522,7 @@ func (pd *pollDesc) wait(mode int, isFile bool) error {
 ```go
 //go:linkname poll_runtime_pollWait internal/poll.runtime_pollWait
 func poll_runtime_pollWait(pd *pollDesc, mode int) int {
-	
+
 	// 1.如果网络正常返回数据就跳出
   for !netpollblock(pd, int32(mode), false) {
     // 2.如果有出错情况也跳出
@@ -547,7 +537,7 @@ func poll_runtime_pollWait(pd *pollDesc, mode int) int {
 
 整条链路跟下来，就是会一直等待数据，等待的结果只有两个
 
-- 有可以读的数据 
+- 有可以读的数据
 - 出现报错
 
 这里面的**报错**，又有那么两种
@@ -584,7 +574,7 @@ func convertErr(res int, isFile bool) error {
 }
 ```
 
-那么问题来了。上面返回的超时错误，也就是**返回2的时候的条件是怎么满足的**？
+那么问题来了。上面返回的超时错误，也就是**返回 2 的时候的条件是怎么满足的**？
 
 ```go
 	if (mode == 'r' && pd.rd < 0) || (mode == 'w' && pd.wd < 0) {
@@ -617,13 +607,11 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 }
 ```
 
-这里会设置`pd.rd=-1`，是指 `poller descriptor.read deadline` ，含义**网络轮询器文件描述符**的**读超时时间**， 我们知道在linux里万物皆文件，这里的文件其实是指这次网络通讯中使用到的**socket**。
+这里会设置`pd.rd=-1`，是指 `poller descriptor.read deadline` ，含义**网络轮询器文件描述符**的**读超时时间**， 我们知道在 linux 里万物皆文件，这里的文件其实是指这次网络通讯中使用到的**socket**。
 
 这时候再回去看**发生超时的条件**就是`if (mode == 'r' && pd.rd < 0) `。
 
 至此。我们的代码里就收到了 `io timeout` 的报错。
-
-
 
 ### 总结
 
@@ -631,27 +619,21 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 
 - 请求的超时在创建`client`里设置。
 
-  
-
 如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
 
 我是小白，我们下期见。
 
-
-
 ### 文章推荐：
 
-- [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ) 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg) 
-- [我感觉，我可能要拿图灵奖了。。。](https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA) 
-- [给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)
-- [硬核！漫画图解HTTP知识点+面试题](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA) 
-- [TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg) 
-- [硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ) 
-
-
+- [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ)
+- [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
+- [我感觉，我可能要拿图灵奖了。。。](https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA)
+- [给大家丢脸了，用了三年 golang，我还是没答对这道内存泄漏题](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)
+- [硬核！漫画图解 HTTP 知识点+面试题](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
+- [硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ)
 
 ###### 别说了，一起在知识的海洋里呛水吧
 
-关注公众号:**【小白debug】**
-![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
+关注公众号:**【小白 debug】**
+![](https://cdn.xiaobaidebug.top/1696069689495.png)

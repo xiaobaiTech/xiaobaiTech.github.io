@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。   兄弟们。 浅浅的炫个富吧。 说出来你们可能不信。 手机你们有吗？我有。 短信，知道吧？一条一毛钱，我天天发。 你敢想吗？ 所以说，年轻人，有钱是">
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。   兄弟们。 浅浅的炫个富吧。 说出来你们可能不信。 手机你们有吗？我有。 短信，知道吧？一条一毛钱，我天天发。 你敢想吗？ 所以说，年轻人，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为什么mysql的count()方法这么慢？">
 <meta property="og:url" content="https://xiaobaidebug.top/2022/06/30/%E5%9B%BE%E8%A7%A3mysql/%E4%B8%BA%E4%BB%80%E4%B9%88mysql%E7%9A%84count()%E6%96%B9%E6%B3%95%E8%BF%99%E4%B9%88%E6%85%A2%EF%BC%9F/index.html">
 <meta property="og:site_name" content="小白debug">
-<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。   兄弟们。 浅浅的炫个富吧。 说出来你们可能不信。 手机你们有吗？我有。 短信，知道吧？一条一毛钱，我天天发。 你敢想吗？ 所以说，年轻人，有钱是">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。   兄弟们。 浅浅的炫个富吧。 说出来你们可能不信。 手机你们有吗？我有。 短信，知道吧？一条一毛钱，我天天发。 你敢想吗？ 所以说，年轻人，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/sms%E5%BB%BA%E8%A1%A8sql.png">
@@ -42,11 +42,11 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/%E5%B0%86%E6%9B%B4%E6%94%B9%E8%A1%A8%E8%A1%8C%E6%95%B0%E7%9A%84%E6%93%8D%E4%BD%9C%E6%94%BE%E5%85%A5%E5%88%B0%E4%BA%8B%E5%8A%A1%E9%87%8C.drawio.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/batch%E5%88%86%E6%89%B9%E8%8E%B7%E5%8F%96%E7%9F%AD%E4%BF%A1%E8%A1%A8.drawio.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/mysql%E5%90%8C%E6%AD%A5hive.drawio.png">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-06-30T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:50:37.183Z">
+<meta property="article:modified_time" content="2023-10-06T04:07:21.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:50:37" itemprop="dateModified" datetime="2022-10-30T10:50:37+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,7 +240,7 @@
 
       
         <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
 </blockquote>
 <p><img src="https://cdn.xiaobaidebug.top/9a9f7046fbb668643c3466b50354a569.gif"></p>
 <p>兄弟们。</p>
@@ -251,26 +251,26 @@
 <p>你敢想吗？</p>
 <p>所以说，年轻人，有钱是真的好。</p>
 <p>今天，我们就以短信为话题聊起。</p>
-<p>短信，它又叫SMS。</p>
+<p>短信，它又叫 SMS。</p>
 <br>
 
 <p>比如说，你有一张**短信表(sms)**，里面放了各种需要发送的短信信息。</p>
 <p><img src="https://cdn.xiaobaidebug.top/sms%E5%BB%BA%E8%A1%A8sql.png" alt="sms建表sql"></p>
 <p><img src="https://cdn.xiaobaidebug.top/sms%E8%A1%A8.drawio.png" alt="sms表"></p>
-<p>需要注意的是<strong>state字段，为0的时候说明这时候短信还未发送。</strong></p>
-<p>此时还会有一个<strong>异步线程</strong>不断的捞起<strong>未发送（state=0）</strong>的短信数据，执行发短信操作，发送成功之后state字段会被<strong>置为1（已发送）</strong>。也就是说<strong>未发送的数据会不断变少</strong>。</p>
+<p>需要注意的是<strong>state 字段，为 0 的时候说明这时候短信还未发送。</strong></p>
+<p>此时还会有一个<strong>异步线程</strong>不断的捞起<strong>未发送（state=0）</strong>的短信数据，执行发短信操作，发送成功之后 state 字段会被<strong>置为 1（已发送）</strong>。也就是说<strong>未发送的数据会不断变少</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E7%9F%AD%E4%BF%A1.drawio.png" alt="异步线程发送短信"></p>
 <br>
 
-<p>假设由于某些原因，你现在需要做一些监控，比如监控的内容是，<strong>你的sms数据表里还有没有state=0（未发送）的短信，方便判断一下堆积的未发送短信大概在什么样的一个量级。</strong></p>
+<p>假设由于某些原因，你现在需要做一些监控，比如监控的内容是，<strong>你的 sms 数据表里还有没有 state=0（未发送）的短信，方便判断一下堆积的未发送短信大概在什么样的一个量级。</strong></p>
 <p>为了获取<strong>满足某些条件的行数是多少</strong>，我们一般会使用<strong>count()方法</strong>。</p>
-<p>这时候为了获取未发送的短信数据，我们很自然就想到了使用下面的sql语句进行查询。</p>
+<p>这时候为了获取未发送的短信数据，我们很自然就想到了使用下面的 sql 语句进行查询。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> sms <span class="keyword">where</span> state <span class="operator">=</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
 
 <p>然后再把获得数据作为打点发给监控服务。</p>
 <br>
 
-<p>当数据表小的时候，这是没问题的，但当数据量大的时候，比如未发送的短信到了<strong>百万量级</strong>的时候，你就会发现，<strong>上面的sql查询时间会变得很长，最后timeout报错，查不出结果了</strong>。</p>
+<p>当数据表小的时候，这是没问题的，但当数据量大的时候，比如未发送的短信到了<strong>百万量级</strong>的时候，你就会发现，<strong>上面的 sql 查询时间会变得很长，最后 timeout 报错，查不出结果了</strong>。</p>
 <br>
 
 <p>为什么？</p>
@@ -279,55 +279,53 @@
 <p>我们先从<strong>count()方法的原理</strong>聊起。</p>
 <br>
 
-<h3 id="count-的原理"><a href="#count-的原理" class="headerlink" title="count()的原理"></a>count()的原理</h3><p>count()方法的目的是计算当前sql语句查询得到的<strong>非NULL的行数</strong>。</p>
-<p>我们知道mysql是分为<strong>server层和存储引擎层的</strong>。</p>
+<h3 id="count-的原理"><a href="#count-的原理" class="headerlink" title="count()的原理"></a>count()的原理</h3><p>count()方法的目的是计算当前 sql 语句查询得到的<strong>非 NULL 的行数</strong>。</p>
+<p>我们知道 mysql 是分为<strong>server 层和存储引擎层的</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/Mysql%E6%9E%B6%E6%9E%8456.drawio-20220613163829373.png" alt="Mysql架构"></p>
-<p>存储引擎层里可以选择各种引擎进行存储，最常见的是innodb、myisam。具体使用哪个存储引擎，可以通过建表sql里的<code>ENGINE</code>字段进行指定。比如这篇文章开头的建表sql里用了<code>ENGINE=InnoDB</code>，那这张表用的就是innodb引擎。</p>
-<p><strong>虽然在server层都叫count()方法，但在不同的存储引擎下，它们的实现方式是有区别的。</strong></p>
-<p>比如同样是<strong>读全表数据</strong>  <code>select count(*) from sms；</code>语句。</p>
-<p>使用 <strong>myisam引擎</strong>的数据表里有个记录当前表里有几行数据的字段，直接读这个字段返回就好了，因此速度快得飞起。</p>
-<p>而使用<strong>innodb引擎</strong>的数据表，则会选择<strong>体积最小的索引树</strong>，然后通过遍历叶子节点的个数挨个加起来，这样也能得到全表数据。</p>
-<p>因此回到文章开头的问题里，当数据表行数变大后，<strong>单次count就需要扫描大量的数据</strong>，因此很可能就会出现超时报错。</p>
+<p>存储引擎层里可以选择各种引擎进行存储，最常见的是 innodb、myisam。具体使用哪个存储引擎，可以通过建表 sql 里的<code>ENGINE</code>字段进行指定。比如这篇文章开头的建表 sql 里用了<code>ENGINE=InnoDB</code>，那这张表用的就是 innodb 引擎。</p>
+<p><strong>虽然在 server 层都叫 count()方法，但在不同的存储引擎下，它们的实现方式是有区别的。</strong></p>
+<p>比如同样是<strong>读全表数据</strong> <code>select count(*) from sms；</code>语句。</p>
+<p>使用 <strong>myisam 引擎</strong>的数据表里有个记录当前表里有几行数据的字段，直接读这个字段返回就好了，因此速度快得飞起。</p>
+<p>而使用<strong>innodb 引擎</strong>的数据表，则会选择<strong>体积最小的索引树</strong>，然后通过遍历叶子节点的个数挨个加起来，这样也能得到全表数据。</p>
+<p>因此回到文章开头的问题里，当数据表行数变大后，<strong>单次 count 就需要扫描大量的数据</strong>，因此很可能就会出现超时报错。</p>
 <br>
-
-
 
 <p>那么问题就来了。</p>
 <br>
 
-<h4 id="为什么innodb不能像myisam那样实现count-方法"><a href="#为什么innodb不能像myisam那样实现count-方法" class="headerlink" title="为什么innodb不能像myisam那样实现count()方法"></a><strong>为什么innodb不能像myisam那样实现count()方法</strong></h4><p>myisam和innodb这两个引擎，有几个比较明显的区别，这个是八股文常考了。</p>
-<p>其中<strong>最大的区别在于myisam不支持事务，而innodb支持事务。</strong></p>
+<h4 id="为什么-innodb-不能像-myisam-那样实现-count-方法"><a href="#为什么-innodb-不能像-myisam-那样实现-count-方法" class="headerlink" title="为什么 innodb 不能像 myisam 那样实现 count()方法"></a><strong>为什么 innodb 不能像 myisam 那样实现 count()方法</strong></h4><p>myisam 和 innodb 这两个引擎，有几个比较明显的区别，这个是八股文常考了。</p>
+<p>其中<strong>最大的区别在于 myisam 不支持事务，而 innodb 支持事务。</strong></p>
 <p>而事务，有四层隔离级别，其中<strong>默认隔离级别就是可重复读隔离级别（RR）</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%9B%9B%E5%B1%82%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.png" alt="四层隔离级别"></p>
-<p>innodb引擎通过MVCC实现了<strong>可重复隔离级别</strong>，事务开启后，多次执行同样的<strong>select快照读</strong>，要能读到同样的数据。</p>
+<p>innodb 引擎通过 MVCC 实现了<strong>可重复隔离级别</strong>，事务开启后，多次执行同样的<strong>select 快照读</strong>，要能读到同样的数据。</p>
 <p>于是我们看个例子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%BA%E4%BB%80%E4%B9%88innodb%E4%B8%8D%E5%8D%95%E7%8B%AC%E8%AE%B0%E5%BD%95%E8%A1%A8%E8%A1%8C%E6%95%B0.drawio.png" alt="为什么innodb不单独记录表行数"></p>
-<p>对于两个事务A和B，一开始sms表假设就<strong>2条</strong>数据，那事务A一开始确实是读到2条数据。事务B在这期间插入了1条数据，按道理数据库其实有3条数据了，但由于可重复读的隔离级别，事务A依然还是只能读到2条数据。</p>
-<p>因此由于事务隔离级别的存在，<strong>不同的事务在同一时间下，看到的表内数据行数是不一致的</strong>，因此innodb，没办法，也没必要像myisam那样单纯的加个count字段信息在数据表上。</p>
-<p>那如果不可避免要使用count()，有没有办法让它快一点？</p>
+<p>对于两个事务 A 和 B，一开始 sms 表假设就<strong>2 条</strong>数据，那事务 A 一开始确实是读到 2 条数据。事务 B 在这期间插入了 1 条数据，按道理数据库其实有 3 条数据了，但由于可重复读的隔离级别，事务 A 依然还是只能读到 2 条数据。</p>
+<p>因此由于事务隔离级别的存在，<strong>不同的事务在同一时间下，看到的表内数据行数是不一致的</strong>，因此 innodb，没办法，也没必要像 myisam 那样单纯的加个 count 字段信息在数据表上。</p>
+<p>那如果不可避免要使用 count()，有没有办法让它快一点？</p>
 <br>
 
-<h3 id="各种count-方法的原理"><a href="#各种count-方法的原理" class="headerlink" title="各种count()方法的原理"></a>各种count()方法的原理</h3><p>count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该看过，比如放个星号*，放个1，放个索引列啥的。</p>
+<h3 id="各种-count-方法的原理"><a href="#各种-count-方法的原理" class="headerlink" title="各种 count()方法的原理"></a>各种 count()方法的原理</h3><p>count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该看过，比如放个星号*，放个 1，放个索引列啥的。</p>
 <p>我们来分析下他们的执行流程。</p>
-<p><strong>count方法的大原则是server层会从innodb存储引擎里读来一行行数据，并且只累计非null的值</strong>。但这个过程，根据count()方法括号内的传参，有略有不同。</p>
+<p><strong>count 方法的大原则是 server 层会从 innodb 存储引擎里读来一行行数据，并且只累计非 null 的值</strong>。但这个过程，根据 count()方法括号内的传参，有略有不同。</p>
 <br>
 
-<h4 id="count"><a href="#count" class="headerlink" title="count(*)"></a>count(*)</h4><p>server层拿到innodb返回的行数据，<strong>不对里面的行数据做任何解析和判断</strong>，默认取出的值肯定都不是null，直接行数+1。</p>
+<h4 id="count"><a href="#count" class="headerlink" title="count(*)"></a>count(*)</h4><p>server 层拿到 innodb 返回的行数据，<strong>不对里面的行数据做任何解析和判断</strong>，默认取出的值肯定都不是 null，直接行数+1。</p>
 <br>
 
-<h4 id="count-1"><a href="#count-1" class="headerlink" title="count(1)"></a>count(1)</h4><p>server层拿到innodb返回的行数据，每行放个1进去，默认不可能为null，直接行数+1.</p>
+<h4 id="count-1"><a href="#count-1" class="headerlink" title="count(1)"></a>count(1)</h4><p>server 层拿到 innodb 返回的行数据，每行放个 1 进去，默认不可能为 null，直接行数+1.</p>
 <br>
 
-<h4 id="count-某个列字段"><a href="#count-某个列字段" class="headerlink" title="count(某个列字段)"></a>count(某个列字段)</h4><p>由于指明了要count某个字段，innodb在取数据的时候，会把这个字段<strong>解析出来</strong>返回给server层，所以会<strong>比count(1)和count(*)多了个解析字段出来的流程。</strong></p>
+<h4 id="count-某个列字段"><a href="#count-某个列字段" class="headerlink" title="count(某个列字段)"></a>count(某个列字段)</h4><p>由于指明了要 count 某个字段，innodb 在取数据的时候，会把这个字段<strong>解析出来</strong>返回给 server 层，所以会<strong>比 count(1)和 count(*)多了个解析字段出来的流程。</strong></p>
 <ul>
-<li>如果这个列字段是<strong>主键id</strong>，主键是不可能为null的，所以server层也不用判断是否为null，innodb每返回一行，行数结果就+1.</li>
-<li>如果这个列是<strong>普通索引字段</strong>，innodb一般会<strong>走普通索引</strong>，每返回一行数据，server层就会判断这个字段是否为null，不是null的情况下+1。当然如果建表sql里字段定义为not null的话，那就不用做这一步判断直接+1。</li>
-<li>如果这个列<strong>没有加过索引</strong>，那innodb可能会全表扫描，返回的每一行数据，server层都会判断这个字段是否为null，不是null的情况下+1。同上面的情况一样，字段加了not null也就省下这一步判断了。</li>
+<li>如果这个列字段是<strong>主键 id</strong>，主键是不可能为 null 的，所以 server 层也不用判断是否为 null，innodb 每返回一行，行数结果就+1.</li>
+<li>如果这个列是<strong>普通索引字段</strong>，innodb 一般会<strong>走普通索引</strong>，每返回一行数据，server 层就会判断这个字段是否为 null，不是 null 的情况下+1。当然如果建表 sql 里字段定义为 not null 的话，那就不用做这一步判断直接+1。</li>
+<li>如果这个列<strong>没有加过索引</strong>，那 innodb 可能会全表扫描，返回的每一行数据，server 层都会判断这个字段是否为 null，不是 null 的情况下+1。同上面的情况一样，字段加了 not null 也就省下这一步判断了。</li>
 </ul>
 <p>理解了原理后我们大概可以知道他们的性能排序是</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">count</span>(<span class="operator">*</span>) ≈ <span class="built_in">count</span>(<span class="number">1</span>) <span class="operator">&gt;</span> <span class="built_in">count</span>(主键id) <span class="operator">&gt;</span> <span class="built_in">count</span>(普通索引列) <span class="operator">&gt;</span> <span class="built_in">count</span>(未加索引列)</span><br></pre></td></tr></table></figure>
 
-<p><strong>所以说count(*)，已经是最快的了。</strong></p>
+<p><strong>所以说 count(*)，已经是最快的了。</strong></p>
 <br>
 
 <p>知道真相的我眼泪掉下来。</p>
@@ -336,62 +334,62 @@
 <p>那有没有其他更好的办法？</p>
 <br>
 
-<h3 id="允许粗略估计行数的场景"><a href="#允许粗略估计行数的场景" class="headerlink" title="允许粗略估计行数的场景"></a>允许粗略估计行数的场景</h3><p>我们回过头来细品下文章开头的需求，我们只是希望知道数据库里还有多少短信是堆积在那没发的，具体是1k还是2k其实都是差不多量级，等到了百万以上，具体数值已经不重要了，我们知道它现在堆积得很离谱，就够了。 因此这个场景，其实是允许使用<strong>比较粗略</strong>的估计的。</p>
+<h3 id="允许粗略估计行数的场景"><a href="#允许粗略估计行数的场景" class="headerlink" title="允许粗略估计行数的场景"></a>允许粗略估计行数的场景</h3><p>我们回过头来细品下文章开头的需求，我们只是希望知道数据库里还有多少短信是堆积在那没发的，具体是 1k 还是 2k 其实都是差不多量级，等到了百万以上，具体数值已经不重要了，我们知道它现在堆积得很离谱，就够了。 因此这个场景，其实是允许使用<strong>比较粗略</strong>的估计的。</p>
 <p><strong>那怎么样才能获得粗略的数值呢？</strong></p>
-<p>还记得我们平时为了查看sql执行计划用的<strong>explain命令</strong>不。</p>
-<p>其中有个<strong>rows</strong>，会用来<strong>估计</strong>接下来执行这条sql需要扫描和检查多少行。它是通过采样的方式计算出来的，虽然会有一定的偏差，但它能反映一定的数量级。</p>
+<p>还记得我们平时为了查看 sql 执行计划用的<strong>explain 命令</strong>不。</p>
+<p>其中有个<strong>rows</strong>，会用来<strong>估计</strong>接下来执行这条 sql 需要扫描和检查多少行。它是通过采样的方式计算出来的，虽然会有一定的偏差，但它能反映一定的数量级。</p>
 <p><img src="https://cdn.xiaobaidebug.top/explain%E9%87%8C%E7%9A%84rows.png" alt="explain里的rows"></p>
-<p>有些语言的orm里可能没有专门的explain语法，但是肯定有执行raw sql的功能，你<strong>可以把explain语句当做raw sql传入，从返回的结果里将rows那一列读出来使用。</strong></p>
-<p>一般情况下，explain的sql如果能走索引，那会比不走索引的情况更准 。单个字段的索引会比多个字段组成的复合索引要准。索引区分度越高，rows的值也会越准。</p>
+<p>有些语言的 orm 里可能没有专门的 explain 语法，但是肯定有执行 raw sql 的功能，你<strong>可以把 explain 语句当做 raw sql 传入，从返回的结果里将 rows 那一列读出来使用。</strong></p>
+<p>一般情况下，explain 的 sql 如果能走索引，那会比不走索引的情况更准 。单个字段的索引会比多个字段组成的复合索引要准。索引区分度越高，rows 的值也会越准。</p>
 <p>这种情况几乎满足大部分的监控场景。但总有一些场景，它要求必须得到精确的行数，这种情况该怎么办呢？</p>
 <br>
 
 <h3 id="必须精确估计行数的场景"><a href="#必须精确估计行数的场景" class="headerlink" title="必须精确估计行数的场景"></a>必须精确估计行数的场景</h3><p>这种场景就比较头疼了，但也不是不能做。</p>
-<p>我们可以单独拉一张新的数据库表，只为保存各种场景下的count。</p>
+<p>我们可以单独拉一张新的数据库表，只为保存各种场景下的 count。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `count_table` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `cnt_what` <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;各种需要计算的指标&#x27;</span>,</span><br><span class="line">  `cnt` tinyint <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;cnt指标值&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_cnt_what` (`cnt_what`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB  <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.xiaobaidebug.top/%E4%BF%9D%E5%AD%98%E5%90%84%E7%A7%8D%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84count.drawio.png" alt="count_table表保存各种场景下的count"></p>
-<p>当需要获取某个场景下的cout值时，可以使用下面的sql进行直接读取，<strong>快得飞起</strong>。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> cnt <span class="keyword">from</span> count_table <span class="keyword">where</span> cnt_what <span class="operator">=</span> &quot;未发送的短信数量&quot;; </span><br></pre></td></tr></table></figure>
+<p>当需要获取某个场景下的 cout 值时，可以使用下面的 sql 进行直接读取，<strong>快得飞起</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> cnt <span class="keyword">from</span> count_table <span class="keyword">where</span> cnt_what <span class="operator">=</span> &quot;未发送的短信数量&quot;;</span><br></pre></td></tr></table></figure>
 
 <br>
 
-<p><strong>那这些count的结果值从哪来呢？</strong></p>
+<p><strong>那这些 count 的结果值从哪来呢？</strong></p>
 <p>这里分成两种情况。</p>
 <br>
 
-<h4 id="实时性要求较高的场景"><a href="#实时性要求较高的场景" class="headerlink" title="实时性要求较高的场景"></a>实时性要求较高的场景</h4><p>如果你对这个cnt计算结果的实时性要求很高，那你需要<strong>将更新cnt的sql加入到对应变更行数的事务中</strong>。</p>
-<p>比如我们有两个事务A和B，分别是增加未发送短信和减少未发送短信。</p>
+<h4 id="实时性要求较高的场景"><a href="#实时性要求较高的场景" class="headerlink" title="实时性要求较高的场景"></a>实时性要求较高的场景</h4><p>如果你对这个 cnt 计算结果的实时性要求很高，那你需要<strong>将更新 cnt 的 sql 加入到对应变更行数的事务中</strong>。</p>
+<p>比如我们有两个事务 A 和 B，分别是增加未发送短信和减少未发送短信。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%B0%86%E6%9B%B4%E6%94%B9%E8%A1%A8%E8%A1%8C%E6%95%B0%E7%9A%84%E6%93%8D%E4%BD%9C%E6%94%BE%E5%85%A5%E5%88%B0%E4%BA%8B%E5%8A%A1%E9%87%8C.drawio.png" alt="将更改表行数的操作放入到事务里"></p>
-<p>这样做的<strong>好处</strong>是事务内的cnt行数依然符合隔离级别，事务回滚的时候，cnt的值也会跟着回滚。</p>
-<p><strong>坏处</strong>也比较明显，多个线程对同一个cnt进行写操作，会触发悲观锁，多个线程之间需要互相等待。对于<strong>高频写的场景</strong>，性能会有折损。</p>
+<p>这样做的<strong>好处</strong>是事务内的 cnt 行数依然符合隔离级别，事务回滚的时候，cnt 的值也会跟着回滚。</p>
+<p><strong>坏处</strong>也比较明显，多个线程对同一个 cnt 进行写操作，会触发悲观锁，多个线程之间需要互相等待。对于<strong>高频写的场景</strong>，性能会有折损。</p>
 <br>
 
 <h4 id="实时性没那么高的场景"><a href="#实时性没那么高的场景" class="headerlink" title="实时性没那么高的场景"></a>实时性没那么高的场景</h4><p>如果实时性要求不高的话，比如可以一天一次，那你可以通过全表扫描后做计算。</p>
-<p>举个例子，比如上面的短信表，可以<strong>按id排序</strong>，每次取出1w条数据，<strong>记下这一批里最大的id，然后下次从最大id开始再拿1w条数据出来，不断循环。</strong></p>
-<p>对于未发送的短信，就只需要在捞出的那1w条数据里，筛选出state=0的条数。</p>
+<p>举个例子，比如上面的短信表，可以<strong>按 id 排序</strong>，每次取出 1w 条数据，<strong>记下这一批里最大的 id，然后下次从最大 id 开始再拿 1w 条数据出来，不断循环。</strong></p>
+<p>对于未发送的短信，就只需要在捞出的那 1w 条数据里，筛选出 state=0 的条数。</p>
 <p><img src="https://cdn.xiaobaidebug.top/batch%E5%88%86%E6%89%B9%E8%8E%B7%E5%8F%96%E7%9F%AD%E4%BF%A1%E8%A1%A8.drawio.png" alt="batch分批获取短信表"></p>
-<p>当然如果有条件，这种场景最好的方式还是<strong>消费binlog将数据导入到hive里</strong>，然后在hive里做查询，不少公司也已经有现成的组件可以做这种事情，不用自己写脚本，岂不美哉。</p>
+<p>当然如果有条件，这种场景最好的方式还是<strong>消费 binlog 将数据导入到 hive 里</strong>，然后在 hive 里做查询，不少公司也已经有现成的组件可以做这种事情，不用自己写脚本，岂不美哉。</p>
 <p><img src="https://cdn.xiaobaidebug.top/mysql%E5%90%8C%E6%AD%A5hive.drawio.png" alt="mysql同步hive"></p>
 <br>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><p>mysql用count方法<strong>查全表数据</strong>，在不同的存储引擎里实现不同，myisam有专门字段记录全表的行数，直接读这个字段就好了。而innodb则需要一行行去算。</p>
+<li><p>mysql 用 count 方法<strong>查全表数据</strong>，在不同的存储引擎里实现不同，myisam 有专门字段记录全表的行数，直接读这个字段就好了。而 innodb 则需要一行行去算。</p>
 </li>
-<li><p>性能方面 <code>count(*) ≈ count(1) &gt; count(主键id) &gt; count(普通索引列) &gt; count(未加索引列)</code>，但哪怕是性能最好的count(*)，由于实现上就需要一行行去算，所以数据量大的时候就是不给力。</p>
+<li><p>性能方面 <code>count(*) ≈ count(1) &gt; count(主键id) &gt; count(普通索引列) &gt; count(未加索引列)</code>，但哪怕是性能最好的 count(*)，由于实现上就需要一行行去算，所以数据量大的时候就是不给力。</p>
 </li>
-<li><p>如果确实需要获取行数，且<strong>可以接受不那么精确的行数（只需要判断大概的量级）</strong>的话，那可以用explain里的rows，这可以满足大部分的监控场景，实现简单。</p>
+<li><p>如果确实需要获取行数，且<strong>可以接受不那么精确的行数（只需要判断大概的量级）</strong>的话，那可以用 explain 里的 rows，这可以满足大部分的监控场景，实现简单。</p>
 </li>
 <li><p><strong>如果要求行数准确</strong>，可以建个新表，里面专门放表行数的信息。</p>
 <ul>
-<li>如果对<strong>实时性要求比较高</strong>的话，可以将更新行数的sql放入到对应事务里，这样既能满足事务隔离性，还能快速读取到行数信息。</li>
-<li>如果对<strong>实时性要求不高</strong>，接受一小时或者一天的更新频率，那既可以自己写脚本遍历全表后更新行数信息。也可以将通过监听binlog将数据导入hive，需要数据时直接通过hive计算得出。</li>
+<li>如果对<strong>实时性要求比较高</strong>的话，可以将更新行数的 sql 放入到对应事务里，这样既能满足事务隔离性，还能快速读取到行数信息。</li>
+<li>如果对<strong>实时性要求不高</strong>，接受一小时或者一天的更新频率，那既可以自己写脚本遍历全表后更新行数信息。也可以将通过监听 binlog 将数据导入 hive，需要数据时直接通过 hive 计算得出。</li>
 </ul>
 </li>
 </ul>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《丁奇mysql45讲》</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《丁奇 mysql45 讲》</p>
 <br>
 
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>兄弟们，最近有点没出息，沉迷在刘亦菲的新剧里，都快忘了写文这件事了。</p>
@@ -404,7 +402,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -415,9 +413,9 @@
 <br>
 
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -539,7 +537,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#count-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">count()的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88innodb%E4%B8%8D%E8%83%BD%E5%83%8Fmyisam%E9%82%A3%E6%A0%B7%E5%AE%9E%E7%8E%B0count-%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">为什么innodb不能像myisam那样实现count()方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%A7%8Dcount-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">各种count()方法的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">2.1.</span> <span class="nav-text">count(*)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count-1"><span class="nav-number">2.2.</span> <span class="nav-text">count(1)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count-%E6%9F%90%E4%B8%AA%E5%88%97%E5%AD%97%E6%AE%B5"><span class="nav-number">2.3.</span> <span class="nav-text">count(某个列字段)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E7%B2%97%E7%95%A5%E4%BC%B0%E8%AE%A1%E8%A1%8C%E6%95%B0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">允许粗略估计行数的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E7%B2%BE%E7%A1%AE%E4%BC%B0%E8%AE%A1%E8%A1%8C%E6%95%B0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">必须精确估计行数的场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E6%80%A7%E8%A6%81%E6%B1%82%E8%BE%83%E9%AB%98%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">实时性要求较高的场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E6%80%A7%E6%B2%A1%E9%82%A3%E4%B9%88%E9%AB%98%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.2.</span> <span class="nav-text">实时性没那么高的场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">7.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#count-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">count()的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-innodb-%E4%B8%8D%E8%83%BD%E5%83%8F-myisam-%E9%82%A3%E6%A0%B7%E5%AE%9E%E7%8E%B0-count-%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">为什么 innodb 不能像 myisam 那样实现 count()方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%A7%8D-count-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">各种 count()方法的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">2.1.</span> <span class="nav-text">count(*)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count-1"><span class="nav-number">2.2.</span> <span class="nav-text">count(1)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count-%E6%9F%90%E4%B8%AA%E5%88%97%E5%AD%97%E6%AE%B5"><span class="nav-number">2.3.</span> <span class="nav-text">count(某个列字段)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E7%B2%97%E7%95%A5%E4%BC%B0%E8%AE%A1%E8%A1%8C%E6%95%B0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">允许粗略估计行数的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E7%B2%BE%E7%A1%AE%E4%BC%B0%E8%AE%A1%E8%A1%8C%E6%95%B0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">必须精确估计行数的场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E6%80%A7%E8%A6%81%E6%B1%82%E8%BE%83%E9%AB%98%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">实时性要求较高的场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E6%80%A7%E6%B2%A1%E9%82%A3%E4%B9%88%E9%AB%98%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.2.</span> <span class="nav-text">实时性没那么高的场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">7.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -555,7 +553,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">54</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

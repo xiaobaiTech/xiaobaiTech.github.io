@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="mysql的索引为什么使用B+树而不使用跳表？  在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。 直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了B+树来做索引，将查询性能优化到了**O(lg(n))**。 但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的跳表，也是**lg(n)**，并且实现还贼">
+  <meta name="description" content="mysql 的索引为什么使用 B+树而不使用跳表？  在我们的印象中，mysql 数据表里无非就是存储一行行的数据。跟个 excel 似的。 直接遍历这一行行数据，性能就是 O(n)，比较慢。为了加速查询，使用了B+树来做索引，将查询性能优化到了**O(lg(n))**。 但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如 redis 的 zset 里用到的跳表，也是**lg(n">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql的索引为什么使用B+树而不使用跳表？">
 <meta property="og:url" content="https://xiaobaidebug.top/2022/04/16/%E5%9B%BE%E8%A7%A3mysql/Mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F/index.html">
 <meta property="og:site_name" content="小白debug">
-<meta property="og:description" content="mysql的索引为什么使用B+树而不使用跳表？  在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。 直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了B+树来做索引，将查询性能优化到了**O(lg(n))**。 但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的跳表，也是**lg(n)**，并且实现还贼">
+<meta property="og:description" content="mysql 的索引为什么使用 B+树而不使用跳表？  在我们的印象中，mysql 数据表里无非就是存储一行行的数据。跟个 excel 似的。 直接遍历这一行行数据，性能就是 O(n)，比较慢。为了加速查询，使用了B+树来做索引，将查询性能优化到了**O(lg(n))**。 但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如 redis 的 zset 里用到的跳表，也是**lg(n">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E5%8D%95%E9%93%BE%E8%A1%A8.png">
@@ -43,11 +43,11 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/image-20220404094549469.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/006Xk4cbgy1gqzc3sofewj30c805st8u.jpg">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-04-16T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:28:13.642Z">
+<meta property="article:modified_time" content="2023-10-06T04:07:47.016Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png">
 
@@ -217,7 +217,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:28:13" itemprop="dateModified" datetime="2022-10-30T10:28:13+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,48 +240,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="mysql的索引为什么使用B-树而不使用跳表？"><a href="#mysql的索引为什么使用B-树而不使用跳表？" class="headerlink" title="mysql的索引为什么使用B+树而不使用跳表？"></a>mysql的索引为什么使用B+树而不使用跳表？</h2><br>
+        <h2 id="mysql-的索引为什么使用-B-树而不使用跳表？"><a href="#mysql-的索引为什么使用-B-树而不使用跳表？" class="headerlink" title="mysql 的索引为什么使用 B+树而不使用跳表？"></a>mysql 的索引为什么使用 B+树而不使用跳表？</h2><br>
 
-<p>在我们的印象中，mysql数据表里无非就是存储一行行的数据。跟个excel似的。</p>
-<p>直接遍历这一行行数据，性能就是O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了**O(lg(n))**。</p>
-<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如redis的zset里用到的<strong>跳表</strong>，也是**lg(n)**，并且实现还贼简单。</p>
-<p><strong>那为什么mysql的索引，不使用跳表呢？</strong></p>
+<p>在我们的印象中，mysql 数据表里无非就是存储一行行的数据。跟个 excel 似的。</p>
+<p>直接遍历这一行行数据，性能就是 O(n)，比较慢。为了加速查询，使用了<strong>B+树</strong>来做索引，将查询性能优化到了**O(lg(n))**。</p>
+<p>但问题就来了，查询数据性能在 lg(n) 级别的数据结构有很多，比如 redis 的 zset 里用到的<strong>跳表</strong>，也是**lg(n)**，并且实现还贼简单。</p>
+<p><strong>那为什么 mysql 的索引，不使用跳表呢？</strong></p>
 <p>我们今天就来聊聊这个话题。</p>
 <br>
 
 <h3 id="B-树的结构"><a href="#B-树的结构" class="headerlink" title="B+树的结构"></a>B+树的结构</h3><p>之前的一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>里，已经提到过<strong>B+树的结构</strong>了。文章不长，如果没看过，建议先看下。</p>
 <p><strong>当然，不看也行。</strong></p>
-<p>在这里，<del>为了混点字数</del>，我简单总结下B+树的结构。</p>
-<p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png" alt="B+树查询过程"><br>如上图，一般B+树是由多个页组成的<strong>多层级</strong>结构，每个页<code>16Kb</code>，对于主键索引来说，最末级的<strong>叶子结点</strong>放行数据，<strong>非叶子结点</strong>放的则是索引信息（主键id和页号），用于加速查询。</p>
-<p>比方说我们想要查找行数据5。会先从顶层页的record们入手。<strong>record里包含了主键id和页号（页地址）</strong>。关注黄色的箭头，向左最小id是1，向右最小id是7。那id=5的数据如果存在，那必定在左边箭头。于是顺着的record的页地址就到了<code>6号</code>数据页里，再判断id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。</p>
-<p>在<code>105号数据页</code>里，虽然有多行数据，但也<strong>不是挨个遍历的</strong>，数据页内还有个<strong>页目录</strong>的信息，它可以通过<strong>二分查找</strong>的方式加速查询行数据，于是找到id=5的数据行，完成查询。</p>
-<p>从上面可以看出，B+树利用了<strong>空间换时间</strong>的方式（构造了一批非叶子结点用于存放索引信息），**将查询时间复杂度从O(n)优化为O(lg(n))**。</p>
+<p>在这里，<del>为了混点字数</del>，我简单总结下 B+树的结构。</p>
+<p><img src="https://cdn.xiaobaidebug.top/B%E5%8A%A0%E6%A0%91%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B.png" alt="B+树查询过程"><br>如上图，一般 B+树是由多个页组成的<strong>多层级</strong>结构，每个页<code>16Kb</code>，对于主键索引来说，最末级的<strong>叶子结点</strong>放行数据，<strong>非叶子结点</strong>放的则是索引信息（主键 id 和页号），用于加速查询。</p>
+<p>比方说我们想要查找行数据 5。会先从顶层页的 record 们入手。<strong>record 里包含了主键 id 和页号（页地址）</strong>。关注黄色的箭头，向左最小 id 是 1，向右最小 id 是 7。那 id=5 的数据如果存在，那必定在左边箭头。于是顺着的 record 的页地址就到了<code>6号</code>数据页里，再判断 id=5&gt;4，所以肯定在右边的数据页里，于是加载<code>105号</code>数据页。</p>
+<p>在<code>105号数据页</code>里，虽然有多行数据，但也<strong>不是挨个遍历的</strong>，数据页内还有个<strong>页目录</strong>的信息，它可以通过<strong>二分查找</strong>的方式加速查询行数据，于是找到 id=5 的数据行，完成查询。</p>
+<p>从上面可以看出，B+树利用了<strong>空间换时间</strong>的方式（构造了一批非叶子结点用于存放索引信息），**将查询时间复杂度从 O(n)优化为 O(lg(n))**。</p>
 <br>
 
-<h3 id="跳表的结构"><a href="#跳表的结构" class="headerlink" title="跳表的结构"></a>跳表的结构</h3><p>看完B+树，我们再来看下跳表是怎么来的。</p>
+<h3 id="跳表的结构"><a href="#跳表的结构" class="headerlink" title="跳表的结构"></a>跳表的结构</h3><p>看完 B+树，我们再来看下跳表是怎么来的。</p>
 <p>同样的，还是为了存储一行行的数据。</p>
 <p>我们可以将它们用<strong>链表</strong>串起来。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%8D%95%E9%93%BE%E8%A1%A8.png" alt="单链表"></p>
-<p>想要查询链表中的其中一个结点，时间复杂度是O(n)，这谁顶得住，于是将<strong>部分</strong>链表结点提出来，再构建出一个新的链表。</p>
+<p>想要查询链表中的其中一个结点，时间复杂度是 O(n)，这谁顶得住，于是将<strong>部分</strong>链表结点提出来，再构建出一个新的链表。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8.png" alt="两层跳表"></p>
 <p>这样当我想要查询一个数据的时候，我先查上层的链表，就很容易知道数据落在<strong>哪个范围</strong>，然后<strong>跳到下一个层级里进行查询。</strong>这样就把搜索范围一下子缩小了一大半。</p>
-<p>比如查询id=10的数据，我们先在上层遍历，依次判断1,6,12，很快就可以判断出10在6到12之间，然后往下一跳，就可以在遍历6,7,8,9,10之后，确定id=10的位置。直接将查询范围从原来的1到10，变成现在的1,6,7,8,9,10，算是砍半了。</p>
+<p>比如查询 id=10 的数据，我们先在上层遍历，依次判断 1,6,12，很快就可以判断出 10 在 6 到 12 之间，然后往下一跳，就可以在遍历 6,7,8,9,10 之后，确定 id=10 的位置。直接将查询范围从原来的 1 到 10，变成现在的 1,6,7,8,9,10，算是砍半了。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%A4%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BEid%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.drawio.png" alt="两层跳表查找id为10的数据"></p>
 <p>既然两层链表就直接将查询范围砍半了，那我<strong>多加几层</strong>，岂不妙哉？</p>
 <p>于是跳表就这样变成了多层。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8.png" alt="三层跳表"></p>
-<p>如果还是查询id=10的数据，就只需要查询1,6,9,10就能找到，比两层的时候更快一些。</p>
+<p>如果还是查询 id=10 的数据，就只需要查询 1,6,9,10 就能找到，比两层的时候更快一些。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E4%B8%89%E5%B1%82%E8%B7%B3%E8%A1%A8%E6%9F%A5%E8%AF%A2id%E4%B8%BA10%E7%9A%84%E6%95%B0%E6%8D%AE.png" alt="三层跳表查询id为10的数据"></p>
-<p>可以看出，跳表也是通过<strong>牺牲空间换取时间</strong>的方式提升查询性能。**时间复杂度都是lg(n)**。</p>
+<p>可以看出，跳表也是通过<strong>牺牲空间换取时间</strong>的方式提升查询性能。**时间复杂度都是 lg(n)**。</p>
 <br>
 
 <h3 id="B-树和跳表的区别"><a href="#B-树和跳表的区别" class="headerlink" title="B+树和跳表的区别"></a>B+树和跳表的区别</h3><p>从上面可以看到，B+树和跳表的<strong>最下面一层，都包含了所有的数据</strong>，且都是<strong>顺序的，适合用于范围查询</strong>。往上的层级都是构建出来用于提升搜索性能的。这两者实在是太像了。但他们两者在<strong>新增和删除数据</strong>时，还是有些区别的。下面我们以新增数据为例聊一下。</p>
 <br>
 
 <h4 id="B-树新增数据会怎么样"><a href="#B-树新增数据会怎么样" class="headerlink" title="B+树新增数据会怎么样"></a>B+树新增数据会怎么样</h4><p>B+树本质上是一种多叉平衡二叉树。关键在于”<strong>平衡</strong>“这两个字，对于多叉树结构来说，它的含义是子树们的高度层级尽量一致（一般最多差一个层级），这样在搜索的时候，不管是到哪个子树分支，搜索次数都差不了太多。</p>
-<p>当数据库表不断插入新的数据时，为了维持B+树的平衡，B+树会不断分裂调整数据页。</p>
-<p>我们知道B+树分为<strong>叶子结点和非叶子结点</strong>。</p>
-<p>当插入一条数据时，叶子结点和它上层的索引结点（非叶子结点）最大容量都是16k，它们都有可能会满。</p>
+<p>当数据库表不断插入新的数据时，为了维持 B+树的平衡，B+树会不断分裂调整数据页。</p>
+<p>我们知道 B+树分为<strong>叶子结点和非叶子结点</strong>。</p>
+<p>当插入一条数据时，叶子结点和它上层的索引结点（非叶子结点）最大容量都是 16k，它们都有可能会满。</p>
 <p>为了简化问题，我们<strong>假设</strong>一个数据页只能放三条行数据或索引。</p>
 <p>加入一条数据，根据数据页会不会满，分为三种情况。</p>
 <ul>
@@ -297,7 +297,7 @@
 </ul>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%8F%B6%E5%AD%90%E5%92%8C%E9%9D%9E%E5%8F%B6%E5%AD%90%E9%83%BD%E6%BB%A1%E4%BA%86.png" alt="叶子和非叶子都满了"></p>
 <p>从上面可以看到，只有在叶子和索引结点<strong>都满了</strong>的情况下，B+树才会考虑加入一层新的结点。</p>
-<p>而从之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>知道，要把三层B+树塞满，那大概需要2kw左右的数据。</p>
+<p>而从之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>知道，要把三层 B+树塞满，那大概需要 2kw 左右的数据。</p>
 <br>
 
 <h4 id="跳表新增数据"><a href="#跳表新增数据" class="headerlink" title="跳表新增数据"></a>跳表新增数据</h4><p>跳表同样也是很多层，新增一个数据时，最底层的链表需要插入数据。</p>
@@ -305,46 +305,42 @@
 <p>这个就纯靠<strong>随机函数</strong>了。</p>
 <p>理论上为了达到<strong>二分的效果</strong>，每一层的结点数需要是下一层结点数的二分之一。</p>
 <p>也就是说现在有一个新的数据插入了，它有<code>50%</code>的概率需要在<code>第二层</code>加入索引，有<code>25%</code>的概率需要在<code>第三层</code>加个索引，以此类推，直到<code>最顶层</code>。</p>
-<p>举个例子，如果跳表中插入数据id=6，且随机函数返回第三层（有25%的概率），那就需要在跳表的最底层到第三层都插入数据。</p>
+<p>举个例子，如果跳表中插入数据 id=6，且随机函数返回第三层（有 25%的概率），那就需要在跳表的最底层到第三层都插入数据。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.drawio.png" alt="跳表插入数据"></p>
 <p>如果这个随机函数设计成上面这样，当<strong>数据量样本足够大</strong>的时候，数据的分布就符合我们理想中的”二分”。</p>
-<p>跟上面B+树不一样，跳表是否新增层数，纯粹靠随机函数，根本不关心前后上下结点。</p>
+<p>跟上面 B+树不一样，跳表是否新增层数，纯粹靠随机函数，根本不关心前后上下结点。</p>
 <br>
-
-
-
-
 
 <p>好了，基础科普也结束了，我们可以进入正题了。</p>
 <br>
 
-<h3 id="mysql的索引为什么使用B-树而不使用跳表？-1"><a href="#mysql的索引为什么使用B-树而不使用跳表？-1" class="headerlink" title="mysql的索引为什么使用B+树而不使用跳表？"></a>mysql的索引为什么使用B+树而不使用跳表？</h3><p><strong>B+树</strong>是多叉树结构，每个结点都是一个16k的数据页，能存放较多索引信息，所以<strong>扇出很高</strong>。<strong>三层</strong>左右就可以存储<code>2kw</code>左右的数据（知道结论就行，想知道原因可以看之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>）。也就是说查询一次数据，如果这些数据页都在磁盘里，那么最多需要查询<strong>三次磁盘IO</strong>。</p>
+<h3 id="mysql-的索引为什么使用-B-树而不使用跳表？-1"><a href="#mysql-的索引为什么使用-B-树而不使用跳表？-1" class="headerlink" title="mysql 的索引为什么使用 B+树而不使用跳表？"></a>mysql 的索引为什么使用 B+树而不使用跳表？</h3><p><strong>B+树</strong>是多叉树结构，每个结点都是一个 16k 的数据页，能存放较多索引信息，所以<strong>扇出很高</strong>。<strong>三层</strong>左右就可以存储<code>2kw</code>左右的数据（知道结论就行，想知道原因可以看之前的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XX_NkIIf_PLyU4IE6lEEYQ">文章</a>）。也就是说查询一次数据，如果这些数据页都在磁盘里，那么最多需要查询<strong>三次磁盘 IO</strong>。</p>
 <br>
 
-<p><strong>跳表</strong>是链表结构，一条数据一个结点，如果最底层要存放<code>2kw</code>数据，且每次查询都要能达到<strong>二分查找</strong>的效果，<code>2kw</code>大概在<code>2的24次方</code>左右，所以，跳表大概高度在<strong>24层</strong>左右。最坏情况下，这24层数据会分散在不同的数据页里，也即是查一次数据会经历<strong>24次磁盘IO</strong>。</p>
-<p>因此存放同样量级的数据，B+树的高度比跳表的要少，如果放在mysql数据库上来说，就是<strong>磁盘IO次数更少，因此B+树查询更快</strong>。</p>
-<p>而针对<strong>写操作</strong>，B+树需要拆分合并索引数据页，跳表则独立插入，并根据随机函数确定层数，没有旋转和维持平衡的开销，因此<strong>跳表的写入性能会比B+树要好。</strong></p>
-<p>其实，mysql的<strong>存储引擎是可以换的</strong>，以前是<code>myisam</code>，后来才有的<code>innodb</code>，它们底层索引用的都是<strong>B+树</strong>。也就是说，你完全可以造一个索引为跳表的存储引擎装到mysql里。事实上，<code>facebook</code>造了个<code>rocksDB</code>的存储引擎，里面就用了<strong>跳表</strong>。直接说结论，它的<strong>写入性能</strong>确实是比innodb要好，但<strong>读性能</strong>确实比innodb要差不少。感兴趣的话，可以在文章最后面的<strong>参考资料</strong>里看到他们的性能对比数据。</p>
+<p><strong>跳表</strong>是链表结构，一条数据一个结点，如果最底层要存放<code>2kw</code>数据，且每次查询都要能达到<strong>二分查找</strong>的效果，<code>2kw</code>大概在<code>2的24次方</code>左右，所以，跳表大概高度在<strong>24 层</strong>左右。最坏情况下，这 24 层数据会分散在不同的数据页里，也即是查一次数据会经历<strong>24 次磁盘 IO</strong>。</p>
+<p>因此存放同样量级的数据，B+树的高度比跳表的要少，如果放在 mysql 数据库上来说，就是<strong>磁盘 IO 次数更少，因此 B+树查询更快</strong>。</p>
+<p>而针对<strong>写操作</strong>，B+树需要拆分合并索引数据页，跳表则独立插入，并根据随机函数确定层数，没有旋转和维持平衡的开销，因此<strong>跳表的写入性能会比 B+树要好。</strong></p>
+<p>其实，mysql 的<strong>存储引擎是可以换的</strong>，以前是<code>myisam</code>，后来才有的<code>innodb</code>，它们底层索引用的都是<strong>B+树</strong>。也就是说，你完全可以造一个索引为跳表的存储引擎装到 mysql 里。事实上，<code>facebook</code>造了个<code>rocksDB</code>的存储引擎，里面就用了<strong>跳表</strong>。直接说结论，它的<strong>写入性能</strong>确实是比 innodb 要好，但<strong>读性能</strong>确实比 innodb 要差不少。感兴趣的话，可以在文章最后面的<strong>参考资料</strong>里看到他们的性能对比数据。</p>
 <br>
 
-<h3 id="redis为什么使用跳表而不使用B-树或二叉树呢？"><a href="#redis为什么使用跳表而不使用B-树或二叉树呢？" class="headerlink" title="redis为什么使用跳表而不使用B+树或二叉树呢？"></a>redis为什么使用跳表而不使用B+树或二叉树呢？</h3><p>redis支持多种数据结构，里面有个<strong>有序集合</strong>，也叫<strong>ZSET</strong>。内部实现就是<strong>跳表</strong>。那为什么要<strong>用跳表而不用B+树等结构呢？</strong></p>
+<h3 id="redis-为什么使用跳表而不使用-B-树或二叉树呢？"><a href="#redis-为什么使用跳表而不使用-B-树或二叉树呢？" class="headerlink" title="redis 为什么使用跳表而不使用 B+树或二叉树呢？"></a>redis 为什么使用跳表而不使用 B+树或二叉树呢？</h3><p>redis 支持多种数据结构，里面有个<strong>有序集合</strong>，也叫<strong>ZSET</strong>。内部实现就是<strong>跳表</strong>。那为什么要<strong>用跳表而不用 B+树等结构呢？</strong></p>
 <p>这个几乎每次面试都要被问一下。</p>
 <p>虽然已经很熟了，但每次都要装作之前没想过，现场思考一下才知道答案。</p>
 <p>真的，很考验演技。</p>
 <p>大家知道，redis 是纯纯的内存数据库。</p>
-<p>进行读写数据都是操作内存，跟磁盘没啥关系，因此也<strong>不存在磁盘IO</strong>了，所以层高就不再是跳表的劣势了。</p>
-<p>并且前面也提到B+树是有一系列合并拆分操作的，换成红黑树或者其他AVL树的话也是各种旋转，目的也是<strong>为了保持树的平衡</strong>。</p>
+<p>进行读写数据都是操作内存，跟磁盘没啥关系，因此也<strong>不存在磁盘 IO</strong>了，所以层高就不再是跳表的劣势了。</p>
+<p>并且前面也提到 B+树是有一系列合并拆分操作的，换成红黑树或者其他 AVL 树的话也是各种旋转，目的也是<strong>为了保持树的平衡</strong>。</p>
 <p>而跳表插入数据时，只需要随机一下，就知道自己要不要往上加索引，根本不用考虑前后结点的感受，也就<strong>少了旋转平衡的开销</strong>。</p>
-<p>因此，redis选了跳表，而不是B+树。</p>
+<p>因此，redis 选了跳表，而不是 B+树。</p>
 <br>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>B+树是多叉平衡搜索树，扇出高，只需要3层左右就能存放2kw左右的数据，同样情况下跳表则需要24层左右，假设层高对应<strong>磁盘IO</strong>，那么B+树的读性能会比跳表要好，因此mysql选了B+树做索引。</li>
-<li>redis的读写全在内存里进行操作，不涉及磁盘IO，同时跳表实现简单，相比B+树、AVL树、少了旋转树结构的开销，因此redis使用跳表来实现ZSET，而不是树结构。</li>
-<li>存储引擎RocksDB内部使用了跳表，对比使用B+树的innodb，虽然写性能更好，但读性能属实差了些。在读多写少的场景下，B+树依旧YYDS。</li>
+<li>B+树是多叉平衡搜索树，扇出高，只需要 3 层左右就能存放 2kw 左右的数据，同样情况下跳表则需要 24 层左右，假设层高对应<strong>磁盘 IO</strong>，那么 B+树的读性能会比跳表要好，因此 mysql 选了 B+树做索引。</li>
+<li>redis 的读写全在内存里进行操作，不涉及磁盘 IO，同时跳表实现简单，相比 B+树、AVL 树、少了旋转树结构的开销，因此 redis 使用跳表来实现 ZSET，而不是树结构。</li>
+<li>存储引擎 RocksDB 内部使用了跳表，对比使用 B+树的 innodb，虽然写性能更好，但读性能属实差了些。在读多写少的场景下，B+树依旧 YYDS。</li>
 </ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL内核：INNODB存储引擎 卷1》</p>
-<p>《RocksDB和Innodb引擎性能PK胜负难料？》</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL 内核：INNODB 存储引擎 卷 1》</p>
+<p>《RocksDB 和 Innodb 引擎性能 PK 胜负难料？》</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1813695">https://cloud.tencent.com/developer/article/1813695</a></p>
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><br>
 
@@ -354,7 +350,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220404094330264.png"></p>
 <p>这么说吧，一个颜值出众，身材火辣的姐姐，还是个世界顶级的武术高手，穿着旗袍，踩着高跟，做着各种让牛顿棺材板都快要按不住的动作，只为手把手教会你武术基本功。</p>
 <p>这时候，剧情还重要吗？</p>
-<p>不得不说，当我看到姐姐穿成这样用木棍顶起400斤的汞球时。</p>
+<p>不得不说，当我看到姐姐穿成这样用木棍顶起 400 斤的汞球时。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20220404094549469.png"></p>
 <br>
 
@@ -387,7 +383,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/image/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -396,9 +392,9 @@
 
 <p><img src="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a> </li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -520,7 +516,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B-%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">mysql的索引为什么使用B+树而不使用跳表？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">B+树的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">跳表的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E5%92%8C%E8%B7%B3%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">B+树和跳表的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-%E6%A0%91%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">1.3.1.</span> <span class="nav-text">B+树新增数据会怎么样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">跳表新增数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B-%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F-1"><span class="nav-number">1.4.</span> <span class="nav-text">mysql的索引为什么使用B+树而不使用跳表？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8B-%E6%A0%91%E6%88%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%91%A2%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">redis为什么使用跳表而不使用B+树或二叉树呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">1.8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">1.8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">1.9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql-%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-B-%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">mysql 的索引为什么使用 B+树而不使用跳表？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">B+树的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">跳表的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E5%92%8C%E8%B7%B3%E8%A1%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">B+树和跳表的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-%E6%A0%91%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">1.3.1.</span> <span class="nav-text">B+树新增数据会怎么样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">跳表新增数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-B-%E6%A0%91%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%EF%BC%9F-1"><span class="nav-number">1.4.</span> <span class="nav-text">mysql 的索引为什么使用 B+树而不使用跳表？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%A1%A8%E8%80%8C%E4%B8%8D%E4%BD%BF%E7%94%A8-B-%E6%A0%91%E6%88%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%91%A2%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">redis 为什么使用跳表而不使用 B+树或二叉树呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">1.8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">1.8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">1.9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -536,7 +532,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">54</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -5,19 +5,13 @@ tags:
 categories: "图解网络"
 ---
 
-
-> 文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。
-
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
 搬运一个在某乎的回答，水一篇文章吧。
 
 ![](https://cdn.xiaobaidebug.top/image-20220813113924022.png)
 
-
-
 ![TCP四次挥手](https://cdn.xiaobaidebug.top/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B7.png)
-
-
 
 正常情况下。只要数据传输完了，**不管是客户端还是[服务端](https://www.zhihu.com/search?q=服务端&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A2613763971})，都可以主动发起四次挥手**，释放连接。
 
@@ -27,7 +21,7 @@ categories: "图解网络"
 
 **第一次挥手**：一般情况下，主动方执行`close()`或 `shutdown()`方法，会发个`FIN报文`出来，表示"**我不再发送数据了**"。
 
-**第二次挥手**：在收到主动方的`FIN`报文后，被动方立马回应一个`ACK`，意思是"我收到你的FIN了，也知道你不再发数据了"。
+**第二次挥手**：在收到主动方的`FIN`报文后，被动方立马回应一个`ACK`，意思是"我收到你的 FIN 了，也知道你不再发数据了"。
 
 上面提到的是**主动方**不再发送数据了。但如果这时候，**被动方**还有数据要发，那就继续发。注意，虽然第二次和第三次挥手之间，被动方是能发数据到主动方的，但主动方能不能正常收就不一定了，这个待会说。
 
@@ -43,20 +37,18 @@ categories: "图解网络"
 
 回到题主的问题。
 
-**TCP四次挥手中如果服务端没收到第四次挥手请求，服务端会一直等待吗？**
+**TCP 四次挥手中如果服务端没收到第四次挥手请求，服务端会一直等待吗？**
 
-第四次挥手是第三次挥手触发的。如果第四次挥手服务端一直没收到，那服务端会认为是不是自己的第三次挥手丢了，于是服务端不断重试发第三次挥手（FIN）.重发次数由系统的tcp_orphan_retries参数控制。重试多次还没成功，服务端直接断开链接。**所以结论是服务端不会一直等待第四次挥手。**
+第四次挥手是第三次挥手触发的。如果第四次挥手服务端一直没收到，那服务端会认为是不是自己的第三次挥手丢了，于是服务端不断重试发第三次挥手（FIN）.重发次数由系统的 tcp_orphan_retries 参数控制。重试多次还没成功，服务端直接断开链接。**所以结论是服务端不会一直等待第四次挥手。**
 
 ![TCP第四次挥手丢失](https://cdn.xiaobaidebug.top/TCP%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B8%A2%E5%A4%B1.drawio.png)
-
-
 
 ```shell
 # cat /proc/sys/net/ipv4/tcp_orphan_retries
 0
 ```
 
-另外，你会发现`tcp_orphan_retries`参数是0，但其实并不是不重试的意思。为0时，默认值为8. 也就是重试8次。
+另外，你会发现`tcp_orphan_retries`参数是 0，但其实并不是不重试的意思。为 0 时，默认值为 8. 也就是重试 8 次。
 
 ```c
 /* Calculate maximal number or retries on an orphaned socket. */
@@ -77,9 +69,7 @@ static int tcp_orphan_retries(struct sock *sk, int alive)
 }
 ```
 
-当然如果服务端重试发第三次挥手FIN的过程中，还是同样的端口和IP,起了个新的客户端，这时候服务端重试的FIN被收到后，客户端就会认为是不正常的数据包，直接发个RST给服务端，这时候两端连接也会断开。
-
-
+当然如果服务端重试发第三次挥手 FIN 的过程中，还是同样的端口和 IP,起了个新的客户端，这时候服务端重试的 FIN 被收到后，客户端就会认为是不正常的数据包，直接发个 RST 给服务端，这时候两端连接也会断开。
 
 <br>
 
@@ -91,8 +81,6 @@ static int tcp_orphan_retries(struct sock *sk, int alive)
 
 链接太长，懒得复制的话，点击**阅读原文**可以直接跳转。
 
-
-
 <br>
 
 ### 最后
@@ -100,8 +88,6 @@ static int tcp_orphan_retries(struct sock *sk, int alive)
 新的文章快写好了，就缺个开头了。
 
 ![](https://cdn.xiaobaidebug.top/image-20220813115736303.png)
-
-
 
 **我有个不成熟的请求。**
 
@@ -117,14 +103,12 @@ static int tcp_orphan_retries(struct sock *sk, int alive)
 
 如果实在叫不出口的话，能帮我点下右下角的**点赞和在看**吗？
 
-
-
 <br>
 
 ###### 别说了，一起在知识的海洋里呛水吧
 
-**点击**下方名片，关注公众号:【小白debug】
-![](https://cdn.xiaobaidebug.top/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif)
+**点击**下方名片，关注公众号:【小白 debug】
+![](https://cdn.xiaobaidebug.top/1696069689495.png)
 
 <br>
 
@@ -136,15 +120,8 @@ static int tcp_orphan_retries(struct sock *sk, int alive)
 
 ![](https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi-20220806162638482.gif)
 
-
-
 ### 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g) 
-- [TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA) 
-- [动图图解！既然IP层会分片，为什么TCP层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w) 
-
-
-
-
-
+- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)

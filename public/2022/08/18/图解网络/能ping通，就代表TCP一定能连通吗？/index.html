@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。    平时，我们想要知道，自己的机器到目的机器之间，网络通不通，一般会执行ping命令。 一般对于状况良好的网络来说，你能看到它对应的loss丢包率">
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。    平时，我们想要知道，自己的机器到目的机器之间，网络通不通，一般会执行ping 命令。 一般对于状况良好的网络来说，你能看到它对应的los">
 <meta property="og:type" content="article">
 <meta property="og:title" content="能ping通，TCP就一定能连通吗？">
 <meta property="og:url" content="https://xiaobaidebug.top/2022/08/18/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E8%83%BDping%E9%80%9A%EF%BC%8C%E5%B0%B1%E4%BB%A3%E8%A1%A8TCP%E4%B8%80%E5%AE%9A%E8%83%BD%E8%BF%9E%E9%80%9A%E5%90%97%EF%BC%9F/index.html">
 <meta property="og:site_name" content="小白debug">
-<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。    平时，我们想要知道，自己的机器到目的机器之间，网络通不通，一般会执行ping命令。 一般对于状况良好的网络来说，你能看到它对应的loss丢包率">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。    平时，我们想要知道，自己的机器到目的机器之间，网络通不通，一般会执行ping 命令。 一般对于状况良好的网络来说，你能看到它对应的los">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/ping%E6%AD%A3%E5%B8%B8.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/ping%E4%B8%8D%E9%80%9A.png">
@@ -48,11 +48,11 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/%E4%B8%8D%E5%90%8CTCP%E8%BF%9E%E6%8E%A5%E7%9A%84%E4%BA%94%E5%85%83%E7%BB%84%E5%B7%AE%E5%BC%82.drawio.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/ping%E8%83%BD%E6%88%90%E5%8A%9F%E4%BD%86%E9%83%A8%E5%88%86TCP%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5.drawio.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220805141757559.png">
-<meta property="og:image" content="https://cdn.xiaobaidebug.top/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif">
+<meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi-20220806162638482.gif">
 <meta property="article:published_time" content="2022-08-18T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-10-30T02:47:39.796Z">
+<meta property="article:modified_time" content="2023-10-06T04:09:12.248Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/ping%E6%AD%A3%E5%B8%B8.png">
 
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-30 10:47:39" itemprop="dateModified" datetime="2022-10-30T10:47:39+08:00">2022-10-30</time>
+                <time title="修改时间：2023-10-06 12:09:12" itemprop="dateModified" datetime="2023-10-06T12:09:12+08:00">2023-10-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,35 +246,35 @@
 
       
         <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎Star。</p>
+<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获面试题集。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
 </blockquote>
 <br>
 
-<p>平时，我们想要知道，自己的机器到目的机器之间，<strong>网络通不通</strong>，一般会执行<strong>ping命令</strong>。</p>
-<p>一般对于状况良好的网络来说，你能看到它对应的<code>loss</code>丢包率为<code>0%</code>，也就是所谓的<strong>能ping通</strong>。如果看到丢包率<code>100%</code>，也就是<strong>ping不通</strong>。</p>
+<p>平时，我们想要知道，自己的机器到目的机器之间，<strong>网络通不通</strong>，一般会执行<strong>ping 命令</strong>。</p>
+<p>一般对于状况良好的网络来说，你能看到它对应的<code>loss</code>丢包率为<code>0%</code>，也就是所谓的<strong>能 ping 通</strong>。如果看到丢包率<code>100%</code>，也就是<strong>ping 不通</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E6%AD%A3%E5%B8%B8.png" alt="ping正常"></p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E4%B8%8D%E9%80%9A.png" alt="ping不通"></p>
 <br>
 
-<p>那么问题来了，假设我能<strong>ping</strong>通某台机器，那这时候如果我改用<strong>TCP协议</strong>去发数据到目的机器，<strong>也一定能通吗？</strong></p>
-<p>或者换个问法，<strong>ping和tcp协议走的网络路径是一样的吗？</strong></p>
+<p>那么问题来了，假设我能<strong>ping</strong>通某台机器，那这时候如果我改用<strong>TCP 协议</strong>去发数据到目的机器，<strong>也一定能通吗？</strong></p>
+<p>或者换个问法，<strong>ping 和 tcp 协议走的网络路径是一样的吗？</strong></p>
 <br>
 
-<p>这时候第一反应就是<strong>不一定</strong>，因为ping完之后中间链路里的<strong>某个路由器可能会挂了（断电了）</strong>，再用TCP去连就会走别的路径。</p>
+<p>这时候第一反应就是<strong>不一定</strong>，因为 ping 完之后中间链路里的<strong>某个路由器可能会挂了（断电了）</strong>，再用 TCP 去连就会走别的路径。</p>
 <p>也没错。但假设，<strong>中间链路没发生任何变化呢？</strong></p>
 <p>我先直接说答案。</p>
 <p><strong>不一定，走的网络路径还是有可能是不同的。</strong></p>
 <p>今天就来聊聊为什么。</p>
 <br>
 
-<p>我之前写过一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Gml_xxvGjq224L7zCoXm5w">《断网了，还能ping通 127.0.0.1 吗？》</a>,里面提到过<strong>ping数据包和tcp数据包的区别</strong>。</p>
+<p>我之前写过一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Gml_xxvGjq224L7zCoXm5w">《断网了，还能 ping 通 127.0.0.1 吗？》</a>,里面提到过<strong>ping 数据包和 tcp 数据包的区别</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB67.drawio.png" alt="ping和TCP发消息的区别"></p>
 <br>
 
 <p>我们知道网络是分层的，每一层都有对应协议。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%AF%B9%E5%BA%94%E7%9A%84%E6%B6%88%E6%81%AF%E4%BD%93%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90.png" alt="五层网络协议对应的消息体变化分析"></p>
 <p>而这网络层就像搭积木一样，上层协议都是基于下层协议搭出来的。</p>
-<p><strong>不管是ping（用了ICMP协议）还是tcp本质上都是基于网络层IP协议的数据包，而到了物理层，都是二进制01串，都走网卡发出去了。</strong></p>
+<p><strong>不管是 ping（用了 ICMP 协议）还是 tcp 本质上都是基于网络层 IP 协议的数据包，而到了物理层，都是二进制 01 串，都走网卡发出去了。</strong></p>
 <p>如果网络环境没发生变化，目的地又一样，那按道理说他们走的网络路径应该是一样的，什么情况下会不同呢？</p>
 <p>我们就从<strong>路由</strong>这个话题聊起吧。</p>
 <br>
@@ -295,26 +295,26 @@
 <p>于是问题就变成了这样一个<strong>图状结构</strong>。每条边都带有<strong>成本或权重</strong>，算这上面<strong>任意两点的最短距离</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84Dijkstra.drawio.png" alt="路由器和Dijkstra"></p>
 <p>这时候想必大家回忆压不住要上来了。</p>
-<p>这题我熟，这就是大学时候刷的<strong>Dijkstra算法</strong>。菊花厂的OJ笔试题集里也经常出现，现在终于明白为什么他们家的笔试题里图类题目比别的大厂貌似要多一些了吧，因为菊花厂就是搞通信的，做路由器的老玩家了。</p>
+<p>这题我熟，这就是大学时候刷的<strong>Dijkstra 算法</strong>。菊花厂的 OJ 笔试题集里也经常出现，现在终于明白为什么他们家的笔试题里图类题目比别的大厂貌似要多一些了吧，因为菊花厂就是搞通信的，做路由器的老玩家了。</p>
 <br>
 
-<h4 id="路由表的生成"><a href="#路由表的生成" class="headerlink" title="路由表的生成"></a>路由表的生成</h4><p>基于<strong>Dijkstra算法</strong>，封装出了一个新的协议，<strong>OSPF协议</strong>（<strong>O</strong>pen <strong>S</strong>hortest <strong>P</strong>ath <strong>F</strong>irst, 开放最短路径优先）。</p>
-<p>有了OSPF，路由器就得到了网络图里自己到其他点之间的<strong>最短距离</strong>，于是就知道了<strong>数据包要到某个点，该走哪条最优路径</strong>。</p>
+<h4 id="路由表的生成"><a href="#路由表的生成" class="headerlink" title="路由表的生成"></a>路由表的生成</h4><p>基于<strong>Dijkstra 算法</strong>，封装出了一个新的协议，<strong>OSPF 协议</strong>（<strong>O</strong>pen <strong>S</strong>hortest <strong>P</strong>ath <strong>F</strong>irst, 开放最短路径优先）。</p>
+<p>有了 OSPF，路由器就得到了网络图里自己到其他点之间的<strong>最短距离</strong>，于是就知道了<strong>数据包要到某个点，该走哪条最优路径</strong>。</p>
 <p>将这些信息汇成一张表，也就是我们常说的<strong>路由表</strong>。</p>
-<p>路由表里记录了到什么IP需要走什么端口，以及走这条路径的成本（<code>metric</code>）。</p>
+<p>路由表里记录了到什么 IP 需要走什么端口，以及走这条路径的成本（<code>metric</code>）。</p>
 <p>可以通过 <code>route</code> 命令查看到。</p>
 <p><img src="https://cdn.xiaobaidebug.top/route2.png" alt="route表"></p>
 <br>
 
-<h4 id="路由表决定数据包路径"><a href="#路由表决定数据包路径" class="headerlink" title="路由表决定数据包路径"></a>路由表决定数据包路径</h4><p>数据包在发送的过程中，会在<strong>网络层</strong>加入<strong>目标地址IP</strong>。</p>
+<h4 id="路由表决定数据包路径"><a href="#路由表决定数据包路径" class="headerlink" title="路由表决定数据包路径"></a>路由表决定数据包路径</h4><p>数据包在发送的过程中，会在<strong>网络层</strong>加入<strong>目标地址 IP</strong>。</p>
 <p>路由器会根据这个<strong>IP</strong>跟<strong>路由表</strong>去做匹配。</p>
 <p>然后路由表，会告诉路由器，什么样的消息该转发到什么端口。</p>
 <p>举个例子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%B7%AF%E7%94%B1%E4%BA%92%E8%81%94%E6%97%B6%E6%96%B0%E7%89%88.drawio.png" alt="通过路由表转发数据"></p>
-<p>假设A要发消息到D。也就是<code>192.168.0.105/24</code>要发消息到<code>192.168.1.11/24</code>。</p>
-<p>那么A会把消息经发到路由器。</p>
-<p>路由器已知目的地IP<code>192.168.1.11/24</code> ，去跟<strong>路由表</strong>做匹配，发现<code>192.168.1.0/24</code>, 就在e2端口，那么就会把消息从e2端口发出，（可能还会经过交换机）最后把消息打到目的机器。</p>
-<p>当然，如果路由表里找不到，那就打到<strong>默认网关</strong>吧，也就是从e1口发出，发到IP<code>192.0.2.1</code>。<strong>这个路由器的路由表不知道该去哪，说不定其他路由器知道</strong>。</p>
+<p>假设 A 要发消息到 D。也就是<code>192.168.0.105/24</code>要发消息到<code>192.168.1.11/24</code>。</p>
+<p>那么 A 会把消息经发到路由器。</p>
+<p>路由器已知目的地 IP<code>192.168.1.11/24</code> ，去跟<strong>路由表</strong>做匹配，发现<code>192.168.1.0/24</code>, 就在 e2 端口，那么就会把消息从 e2 端口发出，（可能还会经过交换机）最后把消息打到目的机器。</p>
+<p>当然，如果路由表里找不到，那就打到<strong>默认网关</strong>吧，也就是从 e1 口发出，发到 IP<code>192.0.2.1</code>。<strong>这个路由器的路由表不知道该去哪，说不定其他路由器知道</strong>。</p>
 <br>
 
 <h4 id="路由表的匹配规则"><a href="#路由表的匹配规则" class="headerlink" title="路由表的匹配规则"></a>路由表的匹配规则</h4><p>上面的例子里，是只匹配上了路由表里的<strong>一项</strong>，所以只能是它了。</p>
@@ -325,21 +325,21 @@
 <p>如果多个路由项都能到目的地，那就优先选<strong>匹配长度更长</strong>的那个。比如，还是目的地<code>192.168.1.11</code>，发现路由表里的<strong>192.168.1</strong>.0/<strong>24</strong> 和 <strong>192.168</strong>.0.0/<strong>16</strong>都能匹配上，但明显<strong>前者匹配长度更长</strong>，所以最后会走 <strong>192.168.1</strong>.0/<strong>24</strong>对应的转发端口。</p>
 <p><strong>但如果两个表项的匹配长度都一样呢？</strong></p>
 <p>那就会看生成这个路由表项的<strong>协议</strong>是啥，选优先级高的，优先级越高也就是所谓的<strong>管理距离</strong>（<strong>AD</strong>，<strong>A</strong>dministrative<strong>D</strong>istance）越小。比如说优先选<strong>手动配</strong>的静态（<strong>static</strong>）路由，次优选<strong>OSPF</strong>动态学习过来的表项。</p>
-<p>如果还是相同，就看<strong>度量值metrics</strong>，其实也就是<strong>路径成本cost</strong>，成本越小，越容易被选中。</p>
-<p><strong>路由器能选的路线有很多，但按道理，最优的只有”一条”，所以到这里为止，我们都可以认为，对于同一个目的地，ping和TCP走的路径是相同的。</strong></p>
+<p>如果还是相同，就看<strong>度量值 metrics</strong>，其实也就是<strong>路径成本 cost</strong>，成本越小，越容易被选中。</p>
+<p><strong>路由器能选的路线有很多，但按道理，最优的只有”一条”，所以到这里为止，我们都可以认为，对于同一个目的地，ping 和 TCP 走的路径是相同的。</strong></p>
 <p>但是。</p>
 <p><strong>如果连路径成本都一样呢？</strong>也就是说有多条最优路径呢。</p>
 <p><strong>那就都用</strong>。</p>
 <p>这也就是所谓的<strong>等价多路径，ECMP</strong>（<strong>E</strong>qual <strong>C</strong>ost <strong>M</strong>ulti<strong>P</strong>ath）。</p>
 <p>我们可以通过<code>traceroute</code>看下链路是否存在等价多路径的情况。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image-20220805122619206.png"></p>
-<p>可以看到，中间某几行，有<strong>好几个IP</strong>，也就是说这一跳里同时可以选好几个目的机器，说明这段路径<strong>支持ECMP</strong>。</p>
+<p>可以看到，中间某几行，有<strong>好几个 IP</strong>，也就是说这一跳里同时可以选好几个目的机器，说明这段路径<strong>支持 ECMP</strong>。</p>
 <br>
 
-<h4 id="ECMP有什么用"><a href="#ECMP有什么用" class="headerlink" title="ECMP有什么用"></a>ECMP有什么用</h4><p>利用等价多路径，我们<strong>可以增加链路带宽</strong>。</p>
+<h4 id="ECMP-有什么用"><a href="#ECMP-有什么用" class="headerlink" title="ECMP 有什么用"></a>ECMP 有什么用</h4><p>利用等价多路径，我们<strong>可以增加链路带宽</strong>。</p>
 <p>举个例子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B2%A1%E6%9C%89ECMP%E6%97%B6%E5%8F%AA%E8%83%BD%E9%80%89%E6%8B%A9%E6%9F%90%E4%B8%80%E6%9D%A1%E8%B7%AF%E5%BE%84.drawio4.png" alt="没有ECMP时只能选择某一条路径"></p>
-<p>从A点到B点，如果这两条路径成本不同，带宽都是<code>1千兆</code>。那数据包肯定就选成本低的那条路了，如果这条路出故障了，就走下面那条路。但不管怎么样，<strong>同一时间，只用到了一条路径</strong>。另外一条闲置就有些浪费了，有没有办法可以利用起来呢？</p>
+<p>从 A 点到 B 点，如果这两条路径成本不同，带宽都是<code>1千兆</code>。那数据包肯定就选成本低的那条路了，如果这条路出故障了，就走下面那条路。但不管怎么样，<strong>同一时间，只用到了一条路径</strong>。另外一条闲置就有些浪费了，有没有办法可以利用起来呢？</p>
 <p>有，将它们两条路径的成本设置成一样，那它们就成了等价路由，然后中间的路由器开启<strong>ECMP</strong>特性，就可以同时利用这两条链路了。带宽就从原来的<code>1千兆</code>变成了<code>2千兆</code>。数据就可以在两条路径中随意选择了。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%88%A9%E7%94%A8ECMP%E5%8F%AF%E4%BB%A5%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E4%B8%A4%E6%9D%A1%E9%93%BE%E8%B7%AF.drawi3o.png" alt="利用ECMP可以同时使用两条链路"></p>
 <p>但这也带来了另外一个问题。<strong>加剧了数据包乱序</strong>。</p>
@@ -348,19 +348,19 @@
 <p>那么问题又又来了。</p>
 <br>
 
-<h4 id="乱序会有什么问题？"><a href="#乱序会有什么问题？" class="headerlink" title="乱序会有什么问题？"></a>乱序会有什么问题？</h4><p>对于我们最最最常使用的TCP协议来说，它是个可靠性网络的协议，这里提到的<strong>可靠</strong>，不仅是保证数据要能送到目的地，还要保证<strong>数据顺序</strong>要跟原来发送端的一样。</p>
-<p>实现也很简单，<strong>TCP为每个数据包（segment）做上编号</strong>。数据到了接收端后，根据<strong>数据包编号</strong>发现是<strong>乱序数据包</strong>，就会扔到<strong>乱序队列</strong>中对数据包进行排序。如果前面的数据包还没到，哪怕后面的数据包先到了，也得在乱序队列中一直等，到齐后才能被上层拿到。</p>
-<p>举个例子，发送端发出三个数据包，<code>编号1,2,3</code>，假设在<strong>传输层</strong><code>2和3</code>先到了，<code>1</code>还没到。那此时<strong>应用层</strong>是没办法拿到<code>2和3</code>的数据包的，必须得等<code>1</code>来了之后，<strong>应用层才能一次性拿到这三个包</strong>。因为这三个包原来可能表示的是一个完整的消息，少了1, 那么<strong>消息就不完整</strong>，应用层拿到了也毫无意义。</p>
-<p>像这种，由于<strong>前面的数据丢失</strong>导致<strong>后面的数据没办法及时给到应用层</strong>的现象，就是我们常说的<strong>TCP队头阻塞</strong>。</p>
+<h4 id="乱序会有什么问题？"><a href="#乱序会有什么问题？" class="headerlink" title="乱序会有什么问题？"></a>乱序会有什么问题？</h4><p>对于我们最最最常使用的 TCP 协议来说，它是个可靠性网络的协议，这里提到的<strong>可靠</strong>，不仅是保证数据要能送到目的地，还要保证<strong>数据顺序</strong>要跟原来发送端的一样。</p>
+<p>实现也很简单，<strong>TCP 为每个数据包（segment）做上编号</strong>。数据到了接收端后，根据<strong>数据包编号</strong>发现是<strong>乱序数据包</strong>，就会扔到<strong>乱序队列</strong>中对数据包进行排序。如果前面的数据包还没到，哪怕后面的数据包先到了，也得在乱序队列中一直等，到齐后才能被上层拿到。</p>
+<p>举个例子，发送端发出三个数据包，<code>编号1,2,3</code>，假设在<strong>传输层</strong><code>2和3</code>先到了，<code>1</code>还没到。那此时<strong>应用层</strong>是没办法拿到<code>2和3</code>的数据包的，必须得等<code>1</code>来了之后，<strong>应用层才能一次性拿到这三个包</strong>。因为这三个包原来可能表示的是一个完整的消息，少了 1, 那么<strong>消息就不完整</strong>，应用层拿到了也毫无意义。</p>
+<p>像这种，由于<strong>前面的数据丢失</strong>导致<strong>后面的数据没办法及时给到应用层</strong>的现象，就是我们常说的<strong>TCP 队头阻塞</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B9%B1%E5%BA%8F%E9%98%9F%E5%88%97%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%88%B0%E6%9D%A5.drawio.png" alt="乱序队列等待数据包的到来"></p>
 <p>乱序发生时<code>2和3</code>需要待在乱序队列中，而<strong>乱序队列其实用的也是接收缓冲区的内存</strong>，而<strong>接收缓冲区是有大小限制的</strong>。通过下面的命令可以看到接收缓冲区的大小。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看接收缓冲区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sysctl net.ipv4.tcp_rmem</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096(min)	87380(default)	6291456(max)</span><br><span class="line"><span class="meta">#</span><span class="bash"> 缓冲区会在min和max之间动态调整</span></span><br></pre></td></tr></table></figure>
 
 <p>乱序的情况越多，接收缓冲区的内存就被占用的越多，对应的<strong>接收窗口</strong>就会变小，那正常能收的数据就变少了，<strong>网络吞吐就变差</strong>了，也就是性能变差了。</p>
-<p>因此，我们需要尽量保证所有<strong>同一个TCP连接下的所有TCP包都走相同路径，这样才能最大程度避免丢包</strong>。</p>
+<p>因此，我们需要尽量保证所有<strong>同一个 TCP 连接下的所有 TCP 包都走相同路径，这样才能最大程度避免丢包</strong>。</p>
 <br>
 
-<h4 id="ECMP的路径选择策略"><a href="#ECMP的路径选择策略" class="headerlink" title="ECMP的路径选择策略"></a>ECMP的路径选择策略</h4><p><strong>当初开启ECMP就是为了提升性能，现在反而加重了乱序，降低了TCP传输性能。</strong></p>
+<h4 id="ECMP-的路径选择策略"><a href="#ECMP-的路径选择策略" class="headerlink" title="ECMP 的路径选择策略"></a>ECMP 的路径选择策略</h4><p><strong>当初开启 ECMP 就是为了提升性能，现在反而加重了乱序，降低了 TCP 传输性能。</strong></p>
 <p>这怎么能忍。</p>
 <p>为了解决这个问题，我们需要有一个合理的路径选择策略。为了避免同一个连接里的数据包乱序，我们需要保证同一个连接里的数据包，都走同样的路径。</p>
 <p>这好办。我们可以通过连接的<strong>五元组</strong>（发送方的<strong>IP</strong>和<strong>端口</strong>，接收方的<strong>IP</strong>和<strong>端口</strong>，以及通信<strong>协议</strong>）信息定位到唯一一条连接。</p>
@@ -370,14 +370,14 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E6%A0%B9%E6%8D%AE%E4%BA%94%E5%85%83%E7%BB%84%E9%80%89%E6%8B%A9ECMP%E8%B7%AF%E5%BE%84.3.png" alt="根据五元组选择ECMP路径"></p>
 <br>
 
-<h3 id="TCP和Ping走的网络路径一样吗"><a href="#TCP和Ping走的网络路径一样吗" class="headerlink" title="TCP和Ping走的网络路径一样吗"></a>TCP和Ping走的网络路径一样吗</h3><p>现在我们回到文章开头的问题。</p>
-<p>对于同样的发送端和接收端，<strong>TCP和Ping走的网络路径一样吗？</strong></p>
-<p>不一定一样，因为<strong>五元组</strong>里的信息里有一项是<strong>通信协议</strong>。ping用的是<strong>ICMP协议</strong>，跟<strong>TCP协议</strong>不同，并且ping不需要用到端口，所以五元组不同，生成的<strong>哈希键不同</strong>，通过ECMP选择到的路径也可能不同。</p>
+<h3 id="TCP-和-Ping-走的网络路径一样吗"><a href="#TCP-和-Ping-走的网络路径一样吗" class="headerlink" title="TCP 和 Ping 走的网络路径一样吗"></a>TCP 和 Ping 走的网络路径一样吗</h3><p>现在我们回到文章开头的问题。</p>
+<p>对于同样的发送端和接收端，<strong>TCP 和 Ping 走的网络路径一样吗？</strong></p>
+<p>不一定一样，因为<strong>五元组</strong>里的信息里有一项是<strong>通信协议</strong>。ping 用的是<strong>ICMP 协议</strong>，跟<strong>TCP 协议</strong>不同，并且 ping 不需要用到端口，所以五元组不同，生成的<strong>哈希键不同</strong>，通过 ECMP 选择到的路径也可能不同。</p>
 <p><img src="https://cdn.xiaobaidebug.top/TCP%E5%92%8Cping%E7%9A%84%E4%BA%94%E5%85%83%E7%BB%84%E5%B7%AE%E5%BC%82.drawio.png" alt="TCP和ping的五元组差异"></p>
 <br>
 
-<h3 id="同样都用TCP协议，数据包走的网络路径一样吗"><a href="#同样都用TCP协议，数据包走的网络路径一样吗" class="headerlink" title="同样都用TCP协议，数据包走的网络路径一样吗"></a>同样都用TCP协议，数据包走的网络路径一样吗</h3><p>还是同样的发送端和接收端，同样是TCP协议，不同TCP连接走的网络路径是一样的吗？</p>
-<p>跟上面的问题一样，其实<strong>还是五元组的问题</strong>，同样都是TCP协议，对于同样的发送端和接收端，他们的IP和接收端的端口肯定是一样的，但<strong>发送方的端口是可以随时变化</strong>的，因此通过ECMP走的路径也可能不同。</p>
+<h3 id="同样都用-TCP-协议，数据包走的网络路径一样吗"><a href="#同样都用-TCP-协议，数据包走的网络路径一样吗" class="headerlink" title="同样都用 TCP 协议，数据包走的网络路径一样吗"></a>同样都用 TCP 协议，数据包走的网络路径一样吗</h3><p>还是同样的发送端和接收端，同样是 TCP 协议，不同 TCP 连接走的网络路径是一样的吗？</p>
+<p>跟上面的问题一样，其实<strong>还是五元组的问题</strong>，同样都是 TCP 协议，对于同样的发送端和接收端，他们的 IP 和接收端的端口肯定是一样的，但<strong>发送方的端口是可以随时变化</strong>的，因此通过 ECMP 走的路径也可能不同。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%8D%E5%90%8CTCP%E8%BF%9E%E6%8E%A5%E7%9A%84%E4%BA%94%E5%85%83%E7%BB%84%E5%B7%AE%E5%BC%82.drawio.png" alt="不同TCP连接的五元组差异"></p>
 <br>
 
@@ -386,29 +386,29 @@
 <br>
 
 <h3 id="利用这个知识点排查问题"><a href="#利用这个知识点排查问题" class="headerlink" title="利用这个知识点排查问题"></a>利用这个知识点排查问题</h3><p>对于业务开发，这绝对不是个没用的知识点。</p>
-<p>如果某天，你发现，你能ping通目的机器，但用TCP去连，却<strong>偶尔连不上</strong>目的机器。而且两端机器都挺空闲，没什么性能上的瓶颈。实在<strong>走投无路</strong>了。</p>
+<p>如果某天，你发现，你能 ping 通目的机器，但用 TCP 去连，却<strong>偶尔连不上</strong>目的机器。而且两端机器都挺空闲，没什么性能上的瓶颈。实在<strong>走投无路</strong>了。</p>
 <p>你就可以想想，会不会是网络中用到了<code>ECMP</code>，其中一条链路有问题导致的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E8%83%BD%E6%88%90%E5%8A%9F%E4%BD%86%E9%83%A8%E5%88%86TCP%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5.drawio.png" alt="ping能成功但部分TCP连接失败"></p>
 <p>排查方法也很简单。</p>
-<p>你是知道本机的IP以及目的机器的IP和端口号的，也知道自己用的是TCP连接。</p>
+<p>你是知道本机的 IP 以及目的机器的 IP 和端口号的，也知道自己用的是 TCP 连接。</p>
 <p>只要你在<strong>报错的时候打印下错误信息，你就知道了发送端的端口号了。</strong></p>
 <p>这样<strong>五元组</strong>是啥你就知道了。</p>
-<p>下一步就是<strong>指定发送端的端口号重新发起TCP请求，同样的五元组，走同样的路径，按理说如果链路有问题，就肯定会复现。</strong></p>
-<p>如果不想改自己的代码，你可以用<strong>nc命令指定客户端端口</strong>看下能不能正常建立TCP连接。</p>
+<p>下一步就是<strong>指定发送端的端口号重新发起 TCP 请求，同样的五元组，走同样的路径，按理说如果链路有问题，就肯定会复现。</strong></p>
+<p>如果不想改自己的代码，你可以用<strong>nc 命令指定客户端端口</strong>看下能不能正常建立 TCP 连接。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -p 6666 baidu.com 80</span><br></pre></td></tr></table></figure>
 
-<p><code>-p 6666</code>是指定发出请求的客户端端口是<code>6666</code>，后面跟着的是<strong>连接的域名</strong>和<strong>80端口</strong>。</p>
+<p><code>-p 6666</code>是指定发出请求的客户端端口是<code>6666</code>，后面跟着的是<strong>连接的域名</strong>和<strong>80 端口</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image-20220805141757559.png" alt="通过nc成功建立tcp连接"></p>
 <p>假设用了<code>6666端口</code>的五元组去连接<strong>总是失败</strong>，改用<code>6667或其他端口</code><strong>却能成功</strong>，你可以带着这个信息去找找负责网络的同事。</p>
 <br>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>路由器可以通过OSPF协议生成路由表，利用数据包里的IP地址去跟路由表做匹配，选择最优路径后进行转发。</li>
-<li>当路由表一个都匹配不上时会走默认网关。当匹配上多个的时候，会先看<strong>匹配长度</strong>，如果一样就看<strong>管理距离</strong>，还一样就看<strong>路径成本</strong>。如果连路径成本都一样，那<strong>等价路径</strong>。如果路由开启了ECMP，那就可以同时利用这几条路径做传输。</li>
-<li>ECMP可以提高链路带宽，同时利用五元组做哈希键进行路径选择，保证了同一条连接的数据包走同一条路径，减少了乱序的情况。</li>
-<li>可以通过traceroute命令查看到链路上是否有用到ECMP的情况。</li>
-<li>开启了ECMP的网络链路中，TCP和ping命令可能走的路径不同，甚至同样是TCP，不同连接之间，走的路径也不同，因此出现了连接时好时坏的问题，实在是走投无路了，可以考虑下是不是跟ECMP有关。</li>
-<li>当然，<strong>遇到问题多怀疑自己，要相信绝大部分时候真的跟ECMP无关</strong>。</li>
+<li>路由器可以通过 OSPF 协议生成路由表，利用数据包里的 IP 地址去跟路由表做匹配，选择最优路径后进行转发。</li>
+<li>当路由表一个都匹配不上时会走默认网关。当匹配上多个的时候，会先看<strong>匹配长度</strong>，如果一样就看<strong>管理距离</strong>，还一样就看<strong>路径成本</strong>。如果连路径成本都一样，那<strong>等价路径</strong>。如果路由开启了 ECMP，那就可以同时利用这几条路径做传输。</li>
+<li>ECMP 可以提高链路带宽，同时利用五元组做哈希键进行路径选择，保证了同一条连接的数据包走同一条路径，减少了乱序的情况。</li>
+<li>可以通过 traceroute 命令查看到链路上是否有用到 ECMP 的情况。</li>
+<li>开启了 ECMP 的网络链路中，TCP 和 ping 命令可能走的路径不同，甚至同样是 TCP，不同连接之间，走的路径也不同，因此出现了连接时好时坏的问题，实在是走投无路了，可以考虑下是不是跟 ECMP 有关。</li>
+<li>当然，<strong>遇到问题多怀疑自己，要相信绝大部分时候真的跟 ECMP 无关</strong>。</li>
 </ul>
 <br>
 
@@ -418,14 +418,14 @@
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>兄弟们。</p>
 <p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
 <p>但我今天不想。</p>
-<p>因为越是这样，评论区里叫我diao毛的兄弟就越多。</p>
-<p><strong>上海快40°的天气，你们竟然能说出如此冰冷的话。</strong></p>
+<p>因为越是这样，评论区里叫我 diao 毛的兄弟就越多。</p>
+<p><strong>上海快 40° 的天气，你们竟然能说出如此冰冷的话。</strong></p>
 <p>但是。</p>
 <p>只要你们还能给我文章右下角来个<strong>点赞和在看</strong>的话。</p>
 <p>这口气，我还能忍。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白debug】<br><img src="https://cdn.xiaobaidebug.top/%E5%B0%8F%E7%99%BDdebug%E5%8A%A8%E5%9B%BE%E4%BA%8C%E7%BB%B4%E7%A0%81-20210908204913011.gif"></p>
+<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -435,8 +435,8 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi-20220806162638482.gif"></p>
 <h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然IP层会分片，为什么TCP层也还要分段？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -558,7 +558,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84"><span class="nav-number">1.</span> <span class="nav-text">网络路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E7%94%B1%E4%BB%80%E4%B9%88%E5%86%B3%E5%AE%9A%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">路径由什么决定？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E7%9A%84%E7%94%9F%E6%88%90"><span class="nav-number">2.1.</span> <span class="nav-text">路由表的生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E5%86%B3%E5%AE%9A%E6%95%B0%E6%8D%AE%E5%8C%85%E8%B7%AF%E5%BE%84"><span class="nav-number">2.2.</span> <span class="nav-text">路由表决定数据包路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E7%9A%84%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="nav-number">2.3.</span> <span class="nav-text">路由表的匹配规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ECMP%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">ECMP有什么用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E4%BC%9A%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">2.5.</span> <span class="nav-text">乱序会有什么问题？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ECMP%E7%9A%84%E8%B7%AF%E5%BE%84%E9%80%89%E6%8B%A9%E7%AD%96%E7%95%A5"><span class="nav-number">2.6.</span> <span class="nav-text">ECMP的路径选择策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP%E5%92%8CPing%E8%B5%B0%E7%9A%84%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84%E4%B8%80%E6%A0%B7%E5%90%97"><span class="nav-number">3.</span> <span class="nav-text">TCP和Ping走的网络路径一样吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%A0%B7%E9%83%BD%E7%94%A8TCP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%8C%85%E8%B5%B0%E7%9A%84%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84%E4%B8%80%E6%A0%B7%E5%90%97"><span class="nav-number">4.</span> <span class="nav-text">同样都用TCP协议，数据包走的网络路径一样吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%99%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E6%8E%92%E6%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">利用这个知识点排查问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84"><span class="nav-number">1.</span> <span class="nav-text">网络路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E7%94%B1%E4%BB%80%E4%B9%88%E5%86%B3%E5%AE%9A%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">路径由什么决定？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E7%9A%84%E7%94%9F%E6%88%90"><span class="nav-number">2.1.</span> <span class="nav-text">路由表的生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E5%86%B3%E5%AE%9A%E6%95%B0%E6%8D%AE%E5%8C%85%E8%B7%AF%E5%BE%84"><span class="nav-number">2.2.</span> <span class="nav-text">路由表决定数据包路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E7%9A%84%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="nav-number">2.3.</span> <span class="nav-text">路由表的匹配规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ECMP-%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">ECMP 有什么用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E4%BC%9A%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">2.5.</span> <span class="nav-text">乱序会有什么问题？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ECMP-%E7%9A%84%E8%B7%AF%E5%BE%84%E9%80%89%E6%8B%A9%E7%AD%96%E7%95%A5"><span class="nav-number">2.6.</span> <span class="nav-text">ECMP 的路径选择策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-%E5%92%8C-Ping-%E8%B5%B0%E7%9A%84%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84%E4%B8%80%E6%A0%B7%E5%90%97"><span class="nav-number">3.</span> <span class="nav-text">TCP 和 Ping 走的网络路径一样吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%A0%B7%E9%83%BD%E7%94%A8-TCP-%E5%8D%8F%E8%AE%AE%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%8C%85%E8%B5%B0%E7%9A%84%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84%E4%B8%80%E6%A0%B7%E5%90%97"><span class="nav-number">4.</span> <span class="nav-text">同样都用 TCP 协议，数据包走的网络路径一样吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%99%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E6%8E%92%E6%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">利用这个知识点排查问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -574,7 +574,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">54</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

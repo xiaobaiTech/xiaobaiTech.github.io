@@ -5,20 +5,17 @@ tags:
 categories: "golang面试题"
 ---
 
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
-> 文章持续更新，可以微信搜一搜「小白debug」第一时间阅读，回复【教程】获golang免费视频教程。本文已经收录在GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎Star。
-
-
-
-### GM模型是什么
+### GM 模型是什么
 
 ![GM图](https://cdn.xiaobaidebug.top/image/GM%E5%9B%BE.png)
 
-
-
 在 `Go 1.1`版本之前，其实用的就是`GM`模型。
+
 <!-- more -->
-- **G**，协程。通常在代码里用  `go`  关键字执行一个方法，那么就等于起了一个`G`。
+
+- **G**，协程。通常在代码里用 `go` 关键字执行一个方法，那么就等于起了一个`G`。
 
 - **M**，**内核**线程，操作系统内核其实看不见`G`和`P`，只知道自己在执行一个线程。`G`和`P`都是在**用户层**上的实现。
 
@@ -26,13 +23,9 @@ categories: "golang面试题"
 
 并发量小的时候还好，当并发量大了，这把大锁，就成为了**性能瓶颈**。
 
-
-
 ![GM模型](https://cdn.xiaobaidebug.top/image/GM%E6%A8%A1%E5%9E%8B.gif)
 
-
-
-### GMP模型是什么
+### GMP 模型是什么
 
 ![GMP图](https://cdn.xiaobaidebug.top/image/GMP图.png)
 
@@ -42,7 +35,7 @@ categories: "golang面试题"
 
 - `P` 的加入，还带来了一个**本地协程队列**，跟前面提到的**全局队列**类似，也是用于存放`G`，想要获取等待运行的`G`，会**优先**从本地队列里拿，访问本地队列无需加锁。而全局协程队列依然是存在的，但是功能被弱化，不到**万不得已**是不会去全局队列里拿`G`的。
 
-- `GM`模型里M想要运行`G`，直接去全局队列里拿就行了；`GMP`模型里，`M`想要运行`G`，就得先获取`P`，然后从 `P` 的本地队列获取 `G`。
+- `GM`模型里 M 想要运行`G`，直接去全局队列里拿就行了；`GMP`模型里，`M`想要运行`G`，就得先获取`P`，然后从 `P` 的本地队列获取 `G`。
 
 ![GMP模型](https://cdn.xiaobaidebug.top/image/GMP%E6%A8%A1%E5%9E%8B1.gif)
 
@@ -52,7 +45,7 @@ categories: "golang面试题"
 
 ![GMP模型-获取全局协程队列](https://cdn.xiaobaidebug.top/image/GMP%E6%A8%A1%E5%9E%8B-%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8D%8F%E7%A8%8B%E9%98%9F%E5%88%97.gif)
 
-- 如果全局队列为空时，`M` 会从其他 `P` 的本地队列**偷（stealing）一半G**放到自己 `P` 的本地队列。
+- 如果全局队列为空时，`M` 会从其他 `P` 的本地队列**偷（stealing）一半 G**放到自己 `P` 的本地队列。
 
 ![GMP模型-stealing](https://cdn.xiaobaidebug.top/image/GMP%E6%A8%A1%E5%9E%8B-stealing2.gif)
 
@@ -60,51 +53,34 @@ categories: "golang面试题"
 
 ![GMP模型-循环执行](https://cdn.xiaobaidebug.top/image/GMP%E6%A8%A1%E5%9E%8B4.gif)
 
+### 为什么 P 的逻辑不直接加在 M 上
 
+主要还是因为`M`其实是**内核**线程，内核只知道自己在跑线程，而`golang`的运行时（包括调度，垃圾回收等）其实都是**用户空间**里的逻辑。操作系统内核哪里还知道，也不需要知道用户空间的 golang 应用原来还有那么多花花肠子。这一切逻辑交给应用层自己去做就好，毕竟改内核线程的逻辑也不合适啊。
 
-
-
-### 为什么P的逻辑不直接加在M上
-
-主要还是因为`M`其实是**内核**线程，内核只知道自己在跑线程，而`golang`的运行时（包括调度，垃圾回收等）其实都是**用户空间**里的逻辑。操作系统内核哪里还知道，也不需要知道用户空间的golang应用原来还有那么多花花肠子。这一切逻辑交给应用层自己去做就好，毕竟改内核线程的逻辑也不合适啊。
-
-
-
->  如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
+> 如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
 
 我是小白，我们下期见。
 
-
-
 ### 参考资料
 
-[1]《Golang 调度器 GMP 原理与调度全分析》  ——Aceld :https://learnku.com/articles/41728  
+[1]《Golang 调度器 GMP 原理与调度全分析》 ——Aceld :https://learnku.com/articles/41728
 
-[2]《GMP模型为什么要有P》   ——煎鱼 :https://mp.weixin.qq.com/s/an7dml9NLOhqOZjEGLdEEw
+[2]《GMP 模型为什么要有 P》 ——煎鱼 :https://mp.weixin.qq.com/s/an7dml9NLOhqOZjEGLdEEw
 
-[3]《深度解密Go语言之Scheduler》 ——qcrao :https://qcrao.com/2019/09/02/dive-into-go-scheduler/#%E4%BB%80%E4%B9%88%E6%98%AF-scheduler 
-
-
+[3]《深度解密 Go 语言之 Scheduler》 ——qcrao :https://qcrao.com/2019/09/02/dive-into-go-scheduler/#%E4%BB%80%E4%B9%88%E6%98%AF-scheduler
 
 ### 文章推荐：
 
-- [i/o timeout，希望你不要踩到这个net/http包的坑](https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q) 
-- [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ) 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg) 
-- [我感觉，我可能要拿图灵奖了。。。](https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA) 
-- [给大家丢脸了，用了三年golang，我还是没答对这道内存泄漏题](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)
-- [硬核！漫画图解HTTP知识点+面试题](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA) 
-- [TCP粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg) 
-- [硬核图解！30张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ) 
+- [i/o timeout，希望你不要踩到这个 net/http 包的坑](https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q)
+- [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ)
+- [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
+- [我感觉，我可能要拿图灵奖了。。。](https://mp.weixin.qq.com/s/rLLfj883lJbWr21wHAJTJA)
+- [给大家丢脸了，用了三年 golang，我还是没答对这道内存泄漏题](https://mp.weixin.qq.com/s/T6XXaFFyyOJioD6dqDJpFg)
+- [硬核！漫画图解 HTTP 知识点+面试题](https://mp.weixin.qq.com/s/T41YBEmG4lkxokDLzRxVgA)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
+- [硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ)
 
+###### 别说了，关注公众号:【小白 debug】，一起在知识的海洋里呛水吧
 
-
-
-
-###### 别说了，关注公众号:【小白debug】，一起在知识的海洋里呛水吧
-
-关注公众号:【小白debug】
-![](https://cdn.xiaobaidebug.top/image/小白debug动图二维码-20210908204913011.gif)
-
-
-
+关注公众号:【小白 debug】
+![](https://cdn.xiaobaidebug.top/1696069689495.png)
