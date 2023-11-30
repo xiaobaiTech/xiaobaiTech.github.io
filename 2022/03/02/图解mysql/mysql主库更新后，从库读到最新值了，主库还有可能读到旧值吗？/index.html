@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="article:published_time" content="2022-03-02T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:47.774Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.478Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/1539510639669-20220302001234401.jpg">
 
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,7 +255,7 @@
 </li>
 </ul>
 <p>毕竟面试官都这么问了，那当然是有可能的，那至于是为啥，以及怎么做到的，今天我们来好好聊聊。</p>
-<h3 id="正常的主从更新流程"><a href="#正常的主从更新流程" class="headerlink" title="正常的主从更新流程"></a>正常的主从更新流程</h3><p>比如我在主库和从库都有张 user 表，此时有以下两条数据。</p>
+<h2 id="正常的主从更新流程"><a href="#正常的主从更新流程" class="headerlink" title="正常的主从更新流程"></a>正常的主从更新流程</h2><p>比如我在主库和从库都有张 user 表，此时有以下两条数据。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%81.png" alt="数据库原始状态"></p>
 <p>正常情况下，我们往主库执行写操作，比如更新一条数据，执行</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update <span class="keyword">user</span> <span class="keyword">set</span> age <span class="operator">=</span> <span class="number">50</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
@@ -297,7 +297,7 @@
 <p>到这里，我们可以开始回答文章开头的第一个问题。</p>
 <br>
 
-<h3 id="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"><a href="#主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？" class="headerlink" title="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"></a>主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</h3><p>这是可能的，上面提到的主从同步的 5 个步骤里，第 3 到第 5 步骤，都需要时间去执行，而这些步骤的执行时间总和，就是我们常说的<strong>主从延迟</strong>。</p>
+<h2 id="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"><a href="#主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？" class="headerlink" title="主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？"></a>主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</h2><p>这是可能的，上面提到的主从同步的 5 个步骤里，第 3 到第 5 步骤，都需要时间去执行，而这些步骤的执行时间总和，就是我们常说的<strong>主从延迟</strong>。</p>
 <p>当更新一行数据后，立马去读主库，主库的数据肯定是最新值，这点没什么好说的，但<strong>如果此时主从延迟过大，这时候读从库，同步可能还没完成，因此读到的就是旧值。</strong></p>
 <p>在实际的开发当中，主从延迟也非常常见，当数据库压力稍微大点，主从延迟就能到 100ms 甚至 1s 以上。</p>
 <p>具体的主从延迟时间可以在从库中执行 <code>show slave status \G;</code>来查看，其中里面的<code>Seconds_Behind_Master</code>则是主从延迟的时间，单位是秒。</p>
@@ -306,11 +306,11 @@
 <p>所以如果你有<strong>写数据后就立马要读数据</strong>的场景，要是此时读的是从库，很有可能会读到<strong>更新前</strong>的旧数据，如果你对数据一致性有较高要求，这种时候<strong>建议读主库</strong>。</p>
 <br>
 
-<h3 id="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"><a href="#主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？" class="headerlink" title="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"></a>主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</h3><p>那另一个问题就来了，如果从库都读到最新值了，那说明<strong>主库肯定已经更新完成了</strong>，那此时读主库是不是只能读到最新值呢？</p>
+<h2 id="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"><a href="#主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？" class="headerlink" title="主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？"></a>主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</h2><p>那另一个问题就来了，如果从库都读到最新值了，那说明<strong>主库肯定已经更新完成了</strong>，那此时读主库是不是只能读到最新值呢？</p>
 <p><strong>还真不是的</strong>，待会我给大家复现下，但在这之前我们了解一些<strong>前置知识点</strong>。</p>
 <br>
 
-<h4 id="mysql-的四种隔离级别"><a href="#mysql-的四种隔离级别" class="headerlink" title="mysql 的四种隔离级别"></a>mysql 的四种隔离级别</h4><p>这个绝对是面试八股文老股了。mysql 有四种隔离级别，分别是<strong>读未提交（Read uncommitted），读提交（Read committed），可重复读（Repeatable read）和串行化（Serializable）</strong>。在不同的隔离级别下，并发读写效果会不太一样。</p>
+<h3 id="mysql-的四种隔离级别"><a href="#mysql-的四种隔离级别" class="headerlink" title="mysql 的四种隔离级别"></a>mysql 的四种隔离级别</h3><p>这个绝对是面试八股文老股了。mysql 有四种隔离级别，分别是<strong>读未提交（Read uncommitted），读提交（Read committed），可重复读（Repeatable read）和串行化（Serializable）</strong>。在不同的隔离级别下，并发读写效果会不太一样。</p>
 <p>当前数据库处于什么隔离级别可以通过执行 <code>select @@tx_isolation;</code> 查看到。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@tx</span>_isolation;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> @<span class="variable">@tx</span>_isolation  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
 
@@ -364,17 +364,17 @@
 <p>算了。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
 <p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有意思的话题。就<strong>超！开！心！</strong></p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -496,7 +496,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9B%B4%E6%96%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">正常的主从更新流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%B8%BB%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql-%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">mysql 的四种隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9B%B4%E6%96%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">正常的主从更新流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%B8%BB%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%BB%8E%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E6%9B%B4%E6%96%B0%E5%90%8E%EF%BC%8C%E4%BB%8E%E5%BA%93%E9%83%BD%E8%AF%BB%E5%88%B0%E6%9C%80%E6%96%B0%E5%80%BC%E4%BA%86%EF%BC%8C%E4%B8%BB%E5%BA%93%E8%BF%98%E6%9C%89%E5%8F%AF%E8%83%BD%E8%AF%BB%E5%88%B0%E6%97%A7%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">mysql 的四种隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

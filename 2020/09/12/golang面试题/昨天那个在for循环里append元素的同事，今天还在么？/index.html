@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/23/cPoMQsnbLIExiBZ.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/09/22/wqH8c8.jpg">
 <meta property="article:published_time" content="2020-09-12T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-04-19T12:18:17.480Z">
+<meta property="article:modified_time" content="2023-11-30T23:38:34.942Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/09/23/cPoMQsnbLIExiBZ.png">
 
@@ -200,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
+                <time title="修改时间：2023-12-01 07:38:34" itemprop="dateModified" datetime="2023-12-01T07:38:34+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -225,34 +225,43 @@
       
         <p><img src="https://i.loli.net/2020/09/23/cPoMQsnbLIExiBZ.png"></p>
 <span id="more"></span>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s := []<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> _, v:=<span class="keyword">range</span> s &#123;</span><br><span class="line">		s =<span class="built_in">append</span>(s, v)</span><br><span class="line">		fmt.Printf(<span class="string">&quot;len(s)=%v\n&quot;</span>,<span class="built_in">len</span>(s))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s := []<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> _, v:=<span class="keyword">range</span> s &#123;</span><br><span class="line">		s =<span class="built_in">append</span>(s, v)</span><br><span class="line">		fmt.Printf(<span class="string">&quot;len(s)=%v\n&quot;</span>,<span class="built_in">len</span>(s))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p><strong>这个代码会造成死循环吗？</strong></p>
-<h2 id="怎么答"><a href="#怎么答" class="headerlink" title="怎么答"></a>怎么答</h2><ul>
+<h1 id="怎么答"><a href="#怎么答" class="headerlink" title="怎么答"></a>怎么答</h1><ul>
 <li><strong>不会死循环</strong>，<code>for range</code>其实是<code>golang</code>的<code>语法糖</code>，在循环开始前会获取切片的长度 <code>len(切片)</code>，然后再执行<code>len(切片)</code>次数的循环。</li>
 </ul>
-<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><ul>
-<li><code>for range</code>的源码是<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The loop we generate:</span></span><br><span class="line"><span class="comment">//   for_temp := range</span></span><br><span class="line"><span class="comment">//   len_temp := len(for_temp)</span></span><br><span class="line"><span class="comment">//   for index_temp = 0; index_temp &lt; len_temp; index_temp++ &#123;</span></span><br><span class="line"><span class="comment">//           value_temp = for_temp[index_temp]</span></span><br><span class="line"><span class="comment">//           index = index_temp</span></span><br><span class="line"><span class="comment">//           value = value_temp</span></span><br><span class="line"><span class="comment">//           original body</span></span><br><span class="line"><span class="comment">//   &#125;</span></span><br></pre></td></tr></table></figure></li>
+<h1 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h1><ul>
+<li><code>for range</code>的源码是</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The loop we generate:</span></span><br><span class="line"><span class="comment">//   for_temp := range</span></span><br><span class="line"><span class="comment">//   len_temp := len(for_temp)</span></span><br><span class="line"><span class="comment">//   for index_temp = 0; index_temp &lt; len_temp; index_temp++ &#123;</span></span><br><span class="line"><span class="comment">//           value_temp = for_temp[index_temp]</span></span><br><span class="line"><span class="comment">//           index = index_temp</span></span><br><span class="line"><span class="comment">//           value = value_temp</span></span><br><span class="line"><span class="comment">//           original body</span></span><br><span class="line"><span class="comment">//   &#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
 <li>上面的代码会被编译器认为是</li>
 </ul>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s := []<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;</span><br><span class="line">	for_temp := s</span><br><span class="line">	len_temp := <span class="built_in">len</span>(for_temp)</span><br><span class="line">	<span class="keyword">for</span> index_temp := <span class="number">0</span>; index_temp &lt; len_temp; index_temp++ &#123;</span><br><span class="line">		value_temp := for_temp[index_temp]</span><br><span class="line">		_ = index_temp</span><br><span class="line">		value := value_temp</span><br><span class="line">		<span class="comment">// 以下是 original body</span></span><br><span class="line">		s =<span class="built_in">append</span>(s, value)</span><br><span class="line">		fmt.Printf(<span class="string">&quot;len(s)=%v\n&quot;</span>,<span class="built_in">len</span>(s))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>代码运行输出<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">len</span>(s)=<span class="number">6</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">7</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">8</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">9</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">10</span></span><br></pre></td></tr></table></figure></li>
+<li>代码运行输出</li>
 </ul>
-<p><strong>所以说，那个同事用的是golang吗？</strong></p>
-<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lK6I353Iw08robqpmPB6-g">golang面试官：for select时，如果通道已经关闭会怎么样？如果只有一个case呢？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qm-8pvHBVRmLQQ4_DHc1Tw">golang面试题：对已经关闭的的chan进行读写，会怎么样？为什么？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ixJu0wrGXsCcGzveCqnr6A">golang面试题：对未初始化的的chan进行读写，会怎么样？为什么？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WK9StkC3Jfy-o1dUqlo7Dg">golang 面试题：reflect（反射包）如何获取字段 tag？为什么 json 包不能导出私有变量的 tag？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zZM_iLuopyenI0LD6VYZGw">golang面试题：json包变量不加tag会怎么样？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4QAxGEr9KxtZXyfSG8VoCQ">golang面试题：怎么避免内存逃逸？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4YYR1eYFIFsNOaTxL4Q-eQ">golang面试题：简单聊聊内存逃逸？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d80m0hgoKcHfKp4ZXH1M4A">golang面试题：字符串转成byte数组，会发生内存拷贝吗？</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/OIRPOszH-rTJp03AeRgnRQ">golang面试题：翻转含有<code>中文、数字、英文字母</code>的字符串</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hPYdiHYRufimyKT4FcW4HA">golang面试题：拷贝大切片一定比小切片代价大吗？</a>   </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IkOwh9bh36vK6JgN7b3KjA">golang面试题：能说说uintptr和unsafe.Pointer的区别吗？</a></li>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">len</span>(s)=<span class="number">6</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">7</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">8</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">9</span></span><br><span class="line"><span class="built_in">len</span>(s)=<span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>所以说，那个同事用的是 golang 吗？</strong></p>
+<h1 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lK6I353Iw08robqpmPB6-g">golang 面试官：for select 时，如果通道已经关闭会怎么样？如果只有一个 case 呢？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qm-8pvHBVRmLQQ4_DHc1Tw">golang 面试题：对已经关闭的的 chan 进行读写，会怎么样？为什么？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ixJu0wrGXsCcGzveCqnr6A">golang 面试题：对未初始化的的 chan 进行读写，会怎么样？为什么？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WK9StkC3Jfy-o1dUqlo7Dg">golang 面试题：reflect（反射包）如何获取字段 tag？为什么 json 包不能导出私有变量的 tag？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zZM_iLuopyenI0LD6VYZGw">golang 面试题：json 包变量不加 tag 会怎么样？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4QAxGEr9KxtZXyfSG8VoCQ">golang 面试题：怎么避免内存逃逸？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4YYR1eYFIFsNOaTxL4Q-eQ">golang 面试题：简单聊聊内存逃逸？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d80m0hgoKcHfKp4ZXH1M4A">golang 面试题：字符串转成 byte 数组，会发生内存拷贝吗？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/OIRPOszH-rTJp03AeRgnRQ">golang 面试题：翻转含有<code>中文、数字、英文字母</code>的字符串</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hPYdiHYRufimyKT4FcW4HA">golang 面试题：拷贝大切片一定比小切片代价大吗？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IkOwh9bh36vK6JgN7b3KjA">golang 面试题：能说说 uintptr 和 unsafe.Pointer 的区别吗？</a></li>
 </ul>
-<h6 id="如果你想每天学习一个知识点？"><a href="#如果你想每天学习一个知识点？" class="headerlink" title="如果你想每天学习一个知识点？"></a>如果你想每天学习一个知识点？</h6><p><img src="https://s1.ax1x.com/2020/09/22/wqH8c8.jpg"></p>
+<h5 id="如果你想每天学习一个知识点？"><a href="#如果你想每天学习一个知识点？" class="headerlink" title="如果你想每天学习一个知识点？"></a>如果你想每天学习一个知识点？</h5><p><img src="https://s1.ax1x.com/2020/09/22/wqH8c8.jpg"></p>
 
     </div>
 
@@ -373,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%AD%94"><span class="nav-number">2.</span> <span class="nav-text">怎么答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">3.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%83%B3%E6%AF%8F%E5%A4%A9%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9F"><span class="nav-number">4.0.0.0.1.</span> <span class="nav-text">如果你想每天学习一个知识点？</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%AD%94"><span class="nav-number">2.</span> <span class="nav-text">怎么答</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">3.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%83%B3%E6%AF%8F%E5%A4%A9%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9F"><span class="nav-number">4.0.0.0.1.</span> <span class="nav-text">如果你想每天学习一个知识点？</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

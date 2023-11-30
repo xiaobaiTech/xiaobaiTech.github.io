@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC80YmNjMGYwNjI3MzE0Y2JiYWRkMWI0ODRjNTE4OTRkOS5wbmc?x-oss-process=image/format,png">
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS85ODZiZWU0YS03NzQ1LTQ0YjMtYTFhOS0wMzc5ODIzOGNkNmQucG5n?x-oss-process=image/format,png">
 <meta property="article:published_time" content="2020-06-11T14:57:55.000Z">
-<meta property="article:modified_time" content="2022-04-19T12:18:17.478Z">
+<meta property="article:modified_time" content="2023-11-30T23:38:34.942Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC8xNDVkOWZiZjQ0NzM0M2Q5YmIxODM4YjNmMzk4MjRhNi5wbmc?x-oss-process=image/format,png">
 
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-19 20:18:17" itemprop="dateModified" datetime="2022-04-19T20:18:17+08:00">2022-04-19</time>
+                <time title="修改时间：2023-12-01 07:38:34" itemprop="dateModified" datetime="2023-12-01T07:38:34+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -229,23 +229,24 @@
       
         <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC8xNDVkOWZiZjQ0NzM0M2Q5YmIxODM4YjNmMzk4MjRhNi5wbmc?x-oss-process=image/format,png"></p>
 <span id="more"></span>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>对<strong>已经关闭</strong>的的<code>chan</code>进行读写，会怎么样？<strong>为什么？</strong></p>
-<h2 id="怎么答"><a href="#怎么答" class="headerlink" title="怎么答"></a>怎么答</h2><ul>
+
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>对<strong>已经关闭</strong>的的<code>chan</code>进行读写，会怎么样？<strong>为什么？</strong></p>
+<h1 id="怎么答"><a href="#怎么答" class="headerlink" title="怎么答"></a>怎么答</h1><ul>
 <li>读<strong>已经关闭</strong>的<code>chan</code>能一直读到东西，但是读到的内容根据通道内<code>关闭前</code>是否有元素而不同。<ul>
-<li>如果<code>chan</code>关闭前，<code>buffer</code>内有元素<strong>还未读</strong>,会正确读到<code>chan</code>内的值，且返回的第二个bool值（是否读成功）为<code>true</code>。</li>
+<li>如果<code>chan</code>关闭前，<code>buffer</code>内有元素<strong>还未读</strong>,会正确读到<code>chan</code>内的值，且返回的第二个 bool 值（是否读成功）为<code>true</code>。</li>
 <li>如果<code>chan</code>关闭前，<code>buffer</code>内有元素<strong>已经被读完</strong>，<code>chan</code>内无值，接下来所有接收的值都会非阻塞直接成功，返回 <code>channel</code> 元素的<strong>零值</strong>，但是第二个<code>bool</code>值一直为<code>false</code>。</li>
 </ul>
 </li>
 <li>写<strong>已经关闭</strong>的<code>chan</code>会<code>panic</code></li>
 </ul>
-<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><h5 id="1-写已经关闭的chan"><a href="#1-写已经关闭的chan" class="headerlink" title="1.写已经关闭的chan"></a>1.写已经关闭的chan</h5><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC9lYjlhZGRhNDU3NGU0ZTAyYjJlODczN2JkODI5NWE0NC5wbmc?x-oss-process=image/format,png"></p>
+<h1 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h1><h4 id="1-写已经关闭的-chan"><a href="#1-写已经关闭的-chan" class="headerlink" title="1.写已经关闭的 chan"></a>1.写已经关闭的 chan</h4><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC9lYjlhZGRhNDU3NGU0ZTAyYjJlODczN2JkODI5NWE0NC5wbmc?x-oss-process=image/format,png"></p>
 <ul>
 <li>注意这个<code>send on closed channel</code>，待会会提到。</li>
 </ul>
-<h5 id="2-读已经关闭的chan"><a href="#2-读已经关闭的chan" class="headerlink" title="2.读已经关闭的chan"></a>2.读已经关闭的chan</h5><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC8wZTcyNTVkNzI5NDI0Y2NhYTBhNGNjNmQ5ZGU1MTBkMi5wbmc?x-oss-process=image/format,png"></p>
-<h2 id="多问一句"><a href="#多问一句" class="headerlink" title="多问一句"></a>多问一句</h2><p><strong>1.为什么写已经关闭的<code>chan</code>就会<code>panic</code>呢？</strong><br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC81Njc2MDBmYmEyNDE0MjcwYWQ3YWU0YTFjY2RhODQwMy5wbmc?x-oss-process=image/format,png"></p>
+<h4 id="2-读已经关闭的-chan"><a href="#2-读已经关闭的-chan" class="headerlink" title="2.读已经关闭的 chan"></a>2.读已经关闭的 chan</h4><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC8wZTcyNTVkNzI5NDI0Y2NhYTBhNGNjNmQ5ZGU1MTBkMi5wbmc?x-oss-process=image/format,png"></p>
+<h1 id="多问一句"><a href="#多问一句" class="headerlink" title="多问一句"></a>多问一句</h1><p><strong>1.为什么写已经关闭的<code>chan</code>就会<code>panic</code>呢？</strong><br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC81Njc2MDBmYmEyNDE0MjcwYWQ3YWU0YTFjY2RhODQwMy5wbmc?x-oss-process=image/format,png"></p>
 <ul>
-<li>当<code>c.closed != 0</code>则为通道关闭，此时执行写，源码提示直接panic，输出的内容就是上面提到的<code>&quot;send on closed channel&quot;</code>。</li>
+<li>当<code>c.closed != 0</code>则为通道关闭，此时执行写，源码提示直接 panic，输出的内容就是上面提到的<code>&quot;send on closed channel&quot;</code>。</li>
 </ul>
 <p><strong>2. 为什么读已关闭的<code>chan</code>会一直能读到值？</strong><br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zdGF0aWMwMS5pbWdrci5jb20vdGVtcC80YmNjMGYwNjI3MzE0Y2JiYWRkMWI0ODRjNTE4OTRkOS5wbmc?x-oss-process=image/format,png"></p>
 <ul>
@@ -257,18 +258,18 @@
 </ul>
 </li>
 </ul>
-<h4 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ixJu0wrGXsCcGzveCqnr6A">对未初始化的的chan进行读写，会怎么样？为什么？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WK9StkC3Jfy-o1dUqlo7Dg">golang 面试题：​reflect（反射包）如何获取字段 tag​？为什么 json 包不能导出私有变量的 tag？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zZM_iLuopyenI0LD6VYZGw">golang面试题：json包变量不加tag会怎么样？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4QAxGEr9KxtZXyfSG8VoCQ">golang面试题：怎么避免内存逃逸？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4YYR1eYFIFsNOaTxL4Q-eQ">golang面试题：简单聊聊内存逃逸？</a> </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d80m0hgoKcHfKp4ZXH1M4A">golang面试题：字符串转成byte数组，会发生内存拷贝吗？</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/OIRPOszH-rTJp03AeRgnRQ">golang面试题：翻转含有<code>中文、数字、英文字母</code>的字符串</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hPYdiHYRufimyKT4FcW4HA">golang面试题：拷贝大切片一定比小切片代价大吗？</a>   </li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IkOwh9bh36vK6JgN7b3KjA">golang面试题：能说说uintptr和unsafe.Pointer的区别吗？</a></li>
+<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ixJu0wrGXsCcGzveCqnr6A">对未初始化的的 chan 进行读写，会怎么样？为什么？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WK9StkC3Jfy-o1dUqlo7Dg">golang 面试题：​reflect（反射包）如何获取字段 tag​？为什么 json 包不能导出私有变量的 tag？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zZM_iLuopyenI0LD6VYZGw">golang 面试题：json 包变量不加 tag 会怎么样？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4QAxGEr9KxtZXyfSG8VoCQ">golang 面试题：怎么避免内存逃逸？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4YYR1eYFIFsNOaTxL4Q-eQ">golang 面试题：简单聊聊内存逃逸？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d80m0hgoKcHfKp4ZXH1M4A">golang 面试题：字符串转成 byte 数组，会发生内存拷贝吗？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/OIRPOszH-rTJp03AeRgnRQ">golang 面试题：翻转含有<code>中文、数字、英文字母</code>的字符串</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hPYdiHYRufimyKT4FcW4HA">golang 面试题：拷贝大切片一定比小切片代价大吗？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IkOwh9bh36vK6JgN7b3KjA">golang 面试题：能说说 uintptr 和 unsafe.Pointer 的区别吗？</a></li>
 </ul>
-<h6 id="如果你想每天学习一个知识点？"><a href="#如果你想每天学习一个知识点？" class="headerlink" title="如果你想每天学习一个知识点？"></a>如果你想每天学习一个知识点？</h6><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS85ODZiZWU0YS03NzQ1LTQ0YjMtYTFhOS0wMzc5ODIzOGNkNmQucG5n?x-oss-process=image/format,png"></p>
+<h5 id="如果你想每天学习一个知识点？"><a href="#如果你想每天学习一个知识点？" class="headerlink" title="如果你想每天学习一个知识点？"></a>如果你想每天学习一个知识点？</h5><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWdrci5jbi1iai51ZmlsZW9zLmNvbS85ODZiZWU0YS03NzQ1LTQ0YjMtYTFhOS0wMzc5ODIzOGNkNmQucG5n?x-oss-process=image/format,png"></p>
 
     </div>
 
@@ -389,7 +390,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%AD%94"><span class="nav-number">2.</span> <span class="nav-text">怎么答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%86%99%E5%B7%B2%E7%BB%8F%E5%85%B3%E9%97%AD%E7%9A%84chan"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">1.写已经关闭的chan</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E8%AF%BB%E5%B7%B2%E7%BB%8F%E5%85%B3%E9%97%AD%E7%9A%84chan"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">2.读已经关闭的chan</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E9%97%AE%E4%B8%80%E5%8F%A5"><span class="nav-number">4.</span> <span class="nav-text">多问一句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.0.1.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%83%B3%E6%AF%8F%E5%A4%A9%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9F"><span class="nav-number">4.0.1.0.1.</span> <span class="nav-text">如果你想每天学习一个知识点？</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%AD%94"><span class="nav-number">2.</span> <span class="nav-text">怎么答</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%86%99%E5%B7%B2%E7%BB%8F%E5%85%B3%E9%97%AD%E7%9A%84-chan"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">1.写已经关闭的 chan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%AF%BB%E5%B7%B2%E7%BB%8F%E5%85%B3%E9%97%AD%E7%9A%84-chan"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">2.读已经关闭的 chan</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E9%97%AE%E4%B8%80%E5%8F%A5"><span class="nav-number">4.</span> <span class="nav-text">多问一句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">4.0.1.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%83%B3%E6%AF%8F%E5%A4%A9%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9F"><span class="nav-number">4.0.1.0.1.</span> <span class="nav-text">如果你想每天学习一个知识点？</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

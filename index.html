@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -231,7 +231,7 @@
 <p>我们今天就来聊下这个话题。</p>
 <br>
 
-<h3 id="使用-socket-进行数据传输"><a href="#使用-socket-进行数据传输" class="headerlink" title="使用 socket 进行数据传输"></a>使用 socket 进行数据传输</h3><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
+<h2 id="使用-socket-进行数据传输"><a href="#使用-socket-进行数据传输" class="headerlink" title="使用 socket 进行数据传输"></a>使用 socket 进行数据传输</h2><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
 <p>socket 就像是一个<strong>电话或者邮箱</strong>（邮政的信箱）。当你想要发送消息的时候，拨通电话或者将信息塞到邮箱里，socket 内核会自动完成将数据传给对方的这个过程。</p>
 <p>基于 socket 我们可以选择使用 TCP 或 UDP 协议进行通信。</p>
 <p>对于 TCP 这样的可靠性协议，每次消息发出后都能明确知道对方收没收到，就<strong>像打电话一样</strong>，只要”喂喂”两下就能知道对方有没有在听。</p>
@@ -253,7 +253,7 @@
 <p>如果想要通过这个 socket 发消息，只需要操作这个 fd 就行了，比如执行 <code>send(fd, msg, ...)</code>，内核就会通过这个 fd 句柄找到 socket 然后进行发数据的操作。</p>
 <p><strong>如果一切顺利</strong>，此时对方执行接收消息的操作，也就是 <code>recv(fd, msg, ...)</code>，就能拿到你发的消息。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663602070263.gif" alt="udp发送接收过程"></p>
-<h3 id="对于异常情况的处理"><a href="#对于异常情况的处理" class="headerlink" title="对于异常情况的处理"></a>对于异常情况的处理</h3><p><strong>但如果不顺利呢？</strong></p>
+<h2 id="对于异常情况的处理"><a href="#对于异常情况的处理" class="headerlink" title="对于异常情况的处理"></a>对于异常情况的处理</h2><p><strong>但如果不顺利呢？</strong></p>
 <p>比如消息发到一半，丢包了呢?</p>
 <blockquote>
 <p>丢包的原因有很多，之前写过的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7126710506936598558">《用了 TCP 协议，就一定不会丢包吗？》</a>有详细聊到过，这里就不再展开。</p>
@@ -264,29 +264,29 @@
 <p>UDP 表示，”哦，是吗？然后呢？关我 x 事”</p>
 <p>TCP 态度就截然相反了，”啊？那可不行，是不是我发太快了呢？是不是链路太堵被别人影响到了呢？不过你放心，我肯定给你补发”</p>
 <p>TCP 老实人石锤了。我们来看下这个老实人在背后都默默做了哪些事情。</p>
-<h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>对于 TCP，它会给发出的消息打上一个<strong>编号（sequence）</strong>，接收方收到后回一个**确认(ack)**。发送方可以通过<code>ack</code>的数值知道接收方收到了哪些<code>sequence</code>的包。</p>
+<h3 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h3><p>对于 TCP，它会给发出的消息打上一个<strong>编号（sequence）</strong>，接收方收到后回一个**确认(ack)**。发送方可以通过<code>ack</code>的数值知道接收方收到了哪些<code>sequence</code>的包。</p>
 <p>如果长时间等不到对方的确认，TCP 就会重新发一次消息，这就是所谓的<strong>重传机制</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597929404.png" alt="TCP重传"></p>
 <br>
 
-<h4 id="流量控制机制"><a href="#流量控制机制" class="headerlink" title="流量控制机制"></a>流量控制机制</h4><p>但重传这件事本身对性能影响是比较严重的，所以是<strong>下下策</strong>。</p>
+<h3 id="流量控制机制"><a href="#流量控制机制" class="headerlink" title="流量控制机制"></a>流量控制机制</h3><p>但重传这件事本身对性能影响是比较严重的，所以是<strong>下下策</strong>。</p>
 <p>于是 TCP 就需要思考有没有办法可以尽量<strong>避免重传</strong>。</p>
 <p>因为数据发送方和接收方处理数据能力可能不同，因此如果可以根据双方的能力去调整发送的数据量就好了，于是就有了<strong>发送和接收窗口</strong>，基本上从名字就能看出它的作用，比如<strong>接收窗口的大小</strong>就是指，接收方当前<strong>能接收的数据量大小</strong>，<strong>发送窗口的大小</strong>就指发送方当前能发的数据量大小。TCP 根据窗口的大小去控制自己发送的数据量，这样就能大大减少丢包的概率。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597968469.png" alt="流量控制机制"></p>
 <br>
 
-<h4 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h4><p>接收方的接收到数据之后，会不断处理，<strong>处理能力也不是一成不变的</strong>，有时候处理的快些，那就可以收多点数据，处理的慢点那就希望对方能少发点数据。毕竟发多了就有可能处理不过来导致丢包，丢包会导致重传，这可是下下策。因此我们需要动态的去调节这个接收窗口的大小，于是就有了<strong>滑动窗口机制</strong>。</p>
+<h3 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h3><p>接收方的接收到数据之后，会不断处理，<strong>处理能力也不是一成不变的</strong>，有时候处理的快些，那就可以收多点数据，处理的慢点那就希望对方能少发点数据。毕竟发多了就有可能处理不过来导致丢包，丢包会导致重传，这可是下下策。因此我们需要动态的去调节这个接收窗口的大小，于是就有了<strong>滑动窗口机制</strong>。</p>
 <p>看到这里大家可能就有点迷了，<strong>流量控制和滑动窗口机制貌似很像，它们之间是啥关系？</strong>我总结一下。其实现在 TCP 是<strong>通过滑动窗口机制来实现流量控制机制的</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597995829.png" alt="滑动窗口机制"></p>
 <br>
 
-<h4 id="拥塞控制机制"><a href="#拥塞控制机制" class="headerlink" title="拥塞控制机制"></a>拥塞控制机制</h4><p>但这还不够，有时候发生丢包，<strong>并不是因为发送方和接收方的处理能力问题导致的</strong>。而是跟<strong>网络环境</strong>有关，大家可以将网络想象为一条公路。马路上可能堵满了别人家的车，只留下一辆车的空间。那就算你家有 5 辆车，目的地也正好有 5 个停车位，你也没办法同时全部一起上路。于是 TCP 希望能感知到外部的网络环境，根据网络环境及时调整自己的发包数量，比如马路只够两辆车跑，那我就只发两辆车。但外部环境这么复杂，TCP 是怎么感知到的呢？</p>
+<h3 id="拥塞控制机制"><a href="#拥塞控制机制" class="headerlink" title="拥塞控制机制"></a>拥塞控制机制</h3><p>但这还不够，有时候发生丢包，<strong>并不是因为发送方和接收方的处理能力问题导致的</strong>。而是跟<strong>网络环境</strong>有关，大家可以将网络想象为一条公路。马路上可能堵满了别人家的车，只留下一辆车的空间。那就算你家有 5 辆车，目的地也正好有 5 个停车位，你也没办法同时全部一起上路。于是 TCP 希望能感知到外部的网络环境，根据网络环境及时调整自己的发包数量，比如马路只够两辆车跑，那我就只发两辆车。但外部环境这么复杂，TCP 是怎么感知到的呢？</p>
 <p>TCP 会先慢慢试探的发数据，不断加码数据量，越发越多，先发一个，再发 2 个，4 个…。直到出现丢包，这样 TCP 就知道现在当前网络大概吃得消几个包了，这既是所谓的<strong>拥塞控制机制</strong>。</p>
 <p>不少人会疑惑流量控制和拥塞控制的关系。我这里小小的总结下。<strong>流量控制</strong>针对的是<strong>单个连接</strong>数据处理能力的控制，<strong>拥塞控制</strong>针对的是<strong>整个网络环境</strong>数据处理能力的控制。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663598420295.png" alt="1663598420295"></p>
 <br>
 
-<h4 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h4><p>但上面提到的都是怎么<strong>降低</strong>重传的概率，似乎重传这个事情就是无法避免的，<strong>那如果确实发生了，有没有办法降低它带来的影响呢？</strong></p>
+<h3 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h3><p>但上面提到的都是怎么<strong>降低</strong>重传的概率，似乎重传这个事情就是无法避免的，<strong>那如果确实发生了，有没有办法降低它带来的影响呢？</strong></p>
 <p>有。当我们需要发送一个超大的数据包时，如果这个数据包丢了，那就得重传同样大的数据包。但如果我能将其分成一小段一小段，那就算真丢了，那我也就只需要重传那一小段就好了，大大减小了重传的压力，这就是 TCP 的<strong>分段机制</strong>。</p>
 <p>而这个所谓的一小段的长度，在传输层叫<strong>MSS</strong>（<strong>Maximum Segment Size</strong>），数据包长度大于 MSS 则会分成 N 个小于等于 MSS 的包。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif" alt="MSS分包"></p>
@@ -296,12 +296,12 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%92%8CMTU%E7%9A%84%E5%8C%BA%E5%88%AB2.png" alt="MSS和MTU的区别"></p>
 <br>
 
-<h4 id="乱序重排机制"><a href="#乱序重排机制" class="headerlink" title="乱序重排机制"></a>乱序重排机制</h4><p>既然数据包会被分段，链路又这么复杂还会丢包，那数据包乱序也就显得不奇怪了。比如发数据包 1,2,3。1 号数据包走了其他网络路径，2 和 3 数据包先到，1 数据包后到，于是数据包顺序就成了 2,3,1。这一点 TCP 也考虑到了，依靠数据包的<code>sequence</code>，接收方就能知道数据包的先后顺序。</p>
+<h3 id="乱序重排机制"><a href="#乱序重排机制" class="headerlink" title="乱序重排机制"></a>乱序重排机制</h3><p>既然数据包会被分段，链路又这么复杂还会丢包，那数据包乱序也就显得不奇怪了。比如发数据包 1,2,3。1 号数据包走了其他网络路径，2 和 3 数据包先到，1 数据包后到，于是数据包顺序就成了 2,3,1。这一点 TCP 也考虑到了，依靠数据包的<code>sequence</code>，接收方就能知道数据包的先后顺序。</p>
 <p>后发的数据包先到是吧，那就先放到专门的<strong>乱序队列</strong>中，等数据都到齐后，重新整理好乱序队列的数据包顺序后再给到用户，这就是<strong>乱序重排机制</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B9%B1%E5%BA%8F%E9%98%9F%E5%88%97%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%88%B0%E6%9D%A5.drawio.png" alt="乱序队列等待数据包的到来"></p>
 <br>
 
-<h4 id="连接机制"><a href="#连接机制" class="headerlink" title="连接机制"></a>连接机制</h4><p>前面提到，UDP 是无连接的，而 TCP 是面向连接的。</p>
+<h3 id="连接机制"><a href="#连接机制" class="headerlink" title="连接机制"></a>连接机制</h3><p>前面提到，UDP 是无连接的，而 TCP 是面向连接的。</p>
 <p>这里提到的<strong>连接</strong>到底是啥？</p>
 <p>TCP 通过上面提到的各种机制实现了数据的可靠性。这些机制背后是通过一个个数据结构来实现的逻辑。而为了实现这套逻辑，操作系统内核需要在两端代码里维护一套复杂的状态机（三次握手，四次挥手，RST，closing 等异常处理机制），<strong>这套状态机其实就是所谓的”连接”<strong>。这其实就是 TCP 的</strong>连接机制</strong>，而 UDP 用不上这套状态机，因此它是”无连接”的。</p>
 <br>
@@ -313,7 +313,7 @@
 <p>不信你改用 UDP 试试，丢包那就是真丢了，丢到你怀疑人生。</p>
 <br>
 
-<h3 id="用-UDP-就一定比用-TCP-快吗？"><a href="#用-UDP-就一定比用-TCP-快吗？" class="headerlink" title="用 UDP 就一定比用 TCP 快吗？"></a>用 UDP 就一定比用 TCP 快吗？</h3><p>这时候 UDP 就不服了：”<strong>正因为没有这些复杂的 TCP 可靠性机制，所以我很快啊</strong>“</p>
+<h2 id="用-UDP-就一定比用-TCP-快吗？"><a href="#用-UDP-就一定比用-TCP-快吗？" class="headerlink" title="用 UDP 就一定比用 TCP 快吗？"></a>用 UDP 就一定比用 TCP 快吗？</h2><p>这时候 UDP 就不服了：”<strong>正因为没有这些复杂的 TCP 可靠性机制，所以我很快啊</strong>“</p>
 <p>嗯，这也是大部分人认为 UDP 比 TCP 快的原因。</p>
 <p><strong>实际上大部分情况下也确实是这样的。这话没毛病。</strong></p>
 <br>
@@ -341,7 +341,7 @@
 <p>当然，解决起来也不复杂。这里的关键点在于是否实现了数据分段机制，<strong>使用 UDP 的应用层如果也实现了分段机制的话，那就不会出现上述的问题了</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>TCP 为了实现可靠性，引入了重传机制、流量控制、滑动窗口、拥塞控制、分段以及乱序重排机制。而 UDP 则没有实现，因此一般来说 TCP 比 UDP 慢。</li>
 <li>TCP 是面向连接的协议，而 UDP 是无连接的协议。这里的”<strong>连接</strong>“其实是，操作系统内核在两端代码里维护的一套复杂状态机。</li>
 <li>大部分项目，会在基于 UDP 的基础上，模仿 TCP，实现不同程度的可靠性机制。比如王者农药用的 KCP 其实就在基于 UDP 在应用层里实现了一套<strong>重传</strong>机制。</li>
@@ -349,7 +349,7 @@
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
 <p>我有个不成熟的请求。</p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
 
@@ -363,7 +363,7 @@
 <p>你说是吧，易峰。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -373,10 +373,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -428,7 +428,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -479,7 +479,7 @@
 <p>在真正回答这个问题之前，我们先来聊下一些相关的知识背景。</p>
 <br>
 
-<h3 id="使用-HTTP-不断轮询"><a href="#使用-HTTP-不断轮询" class="headerlink" title="使用 HTTP 不断轮询"></a>使用 HTTP 不断轮询</h3><p>其实问题的痛点在于，<strong>怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。</strong></p>
+<h2 id="使用-HTTP-不断轮询"><a href="#使用-HTTP-不断轮询" class="headerlink" title="使用 HTTP 不断轮询"></a>使用 HTTP 不断轮询</h2><p>其实问题的痛点在于，<strong>怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。</strong></p>
 <p>最常见的解决方案是，<strong>网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息。</strong></p>
 <p>这其实时一种<strong>伪</strong>服务器推的形式。</p>
 <p>它其实并不是服务器主动发消息到客户端，而是客户端自己不断偷偷请求服务器，只是用户无感知而已。</p>
@@ -497,7 +497,7 @@
 <p>有，而且实现起来成本还非常低。</p>
 <br>
 
-<h3 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h3><p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3s，规定时间内没返回，就认为是超时。</p>
+<h2 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h2><p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3s，规定时间内没返回，就认为是超时。</p>
 <p>如果我们的 HTTP 请求<strong>将超时设置的很大</strong>，比如 30s，<strong>在这 30s 内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。</strong></p>
 <p>这样就减少了 HTTP 请求的个数，并且由于大部分情况下，用户都会在某个 30s 的区间内做扫码操作，所以响应也是及时的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%95%BF%E8%BD%AE%E8%AF%A2.drawio.png" alt="长轮询"></p>
@@ -515,7 +515,7 @@
 <p>这就得说下<strong>websocket</strong>了。</p>
 <br>
 
-<h3 id="websocket-是什么"><a href="#websocket-是什么" class="headerlink" title="websocket 是什么"></a>websocket 是什么</h3><p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
+<h2 id="websocket-是什么"><a href="#websocket-是什么" class="headerlink" title="websocket 是什么"></a>websocket 是什么</h2><p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
 <p>而现在使用最广泛的<code>HTTP1.1</code>，也是基于 TCP 协议的，<strong>同一时间里</strong>，客户端和服务器<strong>只能有一方主动</strong>发数据，这就是所谓的<strong>半双工</strong>。</p>
 <p>也就是说，好好的全双工 TCP，被 HTTP 用成了半双工。</p>
 <p>为什么？</p>
@@ -526,7 +526,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E5%9C%A8%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.drawio.png" alt="websocket在四层网络协议中的位置"></p>
 <br>
 
-<h3 id="怎么建立-websocket-连接"><a href="#怎么建立-websocket-连接" class="headerlink" title="怎么建立 websocket 连接"></a>怎么建立 websocket 连接</h3><p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的<strong>websocket 协议</strong>。</p>
+<h2 id="怎么建立-websocket-连接"><a href="#怎么建立-websocket-连接" class="headerlink" title="怎么建立 websocket 连接"></a>怎么建立 websocket 连接</h2><p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的<strong>websocket 协议</strong>。</p>
 <p>为了兼容这些使用场景。浏览器在<strong>TCP 三次握手</strong>建立连接之后，都<strong>统一使用 HTTP 协议</strong>先进行一次通信。</p>
 <ul>
 <li>如果此时是<strong>普通的 HTTP 请求</strong>，那后续双方就还是老样子继续用普通 HTTP 协议进行交互，这点没啥疑问。</li>
@@ -549,7 +549,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E5%BB%BA%E7%AB%8Bwebsocket%E8%BF%9E%E6%8E%A5.drawio.png" alt="建立websocket连接.drawio"></p>
 <br>
 
-<h3 id="websocket-抓包"><a href="#websocket-抓包" class="headerlink" title="websocket 抓包"></a>websocket 抓包</h3><p>我们可以用 wireshark 抓个包，实际看下数据包的情况。</p>
+<h2 id="websocket-抓包"><a href="#websocket-抓包" class="headerlink" title="websocket 抓包"></a>websocket 抓包</h2><p>我们可以用 wireshark 抓个包，实际看下数据包的情况。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image-20220825222212533.png" alt="客户端请求升级为websocket"></p>
 <p>上面这张图，注意画了红框的第<code>2445</code>行报文，是 websocket 的<strong>第一次握手</strong>，意思是发起了一次带有<code>特殊Header</code>的 HTTP 请求。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%BB%98%E5%9B%BEddddd.drawio.png" alt="服务器同意升级为websocket协议"></p>
@@ -563,7 +563,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/HTTP%E5%92%8Cwebsocket%E7%9A%84%E5%85%B3%E7%B3%BB.drawio.png" alt="HTTP和websocket的关系"></p>
 <br>
 
-<h3 id="websocket-的消息格式"><a href="#websocket-的消息格式" class="headerlink" title="websocket 的消息格式"></a>websocket 的消息格式</h3><p>上面提到在完成协议升级之后，两端就会用 webscoket 的数据格式进行通信。</p>
+<h2 id="websocket-的消息格式"><a href="#websocket-的消息格式" class="headerlink" title="websocket 的消息格式"></a>websocket 的消息格式</h2><p>上面提到在完成协议升级之后，两端就会用 webscoket 的数据格式进行通信。</p>
 <p>数据包在 websocket 中被叫做<strong>帧</strong>。</p>
 <p>我们来看下它的数据格式长什么样子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F2.drawio.png" alt="websocket报文格式"></p>
@@ -601,12 +601,12 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E9%95%BF%E5%BA%A6%E6%A0%87%E5%BF%976.drawio.png" alt="消息边界长度标志"></p>
 <br>
 
-<h3 id="websocket-的使用场景"><a href="#websocket-的使用场景" class="headerlink" title="websocket 的使用场景"></a>websocket 的使用场景</h3><p>websocket 完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
+<h2 id="websocket-的使用场景"><a href="#websocket-的使用场景" class="headerlink" title="websocket 的使用场景"></a>websocket 的使用场景</h2><p>websocket 完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
 <p>回到文章开头的问题，在使用 websocket 协议的网页游戏里，怪物移动以及攻击玩家的行为是<strong>服务器逻辑</strong>产生的，对玩家产生的伤害等数据，都需要由<strong>服务器主动发送给客户端</strong>，客户端获得数据后展示对应的效果。</p>
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.drawio.png" alt="websocket的使用场景"></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>TCP 协议本身是<strong>全双工</strong>的，但我们最常用的 HTTP1.1，虽然是基于 TCP 的协议，但它是<strong>半双工</strong>的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的 websocket 协议。</li>
 <li>在 HTTP1.1 里。只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用<strong>定时轮询或者长轮询</strong>的方式实现<strong>服务器推送</strong>(comet)的效果。</li>
 <li>对于客户端和服务端之间需要频繁交互的复杂场景，比如网页游戏，都可以考虑使用 websocket 协议。</li>
@@ -616,7 +616,7 @@
 <hr>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
 <p>我有个不成熟的请求。</p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
 
@@ -628,7 +628,7 @@
 <p>如果实在叫不出口的话，能帮我<strong>点下关注</strong>和右下角的<strong>点赞+在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -638,10 +638,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -693,7 +693,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:09:12" itemprop="dateModified" datetime="2023-10-06T12:09:12+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -750,7 +750,7 @@
 <p>我们就从<strong>路由</strong>这个话题聊起吧。</p>
 <br>
 
-<h3 id="网络路径"><a href="#网络路径" class="headerlink" title="网络路径"></a>网络路径</h3><p>在我们的想象中，当我们想在两台机器之间传输数据。本机和目的机器之间会建立一条连接，像<strong>一条管道</strong>一样，数据从这头到那头。这条管道其实是我们为了方便理解而抽象出来的概念。</p>
+<h2 id="网络路径"><a href="#网络路径" class="headerlink" title="网络路径"></a>网络路径</h2><p>在我们的想象中，当我们想在两台机器之间传输数据。本机和目的机器之间会建立一条连接，像<strong>一条管道</strong>一样，数据从这头到那头。这条管道其实是我们为了方便理解而抽象出来的概念。</p>
 <p>实际上，我们将数据包从本地网卡发出之后，会经过各种<strong>路由器（或者交换机）</strong>，才能到达目的机器。</p>
 <p>这些路由器数量众多，相互之间可以互连，连起来之后就像是一张大网，所以叫**”网络”**可以说是非常的形象。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%B7%AF%E7%94%B1%E5%99%A8%E6%9E%84%E6%88%90%E7%9A%84%E7%BD%91%E7%BB%9C.drawio.png" alt="路由器构成的网络"></p>
@@ -760,7 +760,7 @@
 <p>那么现在问题来了，<strong>路由器收到数据后，怎么知道应该走哪条路径，传给哪个路由器？</strong></p>
 <br>
 
-<h3 id="路径由什么决定？"><a href="#路径由什么决定？" class="headerlink" title="路径由什么决定？"></a>路径由什么决定？</h3><p>在上面的那么大一张网络中，随便一个路由器都有可能走任何一个路径，将数据发到另外一个路由器上，</p>
+<h2 id="路径由什么决定？"><a href="#路径由什么决定？" class="headerlink" title="路径由什么决定？"></a>路径由什么决定？</h2><p>在上面的那么大一张网络中，随便一个路由器都有可能走任何一个路径，将数据发到另外一个路由器上，</p>
 <p>但路由和路由之间距离，带宽啥的可能都不同。</p>
 <p>于是就很需要知道，<strong>两点之间走哪条路才是最优路径</strong>。</p>
 <p>于是问题就变成了这样一个<strong>图状结构</strong>。每条边都带有<strong>成本或权重</strong>，算这上面<strong>任意两点的最短距离</strong>。</p>
@@ -769,7 +769,7 @@
 <p>这题我熟，这就是大学时候刷的<strong>Dijkstra 算法</strong>。菊花厂的 OJ 笔试题集里也经常出现，现在终于明白为什么他们家的笔试题里图类题目比别的大厂貌似要多一些了吧，因为菊花厂就是搞通信的，做路由器的老玩家了。</p>
 <br>
 
-<h4 id="路由表的生成"><a href="#路由表的生成" class="headerlink" title="路由表的生成"></a>路由表的生成</h4><p>基于<strong>Dijkstra 算法</strong>，封装出了一个新的协议，<strong>OSPF 协议</strong>（<strong>O</strong>pen <strong>S</strong>hortest <strong>P</strong>ath <strong>F</strong>irst, 开放最短路径优先）。</p>
+<h3 id="路由表的生成"><a href="#路由表的生成" class="headerlink" title="路由表的生成"></a>路由表的生成</h3><p>基于<strong>Dijkstra 算法</strong>，封装出了一个新的协议，<strong>OSPF 协议</strong>（<strong>O</strong>pen <strong>S</strong>hortest <strong>P</strong>ath <strong>F</strong>irst, 开放最短路径优先）。</p>
 <p>有了 OSPF，路由器就得到了网络图里自己到其他点之间的<strong>最短距离</strong>，于是就知道了<strong>数据包要到某个点，该走哪条最优路径</strong>。</p>
 <p>将这些信息汇成一张表，也就是我们常说的<strong>路由表</strong>。</p>
 <p>路由表里记录了到什么 IP 需要走什么端口，以及走这条路径的成本（<code>metric</code>）。</p>
@@ -777,7 +777,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/route2.png" alt="route表"></p>
 <br>
 
-<h4 id="路由表决定数据包路径"><a href="#路由表决定数据包路径" class="headerlink" title="路由表决定数据包路径"></a>路由表决定数据包路径</h4><p>数据包在发送的过程中，会在<strong>网络层</strong>加入<strong>目标地址 IP</strong>。</p>
+<h3 id="路由表决定数据包路径"><a href="#路由表决定数据包路径" class="headerlink" title="路由表决定数据包路径"></a>路由表决定数据包路径</h3><p>数据包在发送的过程中，会在<strong>网络层</strong>加入<strong>目标地址 IP</strong>。</p>
 <p>路由器会根据这个<strong>IP</strong>跟<strong>路由表</strong>去做匹配。</p>
 <p>然后路由表，会告诉路由器，什么样的消息该转发到什么端口。</p>
 <p>举个例子。</p>
@@ -788,7 +788,7 @@
 <p>当然，如果路由表里找不到，那就打到<strong>默认网关</strong>吧，也就是从 e1 口发出，发到 IP<code>192.0.2.1</code>。<strong>这个路由器的路由表不知道该去哪，说不定其他路由器知道</strong>。</p>
 <br>
 
-<h4 id="路由表的匹配规则"><a href="#路由表的匹配规则" class="headerlink" title="路由表的匹配规则"></a>路由表的匹配规则</h4><p>上面的例子里，是只匹配上了路由表里的<strong>一项</strong>，所以只能是它了。</p>
+<h3 id="路由表的匹配规则"><a href="#路由表的匹配规则" class="headerlink" title="路由表的匹配规则"></a>路由表的匹配规则</h3><p>上面的例子里，是只匹配上了路由表里的<strong>一项</strong>，所以只能是它了。</p>
 <p>但是，条条大路通罗马。实际上能到目的地的路径肯定有很多。</p>
 <p><strong>如果路由表里有很多项都被匹配上了，会怎么选？</strong></p>
 <br>
@@ -807,7 +807,7 @@
 <p>可以看到，中间某几行，有<strong>好几个 IP</strong>，也就是说这一跳里同时可以选好几个目的机器，说明这段路径<strong>支持 ECMP</strong>。</p>
 <br>
 
-<h4 id="ECMP-有什么用"><a href="#ECMP-有什么用" class="headerlink" title="ECMP 有什么用"></a>ECMP 有什么用</h4><p>利用等价多路径，我们<strong>可以增加链路带宽</strong>。</p>
+<h3 id="ECMP-有什么用"><a href="#ECMP-有什么用" class="headerlink" title="ECMP 有什么用"></a>ECMP 有什么用</h3><p>利用等价多路径，我们<strong>可以增加链路带宽</strong>。</p>
 <p>举个例子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B2%A1%E6%9C%89ECMP%E6%97%B6%E5%8F%AA%E8%83%BD%E9%80%89%E6%8B%A9%E6%9F%90%E4%B8%80%E6%9D%A1%E8%B7%AF%E5%BE%84.drawio4.png" alt="没有ECMP时只能选择某一条路径"></p>
 <p>从 A 点到 B 点，如果这两条路径成本不同，带宽都是<code>1千兆</code>。那数据包肯定就选成本低的那条路了，如果这条路出故障了，就走下面那条路。但不管怎么样，<strong>同一时间，只用到了一条路径</strong>。另外一条闲置就有些浪费了，有没有办法可以利用起来呢？</p>
@@ -819,7 +819,7 @@
 <p>那么问题又又来了。</p>
 <br>
 
-<h4 id="乱序会有什么问题？"><a href="#乱序会有什么问题？" class="headerlink" title="乱序会有什么问题？"></a>乱序会有什么问题？</h4><p>对于我们最最最常使用的 TCP 协议来说，它是个可靠性网络的协议，这里提到的<strong>可靠</strong>，不仅是保证数据要能送到目的地，还要保证<strong>数据顺序</strong>要跟原来发送端的一样。</p>
+<h3 id="乱序会有什么问题？"><a href="#乱序会有什么问题？" class="headerlink" title="乱序会有什么问题？"></a>乱序会有什么问题？</h3><p>对于我们最最最常使用的 TCP 协议来说，它是个可靠性网络的协议，这里提到的<strong>可靠</strong>，不仅是保证数据要能送到目的地，还要保证<strong>数据顺序</strong>要跟原来发送端的一样。</p>
 <p>实现也很简单，<strong>TCP 为每个数据包（segment）做上编号</strong>。数据到了接收端后，根据<strong>数据包编号</strong>发现是<strong>乱序数据包</strong>，就会扔到<strong>乱序队列</strong>中对数据包进行排序。如果前面的数据包还没到，哪怕后面的数据包先到了，也得在乱序队列中一直等，到齐后才能被上层拿到。</p>
 <p>举个例子，发送端发出三个数据包，<code>编号1,2,3</code>，假设在<strong>传输层</strong><code>2和3</code>先到了，<code>1</code>还没到。那此时<strong>应用层</strong>是没办法拿到<code>2和3</code>的数据包的，必须得等<code>1</code>来了之后，<strong>应用层才能一次性拿到这三个包</strong>。因为这三个包原来可能表示的是一个完整的消息，少了 1, 那么<strong>消息就不完整</strong>，应用层拿到了也毫无意义。</p>
 <p>像这种，由于<strong>前面的数据丢失</strong>导致<strong>后面的数据没办法及时给到应用层</strong>的现象，就是我们常说的<strong>TCP 队头阻塞</strong>。</p>
@@ -831,7 +831,7 @@
 <p>因此，我们需要尽量保证所有<strong>同一个 TCP 连接下的所有 TCP 包都走相同路径，这样才能最大程度避免丢包</strong>。</p>
 <br>
 
-<h4 id="ECMP-的路径选择策略"><a href="#ECMP-的路径选择策略" class="headerlink" title="ECMP 的路径选择策略"></a>ECMP 的路径选择策略</h4><p><strong>当初开启 ECMP 就是为了提升性能，现在反而加重了乱序，降低了 TCP 传输性能。</strong></p>
+<h3 id="ECMP-的路径选择策略"><a href="#ECMP-的路径选择策略" class="headerlink" title="ECMP 的路径选择策略"></a>ECMP 的路径选择策略</h3><p><strong>当初开启 ECMP 就是为了提升性能，现在反而加重了乱序，降低了 TCP 传输性能。</strong></p>
 <p>这怎么能忍。</p>
 <p>为了解决这个问题，我们需要有一个合理的路径选择策略。为了避免同一个连接里的数据包乱序，我们需要保证同一个连接里的数据包，都走同样的路径。</p>
 <p>这好办。我们可以通过连接的<strong>五元组</strong>（发送方的<strong>IP</strong>和<strong>端口</strong>，接收方的<strong>IP</strong>和<strong>端口</strong>，以及通信<strong>协议</strong>）信息定位到唯一一条连接。</p>
@@ -841,13 +841,13 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E6%A0%B9%E6%8D%AE%E4%BA%94%E5%85%83%E7%BB%84%E9%80%89%E6%8B%A9ECMP%E8%B7%AF%E5%BE%84.3.png" alt="根据五元组选择ECMP路径"></p>
 <br>
 
-<h3 id="TCP-和-Ping-走的网络路径一样吗"><a href="#TCP-和-Ping-走的网络路径一样吗" class="headerlink" title="TCP 和 Ping 走的网络路径一样吗"></a>TCP 和 Ping 走的网络路径一样吗</h3><p>现在我们回到文章开头的问题。</p>
+<h2 id="TCP-和-Ping-走的网络路径一样吗"><a href="#TCP-和-Ping-走的网络路径一样吗" class="headerlink" title="TCP 和 Ping 走的网络路径一样吗"></a>TCP 和 Ping 走的网络路径一样吗</h2><p>现在我们回到文章开头的问题。</p>
 <p>对于同样的发送端和接收端，<strong>TCP 和 Ping 走的网络路径一样吗？</strong></p>
 <p>不一定一样，因为<strong>五元组</strong>里的信息里有一项是<strong>通信协议</strong>。ping 用的是<strong>ICMP 协议</strong>，跟<strong>TCP 协议</strong>不同，并且 ping 不需要用到端口，所以五元组不同，生成的<strong>哈希键不同</strong>，通过 ECMP 选择到的路径也可能不同。</p>
 <p><img src="https://cdn.xiaobaidebug.top/TCP%E5%92%8Cping%E7%9A%84%E4%BA%94%E5%85%83%E7%BB%84%E5%B7%AE%E5%BC%82.drawio.png" alt="TCP和ping的五元组差异"></p>
 <br>
 
-<h3 id="同样都用-TCP-协议，数据包走的网络路径一样吗"><a href="#同样都用-TCP-协议，数据包走的网络路径一样吗" class="headerlink" title="同样都用 TCP 协议，数据包走的网络路径一样吗"></a>同样都用 TCP 协议，数据包走的网络路径一样吗</h3><p>还是同样的发送端和接收端，同样是 TCP 协议，不同 TCP 连接走的网络路径是一样的吗？</p>
+<h2 id="同样都用-TCP-协议，数据包走的网络路径一样吗"><a href="#同样都用-TCP-协议，数据包走的网络路径一样吗" class="headerlink" title="同样都用 TCP 协议，数据包走的网络路径一样吗"></a>同样都用 TCP 协议，数据包走的网络路径一样吗</h2><p>还是同样的发送端和接收端，同样是 TCP 协议，不同 TCP 连接走的网络路径是一样的吗？</p>
 <p>跟上面的问题一样，其实<strong>还是五元组的问题</strong>，同样都是 TCP 协议，对于同样的发送端和接收端，他们的 IP 和接收端的端口肯定是一样的，但<strong>发送方的端口是可以随时变化</strong>的，因此通过 ECMP 走的路径也可能不同。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%8D%E5%90%8CTCP%E8%BF%9E%E6%8E%A5%E7%9A%84%E4%BA%94%E5%85%83%E7%BB%84%E5%B7%AE%E5%BC%82.drawio.png" alt="不同TCP连接的五元组差异"></p>
 <br>
@@ -856,7 +856,7 @@
 <p><strong>我知道这个有什么用呢？我做业务开发，又没有设置网络路由的权限。</strong></p>
 <br>
 
-<h3 id="利用这个知识点排查问题"><a href="#利用这个知识点排查问题" class="headerlink" title="利用这个知识点排查问题"></a>利用这个知识点排查问题</h3><p>对于业务开发，这绝对不是个没用的知识点。</p>
+<h2 id="利用这个知识点排查问题"><a href="#利用这个知识点排查问题" class="headerlink" title="利用这个知识点排查问题"></a>利用这个知识点排查问题</h2><p>对于业务开发，这绝对不是个没用的知识点。</p>
 <p>如果某天，你发现，你能 ping 通目的机器，但用 TCP 去连，却<strong>偶尔连不上</strong>目的机器。而且两端机器都挺空闲，没什么性能上的瓶颈。实在<strong>走投无路</strong>了。</p>
 <p>你就可以想想，会不会是网络中用到了<code>ECMP</code>，其中一条链路有问题导致的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E8%83%BD%E6%88%90%E5%8A%9F%E4%BD%86%E9%83%A8%E5%88%86TCP%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5.drawio.png" alt="ping能成功但部分TCP连接失败"></p>
@@ -873,7 +873,7 @@
 <p>假设用了<code>6666端口</code>的五元组去连接<strong>总是失败</strong>，改用<code>6667或其他端口</code><strong>却能成功</strong>，你可以带着这个信息去找找负责网络的同事。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>路由器可以通过 OSPF 协议生成路由表，利用数据包里的 IP 地址去跟路由表做匹配，选择最优路径后进行转发。</li>
 <li>当路由表一个都匹配不上时会走默认网关。当匹配上多个的时候，会先看<strong>匹配长度</strong>，如果一样就看<strong>管理距离</strong>，还一样就看<strong>路径成本</strong>。如果连路径成本都一样，那<strong>等价路径</strong>。如果路由开启了 ECMP，那就可以同时利用这几条路径做传输。</li>
 <li>ECMP 可以提高链路带宽，同时利用五元组做哈希键进行路径选择，保证了同一条连接的数据包走同一条路径，减少了乱序的情况。</li>
@@ -883,10 +883,10 @@
 </ul>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《网络排查案例课》 ——极客时间</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《网络排查案例课》 ——极客时间</p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>兄弟们。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>兄弟们。</p>
 <p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
 <p>但我今天不想。</p>
 <p>因为越是这样，评论区里叫我 diao 毛的兄弟就越多。</p>
@@ -896,7 +896,7 @@
 <p>这口气，我还能忍。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -904,10 +904,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
 
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi-20220806162638482.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -959,7 +959,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:09:12" itemprop="dateModified" datetime="2023-10-06T12:09:12+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1011,12 +1011,12 @@
 <p>当然如果服务端重试发第三次挥手 FIN 的过程中，还是同样的端口和 IP,起了个新的客户端，这时候服务端重试的 FIN 被收到后，客户端就会认为是不正常的数据包，直接发个 RST 给服务端，这时候两端连接也会断开。</p>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>查资料的时候发现<strong>小林大佬已经写过，而且写的巨好</strong>，感兴趣的可以看下他的这篇文章。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>查资料的时候发现<strong>小林大佬已经写过，而且写的巨好</strong>，感兴趣的可以看下他的这篇文章。</p>
 <p><strong>《 如何优化 TCP?》</strong><a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/3_tcp/tcp_optimize.html#%E4%B8%BB%E5%8A%A8%E6%96%B9%E7%9A%84%E4%BC%98%E5%8C%96">https://xiaolincoding.com/network/3_tcp/tcp_optimize.html#%E4%B8%BB%E5%8A%A8%E6%96%B9%E7%9A%84%E4%BC%98%E5%8C%96</a></p>
 <p>链接太长，懒得复制的话，点击<strong>阅读原文</strong>可以直接跳转。</p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>新的文章快写好了，就缺个开头了。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>新的文章快写好了，就缺个开头了。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image-20220813115736303.png"></p>
 <p><strong>我有个不成熟的请求。</strong></p>
 <p><img src="https://cdn.xiaobaidebug.top/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg"></p>
@@ -1028,7 +1028,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -1036,10 +1036,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
 
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi-20220806162638482.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1091,7 +1091,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:48:15" itemprop="dateModified" datetime="2023-12-01T07:48:15+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1143,7 +1143,7 @@
 <p>“我来帮他解释下，这个话题就要从<strong>数据包的发送流程</strong>聊起”</p>
 <br>
 
-<h3 id="数据包的发送流程"><a href="#数据包的发送流程" class="headerlink" title="数据包的发送流程"></a>数据包的发送流程</h3><p>首先，我们两个手机的绿皮聊天软件客户端，要通信，中间会通过它们家服务器。大概长这样。</p>
+<h2 id="数据包的发送流程"><a href="#数据包的发送流程" class="headerlink" title="数据包的发送流程"></a>数据包的发送流程</h2><p>首先，我们两个手机的绿皮聊天软件客户端，要通信，中间会通过它们家服务器。大概长这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E4%B8%89%E7%AB%AF%E9%80%9A%E4%BF%A12.drawio.png" alt="聊天软件三端通信"></p>
 <p>但为了<strong>简化模型</strong>，我们把中间的服务器给省略掉，假设这是个端到端的通信。且为了保证消息的可靠性，我们盲猜它们之间用的是<strong>TCP 协议</strong>进行通信。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E4%B8%A4%E7%AB%AF%E9%80%9A%E4%BF%A12.drawio.png" alt="聊天软件两端通信"></p>
@@ -1166,7 +1166,7 @@
 <p>但为了不让大家<strong>保持蹲姿太久</strong>影响身体健康，我这边只重点讲下几个<strong>常见容易发生丢包的场景</strong>。</p>
 <br>
 
-<h3 id="建立连接时丢包"><a href="#建立连接时丢包" class="headerlink" title="建立连接时丢包"></a>建立连接时丢包</h3><p>TCP 协议会通过<strong>三次握手</strong>建立连接。大概长下面这样。</p>
+<h2 id="建立连接时丢包"><a href="#建立连接时丢包" class="headerlink" title="建立连接时丢包"></a>建立连接时丢包</h2><p>TCP 协议会通过<strong>三次握手</strong>建立连接。大概长下面这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%BF%AE%E6%AD%A3%E7%89%882.png" alt="TCP三次握手"></p>
 <p>在服务端，第一次握手之后，会先建立个<strong>半连接</strong>，然后再发出第二次握手。这时候需要有个地方可以<strong>暂存</strong>这些半连接。这个地方就叫<strong>半连接队列</strong>。</p>
 <p>如果之后第三次握手来了，半连接就会升级为全连接，然后暂存到另外一个叫<strong>全连接队列</strong>的地方，坐等程序执行<code>accept()</code>方法将其取走使用。</p>
@@ -1180,7 +1180,7 @@
 <p>这个话题在之前写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/n17NjGRab1u5eXkOCro1gg">《没有 accept，能建立 TCP 连接吗？》</a>有更详细的聊过，感兴趣的可以回去看下。</p>
 <br>
 
-<h3 id="流量控制丢包"><a href="#流量控制丢包" class="headerlink" title="流量控制丢包"></a>流量控制丢包</h3><p>应用层能发网络数据包的软件有那么多，如果所有数据不加控制一股脑冲入到网卡，网卡会吃不消，那怎么办？让数据按一定的规则排个队依次处理，也就是所谓的<strong>qdisc</strong>(<strong>Q</strong>ueueing <strong>Disc</strong>iplines，排队规则)，这也是我们常说的<strong>流量控制</strong>机制。</p>
+<h2 id="流量控制丢包"><a href="#流量控制丢包" class="headerlink" title="流量控制丢包"></a>流量控制丢包</h2><p>应用层能发网络数据包的软件有那么多，如果所有数据不加控制一股脑冲入到网卡，网卡会吃不消，那怎么办？让数据按一定的规则排个队依次处理，也就是所谓的<strong>qdisc</strong>(<strong>Q</strong>ueueing <strong>Disc</strong>iplines，排队规则)，这也是我们常说的<strong>流量控制</strong>机制。</p>
 <p>排队，得先有个队列，而队列有个<strong>长度</strong>。</p>
 <p>我们可以通过下面的<code>ifconfig</code>命令查看到，里面涉及到的<code>txqueuelen</code>后面的数字<code>1000</code>，其实就是流控队列的长度。</p>
 <p>当发送数据过快，流控队列长度<code>txqueuelen</code>又不够大时，就容易出现<strong>丢包</strong>现象。</p>
@@ -1193,10 +1193,10 @@
 
 <br>
 
-<h3 id="网卡丢包"><a href="#网卡丢包" class="headerlink" title="网卡丢包"></a>网卡丢包</h3><p>网卡和它的驱动导致丢包的场景也比较常见，原因很多，比如<strong>网线质量差，接触不良</strong>。除此之外，我们来聊几个常见的场景。</p>
+<h2 id="网卡丢包"><a href="#网卡丢包" class="headerlink" title="网卡丢包"></a>网卡丢包</h2><p>网卡和它的驱动导致丢包的场景也比较常见，原因很多，比如<strong>网线质量差，接触不良</strong>。除此之外，我们来聊几个常见的场景。</p>
 <br>
 
-<h4 id="RingBuffer-过小导致丢包"><a href="#RingBuffer-过小导致丢包" class="headerlink" title="RingBuffer 过小导致丢包"></a>RingBuffer 过小导致丢包</h4><p>上面提到，在接收数据时，会将数据暂存到<code>RingBuffer</code>接收缓冲区中，然后等着内核触发软中断慢慢收走。如果这个<strong>缓冲区过小</strong>，而这时候发送的数据又过快，就有可能发生溢出，此时也会产生<strong>丢包</strong>。</p>
+<h3 id="RingBuffer-过小导致丢包"><a href="#RingBuffer-过小导致丢包" class="headerlink" title="RingBuffer 过小导致丢包"></a>RingBuffer 过小导致丢包</h3><p>上面提到，在接收数据时，会将数据暂存到<code>RingBuffer</code>接收缓冲区中，然后等着内核触发软中断慢慢收走。如果这个<strong>缓冲区过小</strong>，而这时候发送的数据又过快，就有可能发生溢出，此时也会产生<strong>丢包</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/RingBuffer%E6%BB%A1%E4%BA%86%E5%AF%BC%E8%87%B4%E4%B8%A2%E5%8C%85.drawio.png" alt="RingBuffer满了导致丢包"></p>
 <p>我们可以通过下面的命令去查看是否发生过这样的事情。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ifconfig</span></span><br><span class="line">eth0:  RX errors 0  dropped 0  overruns 0  frame 0</span><br></pre></td></tr></table></figure>
@@ -1216,7 +1216,7 @@
 <p><strong>RingBuffer</strong>增大之后，可以减少因为容量小而导致的丢包情况。</p>
 <br>
 
-<h4 id="网卡性能不足"><a href="#网卡性能不足" class="headerlink" title="网卡性能不足"></a>网卡性能不足</h4><p>网卡作为硬件，<strong>传输速度是有上限的</strong>。当网络传输速度过大，达到网卡上限时，就会发生丢包。这种情况一般常见于压测场景。</p>
+<h3 id="网卡性能不足"><a href="#网卡性能不足" class="headerlink" title="网卡性能不足"></a>网卡性能不足</h3><p>网卡作为硬件，<strong>传输速度是有上限的</strong>。当网络传输速度过大，达到网卡上限时，就会发生丢包。这种情况一般常见于压测场景。</p>
 <p>我们可以通过<code>ethtool</code>加网卡名，获得当前网卡支持的最大速度。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ethtool eth0</span></span><br><span class="line">Settings for eth0:</span><br><span class="line">	Speed: 10000Mb/s</span><br></pre></td></tr></table></figure>
 
@@ -1230,7 +1230,7 @@
 <p>遇到这个问题，优先看下你的服务是不是真有这么大的<strong>真实流量</strong>，如果是的话可以考虑下拆分服务，或者就忍痛充钱升级下配置吧。</p>
 <br>
 
-<h3 id="接收缓冲区丢包"><a href="#接收缓冲区丢包" class="headerlink" title="接收缓冲区丢包"></a>接收缓冲区丢包</h3><p>我们一般使用<code>TCP socket</code>进行网络编程的时候，内核都会分配一个<strong>发送缓冲区</strong>和一个<strong>接收缓冲区</strong>。</p>
+<h2 id="接收缓冲区丢包"><a href="#接收缓冲区丢包" class="headerlink" title="接收缓冲区丢包"></a>接收缓冲区丢包</h2><p>我们一般使用<code>TCP socket</code>进行网络编程的时候，内核都会分配一个<strong>发送缓冲区</strong>和一个<strong>接收缓冲区</strong>。</p>
 <p>当我们想要发一个数据包，会在代码里执行<code>send(msg)</code>，这时候数据包并不是一把梭直接就走网卡飞出去的。而是将数据拷贝到内核<strong>发送缓冲区</strong>就完事<strong>返回</strong>了，至于<strong>什么时候发数据，发多少数据</strong>，这个后续由内核自己做决定。之前写过的《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/87BZzLmcntA1snJIIhUR0w">代码执行 send 成功后，数据就发出去了吗？</a>》里有比较详细的介绍。</p>
 <p><img src="https://cdn.xiaobaidebug.top/tcp_sendmsg%E9%80%BB%E8%BE%913.png" alt="tcp_sendmsg逻辑"></p>
 <p>而<strong>接收缓冲区</strong>作用也类似，从外部网络收到的数据包就暂存在这个地方，然后坐等用户空间的应用程序将数据包取走。</p>
@@ -1255,11 +1255,11 @@
 
 <br>
 
-<h3 id="两端之间的网络丢包"><a href="#两端之间的网络丢包" class="headerlink" title="两端之间的网络丢包"></a>两端之间的网络丢包</h3><p>前面提到的是两端机器内部的网络丢包，除此之外，两端之间那么长的一条链路都属于外部网络，这中间有各种路由器和交换机还有光缆啥的，丢包也是很经常发生的。</p>
+<h2 id="两端之间的网络丢包"><a href="#两端之间的网络丢包" class="headerlink" title="两端之间的网络丢包"></a>两端之间的网络丢包</h2><p>前面提到的是两端机器内部的网络丢包，除此之外，两端之间那么长的一条链路都属于外部网络，这中间有各种路由器和交换机还有光缆啥的，丢包也是很经常发生的。</p>
 <p>这些丢包行为发生在中间链路的某些个机器上，我们当然是没权限去登录这些机器。但我们可以通过一些命令观察整个链路的连通情况。</p>
 <br>
 
-<h4 id="ping-命令查看丢包"><a href="#ping-命令查看丢包" class="headerlink" title="ping 命令查看丢包"></a>ping 命令查看丢包</h4><p>比如我们知道目的地的域名是 <code>baidu.com</code>。想知道你的机器到 baidu 服务器之间，有没有产生丢包行为。可以使用 ping 命令。</p>
+<h3 id="ping-命令查看丢包"><a href="#ping-命令查看丢包" class="headerlink" title="ping 命令查看丢包"></a>ping 命令查看丢包</h3><p>比如我们知道目的地的域名是 <code>baidu.com</code>。想知道你的机器到 baidu 服务器之间，有没有产生丢包行为。可以使用 ping 命令。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E6%9F%A5%E7%9C%8B%E4%B8%A2%E5%8C%85.png" alt="ping查看丢包"></p>
 <p>倒数第二行里有个<code>100% packet loss</code>，意思是**丢包率 100%**。</p>
 <p>但这样其实你只能知道<strong>你的机器和目的机器之间有没有丢包。</strong></p>
@@ -1267,7 +1267,7 @@
 <p>有。</p>
 <br>
 
-<h4 id="mtr-命令"><a href="#mtr-命令" class="headerlink" title="mtr 命令"></a>mtr 命令</h4><p>mtr 命令可以查看到你的机器和目的机器之间的每个节点的丢包情况。</p>
+<h3 id="mtr-命令"><a href="#mtr-命令" class="headerlink" title="mtr 命令"></a>mtr 命令</h3><p>mtr 命令可以查看到你的机器和目的机器之间的每个节点的丢包情况。</p>
 <p>像下面这样执行命令。</p>
 <p><img src="https://cdn.xiaobaidebug.top/mtr_icmp.png" alt="mtr_icmp"></p>
 <p>其中**-r 是指 report**，以报告的形式打印结果。</p>
@@ -1281,7 +1281,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image-20220727215553645.png"></p>
 <br>
 
-<h3 id="发生丢包了怎么办"><a href="#发生丢包了怎么办" class="headerlink" title="发生丢包了怎么办"></a>发生丢包了怎么办</h3><p>说了这么多。只是想告诉大家，<strong>丢包是很常见的，几乎不可避免的一件事情</strong>。</p>
+<h2 id="发生丢包了怎么办"><a href="#发生丢包了怎么办" class="headerlink" title="发生丢包了怎么办"></a>发生丢包了怎么办</h2><p>说了这么多。只是想告诉大家，<strong>丢包是很常见的，几乎不可避免的一件事情</strong>。</p>
 <p>但问题来了，发生丢包了怎么办？</p>
 <p>这个好办，用<strong>TCP 协议</strong>去做传输。</p>
 <p><img src="https://cdn.xiaobaidebug.top/tcp%E6%98%AF%E4%BB%80%E4%B9%885.drawio.png" alt="TCP是什么"></p>
@@ -1296,7 +1296,7 @@
 <p>于是乎，问题就变成了，<strong>用了 TCP 协议，就一定不会丢包吗？</strong></p>
 <br>
 
-<h3 id="用了-TCP-协议就一定不会丢包吗"><a href="#用了-TCP-协议就一定不会丢包吗" class="headerlink" title="用了 TCP 协议就一定不会丢包吗"></a>用了 TCP 协议就一定不会丢包吗</h3><p>我们知道 TCP 位于<strong>传输层</strong>，在它的上面还有各种<strong>应用层协议</strong>，比如常见的 HTTP 或者各类 RPC 协议。</p>
+<h2 id="用了-TCP-协议就一定不会丢包吗"><a href="#用了-TCP-协议就一定不会丢包吗" class="headerlink" title="用了 TCP 协议就一定不会丢包吗"></a>用了 TCP 协议就一定不会丢包吗</h2><p>我们知道 TCP 位于<strong>传输层</strong>，在它的上面还有各种<strong>应用层协议</strong>，比如常见的 HTTP 或者各类 RPC 协议。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE5.drawio.png" alt="四层网络协议"></p>
 <p>TCP 保证的可靠性，是<strong>传输层的可靠性</strong>。也就是说，<strong>TCP 只保证数据从 A 机器的传输层可靠地发到 B 机器的传输层。</strong></p>
 <p>至于数据到了接收端的传输层之后，能不能保证到应用层，TCP 并不管。</p>
@@ -1316,7 +1316,7 @@
 <p>兄弟们觉得我做得对的，请在评论区扣个”<strong>正能量</strong>“。</p>
 <br>
 
-<h3 id="这类丢包问题怎么解决？"><a href="#这类丢包问题怎么解决？" class="headerlink" title="这类丢包问题怎么解决？"></a>这类丢包问题怎么解决？</h3><p>故事到这里也到尾声了，感动之余，我们来<strong>聊点掏心窝子的话</strong>。</p>
+<h2 id="这类丢包问题怎么解决？"><a href="#这类丢包问题怎么解决？" class="headerlink" title="这类丢包问题怎么解决？"></a>这类丢包问题怎么解决？</h2><p>故事到这里也到尾声了，感动之余，我们来<strong>聊点掏心窝子的话</strong>。</p>
 <p><strong>其实前面说的都对，没有一句是假话</strong>。</p>
 <p>但某绿皮聊天软件这么成熟，怎么可能没考虑过这一点呢。</p>
 <p>大家应该还记得我们文章开头提到过，<strong>为了简单</strong>，就将服务器那一方给省略了，从三端通信变成了两端通信，所以才有了这个丢包问题。</p>
@@ -1341,7 +1341,7 @@
 <p>所以看到这里大家应该明白了，我把服务端去掉，并不单纯是<strong>为了简单</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>数据从发送端到接收端，链路很长，任何一个地方都可能发生丢包，几乎可以说<strong>丢包不可避免</strong>。</p>
 </li>
 <li><p>平时没事也不用关注丢包，大部分时候 TCP 的重传机制保证了消息可靠性。</p>
@@ -1356,11 +1356,11 @@
 <p>最后给大家留个问题吧，<strong>mtr 命令是怎么知道每一跳的 IP 地址的</strong>？</p>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《Linux 内核技术实战》– 极客时间</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《Linux 内核技术实战》– 极客时间</p>
 <p>《云网络丢包故障定位全景指南》–极客重生</p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我一想到读者里还有不少兄弟还是单身，我就夜不能寐。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我一想到读者里还有不少兄弟还是单身，我就夜不能寐。</p>
 <p>手心手背都是肉，<strong>一碗水要端平</strong>。</p>
 <p>犹豫了很久，为她指了条明路。</p>
 <p>“我读者里有很多<strong>微信不丢包</strong>的兄弟，他们都喜欢在我的文章底下<strong>点赞和再看</strong>。你可以考虑下他们”</p>
@@ -1374,7 +1374,7 @@
 <p>他们不敢，我敢。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -1384,10 +1384,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1439,7 +1439,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1474,7 +1474,7 @@
 <p>为了避免大家有强烈的<strong>审丑疲劳</strong>，今天我们来尝试重新换个方式讲一讲。</p>
 <br>
 
-<h3 id="从-TCP-聊起"><a href="#从-TCP-聊起" class="headerlink" title="从 TCP 聊起"></a>从 TCP 聊起</h3><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
+<h2 id="从-TCP-聊起"><a href="#从-TCP-聊起" class="headerlink" title="从 TCP 聊起"></a>从 TCP 聊起</h2><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
 <p>这时候，我们可选项一般也就<strong>TCP 和 UDP 二选一。TCP 可靠，UDP 不可靠。</strong>除非是马总这种神级程序员（早期 QQ 大量使用 UDP），否则，只要稍微对可靠性有些要求，普通人一般无脑选 TCP 就对了。</p>
 <p>类似下面这样。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd = socket(AF_INET,SOCK_STREAM,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
@@ -1487,7 +1487,7 @@
 <p>不行，这么用会有问题。</p>
 <br>
 
-<h3 id="使用纯裸-TCP-会有什么问题"><a href="#使用纯裸-TCP-会有什么问题" class="headerlink" title="使用纯裸 TCP 会有什么问题"></a>使用纯裸 TCP 会有什么问题</h3><p>八股文常背，TCP 是有三个特点，<strong>面向连接</strong>、<strong>可靠</strong>、基于<strong>字节流</strong>。</p>
+<h2 id="使用纯裸-TCP-会有什么问题"><a href="#使用纯裸-TCP-会有什么问题" class="headerlink" title="使用纯裸 TCP 会有什么问题"></a>使用纯裸 TCP 会有什么问题</h2><p>八股文常背，TCP 是有三个特点，<strong>面向连接</strong>、<strong>可靠</strong>、基于<strong>字节流</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/tcp%E6%98%AF%E4%BB%80%E4%B9%885.drawio.png" alt="TCP是什么"></p>
 <p>这三个特点真的概括的<strong>非常精辟</strong>，这个八股文我们没白背。</p>
 <p>每个特点展开都能聊一篇文章，而今天我们需要关注的是<strong>基于字节流</strong>这一点。</p>
@@ -1495,7 +1495,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/01%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AD%97%E8%8A%82%E6%B5%81.drawio.png" alt="01二进制字节流"></p>
 <p>正因为这个没有<strong>任何边界</strong>的特点，所以当我们选择使用 TCP 发送**”夏洛”和”特烦恼”<strong>的时候，接收端收到的就是</strong>“夏洛特烦恼”<strong>，这时候接收端没发区分你是想要表达</strong>“夏洛”+”特烦恼”<strong>还是</strong>“夏洛特”+”烦恼”**。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E5%AF%B9%E6%AF%94_%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC.drawio.png" alt="消息对比"></p>
-<p>这就是所谓的<strong>粘包问题</strong>，之前也写过一篇专门的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">文章</a>聊过这个问题。</p>
+<p>这就是所谓的<strong>粘包问题</strong>，之前也写过一篇专门的<a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">文章</a>聊过这个问题。</p>
 <p>说这个的目的是为了告诉大家，纯裸 TCP 是不能直接拿来用的，你需要在这个基础上加入一些<strong>自定义的规则</strong>，用于区分<strong>消息边界</strong>。</p>
 <p>于是我们会把每条要发送的数据都包装一下，比如加入<strong>消息头</strong>，<strong>消息头里写清楚一个完整的包长度是多少</strong>，根据这个长度可以继续接收数据，截取出来后它们就是我们真正要传输的<strong>消息体</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E9%95%BF%E5%BA%A6%E6%A0%87%E5%BF%976.drawio.png" alt="消息边界长度标志"></p>
@@ -1504,7 +1504,7 @@
 <p><strong>于是基于 TCP，就衍生了非常多的协议，比如 HTTP 和 RPC。</strong></p>
 <br>
 
-<h3 id="HTTP-和-RPC"><a href="#HTTP-和-RPC" class="headerlink" title="HTTP 和 RPC"></a>HTTP 和 RPC</h3><p>我们回过头来看网络的分层图。</p>
+<h2 id="HTTP-和-RPC"><a href="#HTTP-和-RPC" class="headerlink" title="HTTP 和 RPC"></a>HTTP 和 RPC</h2><p>我们回过头来看网络的分层图。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE5.drawio.png" alt="四层网络协议"></p>
 <p><strong>TCP 是传输层的协议</strong>，而基于 TCP 造出来的 HTTP 和<strong>各类</strong>RPC 协议，它们都只是定义了不同消息格式的<strong>应用层协议</strong>而已。</p>
 <p><strong>HTTP</strong>协议（<strong>H</strong>yper <strong>T</strong>ext <strong>T</strong>ransfer <strong>P</strong>rotocol），又叫做<strong>超文本传输协议</strong>。我们用的比较多，平时上网在浏览器上敲个网址就能访问网页，这里用到的就是 HTTP 协议。</p>
@@ -1528,30 +1528,30 @@
 <p>所以我们该问的不是<strong>既然有 HTTP 协议为什么要有 RPC</strong>，而是<strong>为什么有 RPC 还要有 HTTP 协议</strong>。</p>
 <br>
 
-<h4 id="那既然有-RPC-了，为什么还要有-HTTP-呢？"><a href="#那既然有-RPC-了，为什么还要有-HTTP-呢？" class="headerlink" title="那既然有 RPC 了，为什么还要有 HTTP 呢？"></a>那既然有 RPC 了，为什么还要有 HTTP 呢？</h4><p>现在电脑上装的各种<strong>联网</strong>软件，比如 xx 管家，xx 卫士，它们都作为<strong>客户端（client）</strong>需要跟<strong>服务端（server）</strong>建立连接收发消息，此时都会用到应用层协议，在这种**client/server (c/s)**架构下，它们可以使用自家造的 RPC 协议，因为它只管连自己公司的服务器就 ok 了。</p>
+<h3 id="那既然有-RPC-了，为什么还要有-HTTP-呢？"><a href="#那既然有-RPC-了，为什么还要有-HTTP-呢？" class="headerlink" title="那既然有 RPC 了，为什么还要有 HTTP 呢？"></a>那既然有 RPC 了，为什么还要有 HTTP 呢？</h3><p>现在电脑上装的各种<strong>联网</strong>软件，比如 xx 管家，xx 卫士，它们都作为<strong>客户端（client）</strong>需要跟<strong>服务端（server）</strong>建立连接收发消息，此时都会用到应用层协议，在这种**client/server (c/s)**架构下，它们可以使用自家造的 RPC 协议，因为它只管连自己公司的服务器就 ok 了。</p>
 <p>但有个软件不同，<strong>浏览器（browser）</strong>，不管是 chrome 还是 IE，它们不仅要能访问自家公司的<strong>服务器（server）</strong>，还需要访问其他公司的网站服务器，因此它们需要有个统一的标准，不然大家没法交流。于是，HTTP 就是那个时代用于统一 <strong>browser/server (b/s)</strong> 的协议。</p>
 <p>也就是说在多年以前，<strong>HTTP 主要用于 b/s 架构，而 RPC 更多用于 c/s 架构。但现在其实已经没分那么清了，b/s 和 c/s 在慢慢融合。</strong>很多软件同时支持多端，比如某度云盘，既要支持<strong>网页版</strong>，还要支持<strong>手机端和 pc 端</strong>，如果通信协议都用 HTTP 的话，那服务器只用同一套就够了。而 RPC 就开始退居幕后，一般用于公司内部集群里，各个微服务之间的通讯。</p>
 <p>那这么说的话，<strong>都用 HTTP 得了，还用什么 RPC？</strong></p>
 <p>仿佛又回到了文章开头的样子，那这就要从它们之间的区别开始说起。</p>
 <br>
 
-<h3 id="HTTP-和-RPC-有什么区别"><a href="#HTTP-和-RPC-有什么区别" class="headerlink" title="HTTP 和 RPC 有什么区别"></a>HTTP 和 RPC 有什么区别</h3><p>我们来看看 RPC 和 HTTP 区别比较明显的几个点。</p>
+<h2 id="HTTP-和-RPC-有什么区别"><a href="#HTTP-和-RPC-有什么区别" class="headerlink" title="HTTP 和 RPC 有什么区别"></a>HTTP 和 RPC 有什么区别</h2><p>我们来看看 RPC 和 HTTP 区别比较明显的几个点。</p>
 <br>
 
-<h4 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h4><p>首先要向某个服务器发起请求，你得先建立连接，而建立连接的前提是，你得知道<strong>IP 地址和端口</strong>。这个找到服务对应的 IP 端口的过程，其实就是<strong>服务发现</strong>。</p>
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><p>首先要向某个服务器发起请求，你得先建立连接，而建立连接的前提是，你得知道<strong>IP 地址和端口</strong>。这个找到服务对应的 IP 端口的过程，其实就是<strong>服务发现</strong>。</p>
 <p>在<strong>HTTP</strong>中，你知道服务的域名，就可以通过<strong>DNS 服务</strong>去解析得到它背后的 IP 地址，默认 80 端口。</p>
 <p>而<strong>RPC</strong>的话，就有些区别，一般会有专门的<strong>中间服务</strong>去保存服务名和 IP 信息，比如<strong>consul 或者 etcd，甚至是 redis</strong>。想要访问某个服务，就去这些中间服务去获得 IP 和端口信息。由于 dns 也是服务发现的一种，所以也有基于 dns 去做服务发现的组件，比如<strong>CoreDNS</strong>。</p>
 <p>可以看出服务发现这一块，两者是有些区别，但不太能分高低。</p>
 <br>
 
-<h4 id="底层连接形式"><a href="#底层连接形式" class="headerlink" title="底层连接形式"></a>底层连接形式</h4><p>以主流的<strong>HTTP1.1</strong>协议为例，其默认在建立底层 TCP 连接之后会一直保持这个连接（<strong>keep alive</strong>），之后的请求和响应都会复用这条连接。</p>
+<h3 id="底层连接形式"><a href="#底层连接形式" class="headerlink" title="底层连接形式"></a>底层连接形式</h3><p>以主流的<strong>HTTP1.1</strong>协议为例，其默认在建立底层 TCP 连接之后会一直保持这个连接（<strong>keep alive</strong>），之后的请求和响应都会复用这条连接。</p>
 <p>而<strong>RPC</strong>协议，也跟 HTTP 类似，也是通过建立 TCP 长链接进行数据交互，但不同的地方在于，RPC 协议一般还会再建个<strong>连接池</strong>，在请求量大的时候，建立多条连接放在池内，要发数据的时候就从池里取一条连接出来，<strong>用完放回去，下次再复用</strong>，可以说非常环保。</p>
 <p><img src="https://cdn.xiaobaidebug.top/connection_pool3.drawio.png" alt="connection_pool"></p>
 <p><strong>由于连接池有利于提升网络请求性能，所以不少编程语言的网络库里都会给 HTTP 加个连接池</strong>，比如<strong>go</strong>就是这么干的。</p>
 <p>可以看出这一块两者也没太大区别，所以也不是关键。</p>
 <br>
 
-<h4 id="传输的内容"><a href="#传输的内容" class="headerlink" title="传输的内容"></a>传输的内容</h4><p>基于 TCP 传输的消息，说到底，无非都是<strong>消息头 header 和消息体 body。</strong></p>
+<h3 id="传输的内容"><a href="#传输的内容" class="headerlink" title="传输的内容"></a>传输的内容</h3><p>基于 TCP 传输的消息，说到底，无非都是<strong>消息头 header 和消息体 body。</strong></p>
 <p><strong>header</strong>是用于标记一些特殊信息，其中最重要的是<strong>消息体长度</strong>。</p>
 <p><strong>body</strong>则是放我们真正需要传输的内容，而这些内容只能是二进制 01 串，毕竟计算机只认识这玩意。所以 TCP 传字符串和数字都问题不大，因为字符串可以转成编码再变成 01 串，而数字本身也能直接转为二进制。但结构体呢，我们得想个办法将它也转为二进制 01 串，这样的方案现在也有很多现成的，比如<strong>json，protobuf。</strong></p>
 <p>这个将结构体转为二进制数组的过程就叫<strong>序列化</strong>，反过来将二进制数组复原成结构体的过程叫<strong>反序列化</strong>。</p>
@@ -1569,10 +1569,10 @@
 <p>那么问题又来了。</p>
 <br>
 
-<h5 id="为什么既然有了-HTTP2，还要有-RPC-协议？"><a href="#为什么既然有了-HTTP2，还要有-RPC-协议？" class="headerlink" title="为什么既然有了 HTTP2，还要有 RPC 协议？"></a>为什么既然有了 HTTP2，还要有 RPC 协议？</h5><p>这个是由于 HTTP2 是 2015 年出来的。那时候很多公司内部的 RPC 协议都已经跑了好些年了，基于历史原因，一般也没必要去换了。</p>
+<h4 id="为什么既然有了-HTTP2，还要有-RPC-协议？"><a href="#为什么既然有了-HTTP2，还要有-RPC-协议？" class="headerlink" title="为什么既然有了 HTTP2，还要有 RPC 协议？"></a>为什么既然有了 HTTP2，还要有 RPC 协议？</h4><p>这个是由于 HTTP2 是 2015 年出来的。那时候很多公司内部的 RPC 协议都已经跑了好些年了，基于历史原因，一般也没必要去换了。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>纯裸 TCP 是能收发数据，但它是个<strong>无边界</strong>的数据流，上层需要定义<strong>消息格式</strong>用于定义<strong>消息边界</strong>。于是就有了各种协议，HTTP 和各类 RPC 协议就是在 TCP 之上定义的应用层协议。</li>
 <li><strong>RPC 本质上不算是协议，而是一种调用方式</strong>，而像 gRPC 和 thrift 这样的具体实现，才是协议，它们是实现了 RPC 调用的协议。目的是希望程序员能像调用本地方法那样去调用远端的服务方法。同时 RPC 有很多种实现方式，<strong>不一定非得基于 TCP 协议</strong>。</li>
 <li>从发展历史来说，<strong>HTTP 主要用于 b/s 架构，而 RPC 更多用于 c/s 架构。但现在其实已经没分那么清了，b/s 和 c/s 在慢慢融合。</strong>很多软件同时支持多端，所以对外一般用 HTTP 协议，而内部集群的微服务之间则采用 RPC 协议进行通讯。</li>
@@ -1584,10 +1584,10 @@
 <p>最后留个问题吧，大家有没有发现，不管是 HTTP 还是 RPC，它们都有个特点，那就是消息都是客户端请求，服务端响应。<strong>客户端没问，服务端肯定就不答</strong>，这就有点僵了，但现实中肯定有需要<strong>下游主动发送消息给上游</strong>的场景，比如打个网页游戏，站在那啥也不操作，怪也会主动攻击我，这种情况该怎么办呢？</p>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41609070">https://www.zhihu.com/question/41609070</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41609070">https://www.zhihu.com/question/41609070</a></p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
 <p>但还是算了。因为我最近一直在想一个问题，希望兄弟们能在<strong>评论区</strong>告诉我答案。</p>
 <p>最近手机借给别人玩了一下午，现在老是给我推荐<strong>练习时长两年半的练习生</strong>视频。</p>
 <p>每个视频都在声嘶力竭的告诉我，<strong>鸡你太美</strong>。</p>
@@ -1601,7 +1601,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -1611,10 +1611,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1666,7 +1666,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:09:12" itemprop="dateModified" datetime="2023-10-06T12:09:12+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1711,7 +1711,7 @@
 <p>看完你大概能知道<strong>什么情况下你该考虑离职了。</strong></p>
 <br>
 
-<h3 id="业务起步"><a href="#业务起步" class="headerlink" title="业务起步"></a>业务起步</h3><p>很多公司在某些业务上小赚了一笔之后，都会考虑开辟新的业务线，以期待这个新的业务线会成为新的收入增长点。而这时候，老板们就会观察当前行业的风口，大一点的公司还会有专门的部门做各种研究。</p>
+<h2 id="业务起步"><a href="#业务起步" class="headerlink" title="业务起步"></a>业务起步</h2><p>很多公司在某些业务上小赚了一笔之后，都会考虑开辟新的业务线，以期待这个新的业务线会成为新的收入增长点。而这时候，老板们就会观察当前行业的风口，大一点的公司还会有专门的部门做各种研究。</p>
 <p>在多次 ppt 会议之后，最后也不知道是谁成功忽悠了谁。总之，老板显得有些深思熟虑，并在 ppt 的某页上重点画了一个圈，你以为这是个重点经济增长圈？</p>
 <p>但其实，它只是个饼，圆一点的饼。</p>
 <p>于是，一个新的业务线就这样，带着<strong>宏伟使命和伟大愿景</strong>来了。</p>
@@ -1725,7 +1725,7 @@
 <p>你心想，你就是下一个风口上的猪。闭上眼睛，你都能看到，自己以后跟各界互联网大佬手搭着肩，在 ktv 里哭着唱朋友一生一起走的画面了。</p>
 <br>
 
-<h3 id="业务中期"><a href="#业务中期" class="headerlink" title="业务中期"></a>业务中期</h3><p><strong>搞钱的事，怎么能在一棵树上干吊着呢？要多搞几棵树吊吊。</strong></p>
+<h2 id="业务中期"><a href="#业务中期" class="headerlink" title="业务中期"></a>业务中期</h2><p><strong>搞钱的事，怎么能在一棵树上干吊着呢？要多搞几棵树吊吊。</strong></p>
 <p>于是本着<strong>养蛊</strong>的思路，公司开了更多同类型的细分业务，比如教育还能细分为小学教育，初中教育，再细分还能分为语文数学英语。这时候你会发现，业务变得越来越多了，你手上的需求也越来越多了。</p>
 <p>你每天都在多线程切换，除了写代码，等待你的还有开不完的会，搞不完的 oncall，有时候新来的产品还会天真无邪的找你一对一咨询各种产品细节。白天一晃而过，晚上 8 点之后，你才能开始安心写代码。</p>
 <p>在这种高压环境下待个一年，恍如隔世，照个镜子，<strong>原来人间已经过了三年</strong>。相对论诚不欺我，爱因斯坦棺材板的压不住了。</p>
@@ -1743,7 +1743,7 @@
 <p>这是这一年里，<strong>第 4 次</strong>调整组织架构和方向了，你开始在想老板是不是连自己都没想清楚，但你看老板回答各种问题时，那笃定睿智的神情，你又感觉你行了，坚持下吧，说不定这次真的能行呢！</p>
 <br>
 
-<h3 id="业务后期"><a href="#业务后期" class="headerlink" title="业务后期"></a>业务后期</h3><p>古人说，公司内的消息要在公司外的八卦平台上才能看到。</p>
+<h2 id="业务后期"><a href="#业务后期" class="headerlink" title="业务后期"></a>业务后期</h2><p>古人说，公司内的消息要在公司外的八卦平台上才能看到。</p>
 <p>古人诚不欺你，某天，你在某知名互联网茶水间 app 某脉上看到了自家公司正在裁员的消息，而裁员的对象，正好是你所在的业务线方向。</p>
 <p>虽然<strong>身边陆续有同事在开始慢慢离职</strong>，之前合作对接过的几个开发老哥内部账号也变成了离职状态。</p>
 <p>甚至连竞品的股价都开始在暴跌。</p>
@@ -1763,7 +1763,7 @@
 <p>如无意外，他觉得你绩效不好，要你签一份**<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/fuQAAjOMYW1tzyujh7GOHQ">PIP</a>协议<strong>，你很清楚</strong>这玩意签了就等于承认自己不行，离职连 N+x 都没有**。但你也无力反抗，你很清楚什么叫”欲加之罪，何患无辞”。</p>
 <br>
 
-<h3 id="什么时候该离职"><a href="#什么时候该离职" class="headerlink" title="什么时候该离职"></a>什么时候该离职</h3><p>你开始脑袋放空，过往发生的每一件事都像碎片那样串联了起来。明明有那么多迹象告诉你，快跑。但你都视而不见。</p>
+<h2 id="什么时候该离职"><a href="#什么时候该离职" class="headerlink" title="什么时候该离职"></a>什么时候该离职</h2><p>你开始脑袋放空，过往发生的每一件事都像碎片那样串联了起来。明明有那么多迹象告诉你，快跑。但你都视而不见。</p>
 <p><strong>“早知道我半年前就跑了”</strong></p>
 <p>可是问题来了。</p>
 <p>如果再让你回到半年前，你身处在一个<strong>温水煮青蛙</strong>的环境，你怎么知道该不该跑。</p>
@@ -1785,7 +1785,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/006m97Kgly1ft9rx3wg9uj309j09qmxm-20220704214907793.jpg"></p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我之前写过一篇关于 PIP 的文章，发在了某乎上，让我意外的是，最近时不时会有老哥看到后私信问我该怎么办，貌似最近大行情变差了，用这种方式劝退的公司越来越多了。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我之前写过一篇关于 PIP 的文章，发在了某乎上，让我意外的是，最近时不时会有老哥看到后私信问我该怎么办，貌似最近大行情变差了，用这种方式劝退的公司越来越多了。</p>
 <p>这是个<strong>屁股决定脑袋</strong>的世界，在老板视角里，用 pip 劝退员工可以省下赔款，如果他不能辞退足够多的人，他的绩效和年终就不好看，自己的利益当然比他人的利益重要。在员工视角里，用 pip 劝退员工的老板真实丧良心，但记住，没有人可以逼你签任何协议。<strong>大家做的都没错，都是各自系统的最优解。</strong></p>
 <br>
 
@@ -1798,7 +1798,7 @@
 <p>你执意要去山的对面看看海，我很想告诉你山的对面没有海，但我知道，<strong>就算我说了，你也是不会信的，你需要亲自去看看。</strong></p>
 <br>
 
-<h3 id="多说两句"><a href="#多说两句" class="headerlink" title="多说两句"></a>多说两句</h3><p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
+<h2 id="多说两句"><a href="#多说两句" class="headerlink" title="多说两句"></a>多说两句</h2><p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
 <p>但我今天不想。</p>
 <p>点一个<strong>赞</strong>，愿世界和平。</p>
 <p>点一个<strong>在看</strong>，愿所有的伤痛都由发 pip 的那个人承担。</p>
@@ -1806,7 +1806,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -1814,10 +1814,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -1869,7 +1869,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1932,7 +1932,7 @@
 <p>我们先从<strong>count()方法的原理</strong>聊起。</p>
 <br>
 
-<h3 id="count-的原理"><a href="#count-的原理" class="headerlink" title="count()的原理"></a>count()的原理</h3><p>count()方法的目的是计算当前 sql 语句查询得到的<strong>非 NULL 的行数</strong>。</p>
+<h2 id="count-的原理"><a href="#count-的原理" class="headerlink" title="count()的原理"></a>count()的原理</h2><p>count()方法的目的是计算当前 sql 语句查询得到的<strong>非 NULL 的行数</strong>。</p>
 <p>我们知道 mysql 是分为<strong>server 层和存储引擎层的</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/Mysql%E6%9E%B6%E6%9E%8456.drawio-20220613163829373.png" alt="Mysql架构"></p>
 <p>存储引擎层里可以选择各种引擎进行存储，最常见的是 innodb、myisam。具体使用哪个存储引擎，可以通过建表 sql 里的<code>ENGINE</code>字段进行指定。比如这篇文章开头的建表 sql 里用了<code>ENGINE=InnoDB</code>，那这张表用的就是 innodb 引擎。</p>
@@ -1946,7 +1946,7 @@
 <p>那么问题就来了。</p>
 <br>
 
-<h4 id="为什么-innodb-不能像-myisam-那样实现-count-方法"><a href="#为什么-innodb-不能像-myisam-那样实现-count-方法" class="headerlink" title="为什么 innodb 不能像 myisam 那样实现 count()方法"></a><strong>为什么 innodb 不能像 myisam 那样实现 count()方法</strong></h4><p>myisam 和 innodb 这两个引擎，有几个比较明显的区别，这个是八股文常考了。</p>
+<h3 id="为什么-innodb-不能像-myisam-那样实现-count-方法"><a href="#为什么-innodb-不能像-myisam-那样实现-count-方法" class="headerlink" title="为什么 innodb 不能像 myisam 那样实现 count()方法"></a><strong>为什么 innodb 不能像 myisam 那样实现 count()方法</strong></h3><p>myisam 和 innodb 这两个引擎，有几个比较明显的区别，这个是八股文常考了。</p>
 <p>其中<strong>最大的区别在于 myisam 不支持事务，而 innodb 支持事务。</strong></p>
 <p>而事务，有四层隔离级别，其中<strong>默认隔离级别就是可重复读隔离级别（RR）</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%9B%9B%E5%B1%82%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.png" alt="四层隔离级别"></p>
@@ -1958,18 +1958,18 @@
 <p>那如果不可避免要使用 count()，有没有办法让它快一点？</p>
 <br>
 
-<h3 id="各种-count-方法的原理"><a href="#各种-count-方法的原理" class="headerlink" title="各种 count()方法的原理"></a>各种 count()方法的原理</h3><p>count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该看过，比如放个星号*，放个 1，放个索引列啥的。</p>
+<h2 id="各种-count-方法的原理"><a href="#各种-count-方法的原理" class="headerlink" title="各种 count()方法的原理"></a>各种 count()方法的原理</h2><p>count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该看过，比如放个星号*，放个 1，放个索引列啥的。</p>
 <p>我们来分析下他们的执行流程。</p>
 <p><strong>count 方法的大原则是 server 层会从 innodb 存储引擎里读来一行行数据，并且只累计非 null 的值</strong>。但这个过程，根据 count()方法括号内的传参，有略有不同。</p>
 <br>
 
-<h4 id="count"><a href="#count" class="headerlink" title="count(*)"></a>count(*)</h4><p>server 层拿到 innodb 返回的行数据，<strong>不对里面的行数据做任何解析和判断</strong>，默认取出的值肯定都不是 null，直接行数+1。</p>
+<h3 id="count"><a href="#count" class="headerlink" title="count(*)"></a>count(*)</h3><p>server 层拿到 innodb 返回的行数据，<strong>不对里面的行数据做任何解析和判断</strong>，默认取出的值肯定都不是 null，直接行数+1。</p>
 <br>
 
-<h4 id="count-1"><a href="#count-1" class="headerlink" title="count(1)"></a>count(1)</h4><p>server 层拿到 innodb 返回的行数据，每行放个 1 进去，默认不可能为 null，直接行数+1.</p>
+<h3 id="count-1"><a href="#count-1" class="headerlink" title="count(1)"></a>count(1)</h3><p>server 层拿到 innodb 返回的行数据，每行放个 1 进去，默认不可能为 null，直接行数+1.</p>
 <br>
 
-<h4 id="count-某个列字段"><a href="#count-某个列字段" class="headerlink" title="count(某个列字段)"></a>count(某个列字段)</h4><p>由于指明了要 count 某个字段，innodb 在取数据的时候，会把这个字段<strong>解析出来</strong>返回给 server 层，所以会<strong>比 count(1)和 count(*)多了个解析字段出来的流程。</strong></p>
+<h3 id="count-某个列字段"><a href="#count-某个列字段" class="headerlink" title="count(某个列字段)"></a>count(某个列字段)</h3><p>由于指明了要 count 某个字段，innodb 在取数据的时候，会把这个字段<strong>解析出来</strong>返回给 server 层，所以会<strong>比 count(1)和 count(*)多了个解析字段出来的流程。</strong></p>
 <ul>
 <li>如果这个列字段是<strong>主键 id</strong>，主键是不可能为 null 的，所以 server 层也不用判断是否为 null，innodb 每返回一行，行数结果就+1.</li>
 <li>如果这个列是<strong>普通索引字段</strong>，innodb 一般会<strong>走普通索引</strong>，每返回一行数据，server 层就会判断这个字段是否为 null，不是 null 的情况下+1。当然如果建表 sql 里字段定义为 not null 的话，那就不用做这一步判断直接+1。</li>
@@ -1987,7 +1987,7 @@
 <p>那有没有其他更好的办法？</p>
 <br>
 
-<h3 id="允许粗略估计行数的场景"><a href="#允许粗略估计行数的场景" class="headerlink" title="允许粗略估计行数的场景"></a>允许粗略估计行数的场景</h3><p>我们回过头来细品下文章开头的需求，我们只是希望知道数据库里还有多少短信是堆积在那没发的，具体是 1k 还是 2k 其实都是差不多量级，等到了百万以上，具体数值已经不重要了，我们知道它现在堆积得很离谱，就够了。 因此这个场景，其实是允许使用<strong>比较粗略</strong>的估计的。</p>
+<h2 id="允许粗略估计行数的场景"><a href="#允许粗略估计行数的场景" class="headerlink" title="允许粗略估计行数的场景"></a>允许粗略估计行数的场景</h2><p>我们回过头来细品下文章开头的需求，我们只是希望知道数据库里还有多少短信是堆积在那没发的，具体是 1k 还是 2k 其实都是差不多量级，等到了百万以上，具体数值已经不重要了，我们知道它现在堆积得很离谱，就够了。 因此这个场景，其实是允许使用<strong>比较粗略</strong>的估计的。</p>
 <p><strong>那怎么样才能获得粗略的数值呢？</strong></p>
 <p>还记得我们平时为了查看 sql 执行计划用的<strong>explain 命令</strong>不。</p>
 <p>其中有个<strong>rows</strong>，会用来<strong>估计</strong>接下来执行这条 sql 需要扫描和检查多少行。它是通过采样的方式计算出来的，虽然会有一定的偏差，但它能反映一定的数量级。</p>
@@ -1997,7 +1997,7 @@
 <p>这种情况几乎满足大部分的监控场景。但总有一些场景，它要求必须得到精确的行数，这种情况该怎么办呢？</p>
 <br>
 
-<h3 id="必须精确估计行数的场景"><a href="#必须精确估计行数的场景" class="headerlink" title="必须精确估计行数的场景"></a>必须精确估计行数的场景</h3><p>这种场景就比较头疼了，但也不是不能做。</p>
+<h2 id="必须精确估计行数的场景"><a href="#必须精确估计行数的场景" class="headerlink" title="必须精确估计行数的场景"></a>必须精确估计行数的场景</h2><p>这种场景就比较头疼了，但也不是不能做。</p>
 <p>我们可以单独拉一张新的数据库表，只为保存各种场景下的 count。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `count_table` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `cnt_what` <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;各种需要计算的指标&#x27;</span>,</span><br><span class="line">  `cnt` tinyint <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;cnt指标值&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_cnt_what` (`cnt_what`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB  <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
 
@@ -2011,14 +2011,14 @@
 <p>这里分成两种情况。</p>
 <br>
 
-<h4 id="实时性要求较高的场景"><a href="#实时性要求较高的场景" class="headerlink" title="实时性要求较高的场景"></a>实时性要求较高的场景</h4><p>如果你对这个 cnt 计算结果的实时性要求很高，那你需要<strong>将更新 cnt 的 sql 加入到对应变更行数的事务中</strong>。</p>
+<h3 id="实时性要求较高的场景"><a href="#实时性要求较高的场景" class="headerlink" title="实时性要求较高的场景"></a>实时性要求较高的场景</h3><p>如果你对这个 cnt 计算结果的实时性要求很高，那你需要<strong>将更新 cnt 的 sql 加入到对应变更行数的事务中</strong>。</p>
 <p>比如我们有两个事务 A 和 B，分别是增加未发送短信和减少未发送短信。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%B0%86%E6%9B%B4%E6%94%B9%E8%A1%A8%E8%A1%8C%E6%95%B0%E7%9A%84%E6%93%8D%E4%BD%9C%E6%94%BE%E5%85%A5%E5%88%B0%E4%BA%8B%E5%8A%A1%E9%87%8C.drawio.png" alt="将更改表行数的操作放入到事务里"></p>
 <p>这样做的<strong>好处</strong>是事务内的 cnt 行数依然符合隔离级别，事务回滚的时候，cnt 的值也会跟着回滚。</p>
 <p><strong>坏处</strong>也比较明显，多个线程对同一个 cnt 进行写操作，会触发悲观锁，多个线程之间需要互相等待。对于<strong>高频写的场景</strong>，性能会有折损。</p>
 <br>
 
-<h4 id="实时性没那么高的场景"><a href="#实时性没那么高的场景" class="headerlink" title="实时性没那么高的场景"></a>实时性没那么高的场景</h4><p>如果实时性要求不高的话，比如可以一天一次，那你可以通过全表扫描后做计算。</p>
+<h3 id="实时性没那么高的场景"><a href="#实时性没那么高的场景" class="headerlink" title="实时性没那么高的场景"></a>实时性没那么高的场景</h3><p>如果实时性要求不高的话，比如可以一天一次，那你可以通过全表扫描后做计算。</p>
 <p>举个例子，比如上面的短信表，可以<strong>按 id 排序</strong>，每次取出 1w 条数据，<strong>记下这一批里最大的 id，然后下次从最大 id 开始再拿 1w 条数据出来，不断循环。</strong></p>
 <p>对于未发送的短信，就只需要在捞出的那 1w 条数据里，筛选出 state=0 的条数。</p>
 <p><img src="https://cdn.xiaobaidebug.top/batch%E5%88%86%E6%89%B9%E8%8E%B7%E5%8F%96%E7%9F%AD%E4%BF%A1%E8%A1%A8.drawio.png" alt="batch分批获取短信表"></p>
@@ -2026,7 +2026,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/mysql%E5%90%8C%E6%AD%A5hive.drawio.png" alt="mysql同步hive"></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>mysql 用 count 方法<strong>查全表数据</strong>，在不同的存储引擎里实现不同，myisam 有专门字段记录全表的行数，直接读这个字段就好了。而 innodb 则需要一行行去算。</p>
 </li>
 <li><p>性能方面 <code>count(*) ≈ count(1) &gt; count(主键id) &gt; count(普通索引列) &gt; count(未加索引列)</code>，但哪怕是性能最好的 count(*)，由于实现上就需要一行行去算，所以数据量大的时候就是不给力。</p>
@@ -2042,10 +2042,10 @@
 </ul>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《丁奇 mysql45 讲》</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《丁奇 mysql45 讲》</p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>兄弟们，最近有点没出息，沉迷在刘亦菲的新剧里，都快忘了写文这件事了。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>兄弟们，最近有点没出息，沉迷在刘亦菲的新剧里，都快忘了写文这件事了。</p>
 <p>按照惯例，我应该在这里唯唯诺诺的求大家叫我两声<strong>靓仔</strong>的。</p>
 <p>但今天，我感觉我不配。</p>
 <p>所以先这样。</p>
@@ -2055,7 +2055,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -2065,10 +2065,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -2120,7 +2120,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -2163,7 +2163,7 @@
 <p>这篇文章，我会尝试回答这几个问题。</p>
 <br>
 
-<h3 id="主键不自增行不行"><a href="#主键不自增行不行" class="headerlink" title="主键不自增行不行"></a>主键不自增行不行</h3><p>当然是可以的。比如我们可以把建表 sql 里的<code>AUTO_INCREMENT</code>去掉。</p>
+<h2 id="主键不自增行不行"><a href="#主键不自增行不行" class="headerlink" title="主键不自增行不行"></a>主键不自增行不行</h2><p>当然是可以的。比如我们可以把建表 sql 里的<code>AUTO_INCREMENT</code>去掉。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
 
 <p>然后执行</p>
@@ -2175,7 +2175,7 @@
 
 <br>
 
-<h3 id="为什么要用自增主键"><a href="#为什么要用自增主键" class="headerlink" title="为什么要用自增主键"></a>为什么要用自增主键</h3><p>我们在数据库里保存的数据就跟 excel 表一样，一行行似的。</p>
+<h2 id="为什么要用自增主键"><a href="#为什么要用自增主键" class="headerlink" title="为什么要用自增主键"></a>为什么要用自增主键</h2><p>我们在数据库里保存的数据就跟 excel 表一样，一行行似的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
 <p>而在底层，这一行行数据，就是保存在一个个<strong>16k 大小的页</strong>里。</p>
 <p>每次都去遍历所有的行性能会不好，于是为了加速搜索，我们可以<strong>根据主键 id，从小到大排列这些行数据</strong>，将这些数据页用<strong>双向链表</strong>的形式组织起来，再将这些页里的部分信息提取出来放到一个新的 16kb 的数据页里，再加入<strong>层级的概念</strong>。于是，一个个数据页就被组织起来了，成为了一棵<strong>B+树索引</strong>。</p>
@@ -2193,7 +2193,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%BB%E9%94%AEid%E4%B8%8D%E8%87%AA%E5%A2%9E%E7%9A%84%E6%83%85%E5%86%B5.drawio.png" alt="主键id不自增的情况"></p>
 <br>
 
-<h3 id="没有主键可以吗"><a href="#没有主键可以吗" class="headerlink" title="没有主键可以吗"></a>没有主键可以吗</h3><p>mysql 表如果没有主键索引，查个数据都得全表扫描，那既然它这么重要，我今天就不当人了，<strong>不声明主键，可以吗？</strong></p>
+<h2 id="没有主键可以吗"><a href="#没有主键可以吗" class="headerlink" title="没有主键可以吗"></a>没有主键可以吗</h2><p>mysql 表如果没有主键索引，查个数据都得全表扫描，那既然它这么重要，我今天就不当人了，<strong>不声明主键，可以吗？</strong></p>
 <p>嗯，你完全可以不声明主键。</p>
 <p>你确实可以在建表 sql 里写成这样。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `name` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span></span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
@@ -2201,11 +2201,11 @@
 <p>看起来确实是没有主键的样子。然而实际上，mysql 的 innodb 引擎内部会帮你生成一个名为<code>ROW_ID</code>列，它是个 6 字节的隐藏列，你平时也看不到它，但实际上，它也是自增的。有了这层兜底机制保证，<strong>数据表肯定会有主键和主键索引</strong>。</p>
 <p>跟 ROW_ID 被隐藏的列还有<code>trx_id</code>字段，用于记录当前这一行数据行是被<strong>哪个事务</strong>修改的，和一个<code>roll_pointer</code>字段，这个字段是用来指向当前这个数据行的上一个版本，通过这个字段，可以为这行数据形成一条版本链，从而实现<strong>多版本并发控制（MVCC）</strong>。有没有很眼熟，这个在之前写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/SR0ZL1zAc_0QIQvpDCOANw">文章</a>里出现过。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%9A%90%E8%97%8F%E7%9A%84row_id%E5%88%97.drawio.png" alt="隐藏的row_id列"><br></p>
-<h3 id="有没有建议主键不自增的场景"><a href="#有没有建议主键不自增的场景" class="headerlink" title="有没有建议主键不自增的场景"></a>有没有建议主键不自增的场景</h3><p>前面提到了主键自增可以带来很多好处，事实上<strong>大部分场景下，我们都建议主键设为自增。</strong></p>
+<h2 id="有没有建议主键不自增的场景"><a href="#有没有建议主键不自增的场景" class="headerlink" title="有没有建议主键不自增的场景"></a>有没有建议主键不自增的场景</h2><p>前面提到了主键自增可以带来很多好处，事实上<strong>大部分场景下，我们都建议主键设为自增。</strong></p>
 <p>那有没有不建议主键自增的场景呢？</p>
 <br>
 
-<h4 id="mysql-分库分表下的-id"><a href="#mysql-分库分表下的-id" class="headerlink" title="mysql 分库分表下的 id"></a>mysql 分库分表下的 id</h4><p>聊到分库分表，那我就需要说明下，<strong>递增和自增的区别</strong>了，<strong>自增</strong>就是每次都+1，而<strong>递增</strong>则是新的 id 比上一个 id 要大就行了，具体大多少，没关系。</p>
+<h3 id="mysql-分库分表下的-id"><a href="#mysql-分库分表下的-id" class="headerlink" title="mysql 分库分表下的 id"></a>mysql 分库分表下的 id</h3><p>聊到分库分表，那我就需要说明下，<strong>递增和自增的区别</strong>了，<strong>自增</strong>就是每次都+1，而<strong>递增</strong>则是新的 id 比上一个 id 要大就行了，具体大多少，没关系。</p>
 <p>之前写过一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/HShytuc9Sw3p3kwCfbRbXw">文章</a>提到过，mysql 在水平分库分表时，一般有两种方式。</p>
 <p>一种分表方式是通过<strong>对 id 取模进行分表</strong>，这种要求递增就好，不要求严格自增，因为取模后数据会被分散到多个分表中，就算 id 是严格自增的，在分散之后，都只能保证每个分表里 id 只能是递增的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%A0%B9%E6%8D%AEid%E5%8F%96%E6%A8%A1%E5%88%86%E8%A1%A8.drawio.png" alt="根据id取模分表"></p>
@@ -2219,7 +2219,7 @@
 <p>有没有不依赖于其他第三方组件的方法呢？</p>
 <br>
 
-<h5 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h5><p>有，比如<strong>Twitter 开源的雪花算法。</strong></p>
+<h4 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h4><p>有，比如<strong>Twitter 开源的雪花算法。</strong></p>
 <p>雪花算法通过 64 位有特殊含义的数字来组成 id。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95.d4rawio.png" alt="雪花算法"></p>
 <p>首先<strong>第 0 位</strong>不用。</p>
@@ -2236,7 +2236,7 @@
 <p>有。这就是这篇文章的重点了。</p>
 <br>
 
-<h5 id="适合分库分表的-uuid-算法"><a href="#适合分库分表的-uuid-算法" class="headerlink" title="适合分库分表的 uuid 算法"></a>适合分库分表的 uuid 算法</h5><p>我们可以参考雪花算法的实现，设计成下面这样。注意下面的每一位，<strong>都是十进制</strong>，而不是二进制。</p>
+<h4 id="适合分库分表的-uuid-算法"><a href="#适合分库分表的-uuid-算法" class="headerlink" title="适合分库分表的 uuid 算法"></a>适合分库分表的 uuid 算法</h4><p>我们可以参考雪花算法的实现，设计成下面这样。注意下面的每一位，<strong>都是十进制</strong>，而不是二进制。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%80%82%E5%90%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84uuid%E7%AE%97%E6%B3%95.d43rawio.png" alt="适合分库分表的uuid算法"></p>
 <p>开头的<strong>12 位</strong>依然是时间，但并不是时间戳，雪花算法的时间戳精确到毫秒，我们用不上这么细，我们改为<code>yyMMddHHmmss</code>，注意开头的 yy 是两位，也就是这个方案能保证到 2099 年之前，id 都不会重复，能用到重复，那也是真·百年企业。同样由于最前面是时间，随着时间流逝，也能保证 id 趋势递增。</p>
 <p>接下来的<strong>10 位</strong>，用<strong>十进制</strong>的方式表示工作机器的 ip，就可以把 12 位的 ip 转为 10 位的数字，它可以保证全局唯一，只要服务起来了，也就知道自己的 ip 是多少了，不需要像雪花算法那样从别的地方去读取 worker id 了，又是一个小细节。</p>
@@ -2253,7 +2253,7 @@
 <p>数据库有那么多种，mysql 只是其中一种，那其他数据库也是要求主键自增吗？</p>
 <br>
 
-<h4 id="tidb-的主键-id-不建议自增"><a href="#tidb-的主键-id-不建议自增" class="headerlink" title="tidb 的主键 id 不建议自增"></a>tidb 的主键 id 不建议自增</h4><p>tidb 是一款分布式数据库，作为 mysql 分库分表场景下的替代产品，可以更好的对数据进行分片。</p>
+<h3 id="tidb-的主键-id-不建议自增"><a href="#tidb-的主键-id-不建议自增" class="headerlink" title="tidb 的主键 id 不建议自增"></a>tidb 的主键 id 不建议自增</h3><p>tidb 是一款分布式数据库，作为 mysql 分库分表场景下的替代产品，可以更好的对数据进行分片。</p>
 <p>它通过引入<strong>Range</strong>的概念进行数据表分片，比如第一个分片表的 id 在 0<del>2kw，第二个分片表的 id 在 2kw</del>4kw。这其实就是<strong>根据 id 范围进行数据库分表</strong>。</p>
 <p>它的语法几乎跟 mysql 一致，用起来大部分时候是无感的。</p>
 <p>但跟 mysql 有一点很不一样的就是，mysql 建议 id 自增，但<strong>tidb 却建议使用随机的 uuid</strong>。原因是如果 id 自增的话，根据范围分片的规则，一段时间内生成的 id 几乎都会落到同一个分片上，比如下图，从<code>3kw</code>开始的自增 uuid，几乎都落到<code>range 1</code>这个分片中，而其他表却几乎不会有写入，性能没有被利用起来。出现<strong>一表有难，多表围观</strong>的场面，这种情况又叫<strong>写热点</strong>问题。</p>
@@ -2261,7 +2261,7 @@
 <p>所以为了充分的利用多个分表的写入能力，tidb 建议我们写入时使用<strong>随机 id</strong>，这样数据就能被均匀分散到多个分片中。</p>
 <br>
 
-<h4 id="用户-id-不建议用自增-id"><a href="#用户-id-不建议用自增-id" class="headerlink" title="用户 id 不建议用自增 id"></a>用户 id 不建议用自增 id</h4><p>前面提到的不建议使用自增 id 的场景，都是技术原因导致的，而下面介绍的这个，单纯是因为业务。</p>
+<h3 id="用户-id-不建议用自增-id"><a href="#用户-id-不建议用自增-id" class="headerlink" title="用户 id 不建议用自增 id"></a>用户 id 不建议用自增 id</h3><p>前面提到的不建议使用自增 id 的场景，都是技术原因导致的，而下面介绍的这个，单纯是因为业务。</p>
 <p>举个例子吧。</p>
 <p>如果你能知道一个产品每个月，新增的用户数有多少，这个对你来说会是有用的信息吗？</p>
 <p>对程序员来说，可能这个信息价值不大。</p>
@@ -2278,7 +2278,7 @@
 <p>当然，<strong>主键保持自增，但是不暴露给前端，那也行，那前面的话，你当我没说过</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>建表 sql 里主键边上的<code>AUTO_INCREMENT</code>，可以让主键自增，去掉它是可以的，但这就需要你在 insert 的时候自己设置主键的值。</p>
 </li>
 <li><p>建表 sql 里的 <code>PRIMARY KEY</code> 是用来声明主键的，如果去掉，那也能建表成功，但 mysql 内部会给你偷偷建一个 <code>ROW_ID</code>的隐藏列作为主键。</p>
@@ -2292,7 +2292,7 @@
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我比较记仇，最近有不少兄弟们在评论区叫我 diao 毛。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我比较记仇，最近有不少兄弟们在评论区叫我 diao 毛。</p>
 <p><strong>我都记住了。</strong></p>
 <p>但是，只要兄弟们还能给右下角的<strong>点赞和在看</strong>来上那么一下的话。</p>
 <p>我觉得，<strong>这口气，也不是不能忍。</strong></p>
@@ -2302,7 +2302,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -2312,10 +2312,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       
@@ -2367,7 +2367,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -2391,7 +2391,7 @@
 
       
           <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
+<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
 </blockquote>
 <p>我们先来说下标题是什么意思。</p>
 <br>
@@ -2427,7 +2427,7 @@
 <p>这可如何是好？</p>
 <br>
 
-<h3 id="为什么下游需要-batch-call"><a href="#为什么下游需要-batch-call" class="headerlink" title="为什么下游需要 batch call"></a>为什么下游需要 batch call</h3><p>本着<strong>先问是不是，再问为什么</strong>的精神，我们先看看为啥下游的要求会如此别致。</p>
+<h2 id="为什么下游需要-batch-call"><a href="#为什么下游需要-batch-call" class="headerlink" title="为什么下游需要 batch call"></a>为什么下游需要 batch call</h2><p>本着<strong>先问是不是，再问为什么</strong>的精神，我们先看看为啥下游的要求会如此别致。</p>
 <p>为什么同样都是处理多张图片，下游不搞成支持并发而要搞成批量调用（batch call）？</p>
 <p>这个设定有点奇怪？</p>
 <p>其实不奇怪，在算法服务中<strong>甚至很常见</strong>，举个例子你就明白了。</p>
@@ -2460,13 +2460,13 @@
 <p>这里的调用，就需要分为<strong>同步调用和异步调用</strong>了。</p>
 <br>
 
-<h3 id="同步调用和异步调用的区别"><a href="#同步调用和异步调用的区别" class="headerlink" title="同步调用和异步调用的区别"></a>同步调用和异步调用的区别</h3><p>同步调用，意思是上游发起请求后，<strong>阻塞等待</strong>，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的 http 调用一样。</p>
+<h2 id="同步调用和异步调用的区别"><a href="#同步调用和异步调用的区别" class="headerlink" title="同步调用和异步调用的区别"></a>同步调用和异步调用的区别</h2><p>同步调用，意思是上游发起请求后，<strong>阻塞等待</strong>，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的 http 调用一样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="同步调用"></p>
 <p>异步调用，意思是上游发起请求后<strong>立马返回</strong>，下游收到消息后慢慢处理，处理完之后再通过某个形式通知上游。常见的形式是使用消息队列，也就是 mq。将消息发给 mq 后，下游消费 mq 消息，触发处理逻辑，然后再把处理结果发到 mq，上游消费 mq 的结果。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="异步调用"></p>
 <br>
 
-<h3 id="异步调用的形式接入"><a href="#异步调用的形式接入" class="headerlink" title="异步调用的形式接入"></a>异步调用的形式接入</h3><p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png" alt="异步调用的实现方式"></p>
+<h2 id="异步调用的形式接入"><a href="#异步调用的形式接入" class="headerlink" title="异步调用的形式接入"></a>异步调用的形式接入</h2><p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png" alt="异步调用的实现方式"></p>
 <p>回到我们文章开头提到的例子，当上游服务收到一个请求（一个视频和它对应的图片），这时候上游服务作为生产者将这个数据写入到 mq 中，请求返回。然后新造一个 C 服务，负责批量消费 mq 里的消息。这时候服务 C 就可以根据下游服务的性能控制自己的消费速度，比如一次性消费 10 条数据（视频），每个数据下面挂了 10 个图片，那我一次 batch 的图片数量就是 10*10=100 张，原来的 10 次请求就变为了 1 次请求。这对下游就相当的友好了。</p>
 <p>下游返回结果后，服务 C 将结果写入到 mq 的另外一个 topic 下，由上游去做消费，这样就结束了整个调用流程。</p>
 <br>
@@ -2477,11 +2477,11 @@
 <p><strong>其实对于这种上下游服务处理性能不一致的场景，最适合用的就是异步调用。而且涉及到的服务性能差距越大，服务个数越多，这个方案的优势就越明显。</strong></p>
 <br>
 
-<h3 id="同步调用的方式接入"><a href="#同步调用的方式接入" class="headerlink" title="同步调用的方式接入"></a>同步调用的方式接入</h3><p>虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。</p>
+<h2 id="同步调用的方式接入"><a href="#同步调用的方式接入" class="headerlink" title="同步调用的方式接入"></a>同步调用的方式接入</h2><p>虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。</p>
 <p>这就需要采用同步调用的方案，但怎么才能把同步接口改造得更适合这种调用场景，这也是这篇文章的重点。</p>
 <br>
 
-<h4 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h4><p>如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。</p>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><p>如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。</p>
 <p><strong>这样的组件一般也不需要你自己写，几乎任何一个语言里都会有现成的。</strong></p>
 <p>比如 golang 里可以用<code>golang.org/x/time/rate</code>库，它其实是用令牌桶算法实现的限流器。如果不知道令牌桶是啥也没关系，不影响理解。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%99%90%E6%B5%81%E5%99%A8%E9%80%BB%E8%BE%91.png" alt="限流器逻辑"></p>
@@ -2489,7 +2489,7 @@
 <p>限流只能保证下游算法服务不被压垮，并不能提升单次调用 batch 的图片数量，有没有什么办法可以解决这个问题呢？</p>
 <br>
 
-<h4 id="参考-Nagle-算法的做法"><a href="#参考-Nagle-算法的做法" class="headerlink" title="参考 Nagle 算法的做法"></a>参考 Nagle 算法的做法</h4><p>我们熟悉的 TCP 协议里，有个算法叫 Nagle 算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。</p>
+<h3 id="参考-Nagle-算法的做法"><a href="#参考-Nagle-算法的做法" class="headerlink" title="参考 Nagle 算法的做法"></a>参考 Nagle 算法的做法</h3><p>我们熟悉的 TCP 协议里，有个算法叫 Nagle 算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。</p>
 <p>当我们想要发送一些数据包时，数据包会被放入到一个缓冲区中，不立刻发送，那什么时候会发送呢？</p>
 <p>数据包会在以下两个情况被发送：</p>
 <ul>
@@ -2527,14 +2527,14 @@
 <p><img src="https://cdn.xiaobaidebug.top/image-20220529171810510.png"></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>为了充分利用<strong>GPU</strong>并行计算的能力，不少算法服务会希望上游通过加大<strong>batch</strong>的同时减少并发的方式进行接口调用。</li>
 <li>对于上下游性能差距明显的服务，建议配合<strong>mq</strong>采用<strong>异步调用</strong>的方式将服务串联起来。</li>
 <li>如果非得使用<strong>同步调用</strong>的方式进行调用，建议模仿<strong>Nagle 算法</strong>的形式，攒一批数据再发起请求，这样既可以增大 batch，同时减少并发，真·一举两得，<strong>亲测有效</strong>。</li>
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。</p>
 <p>性能不够？<strong>下游加机器，gpu 卡，买！</strong></p>
 <p>然后下个季度再提起一个技术优化，<strong>性能提升 xx%，cpu，gpu 减少 xx%。</strong></p>
 <p>有没有闻到？</p>
@@ -2555,7 +2555,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -2563,10 +2563,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
 
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
       

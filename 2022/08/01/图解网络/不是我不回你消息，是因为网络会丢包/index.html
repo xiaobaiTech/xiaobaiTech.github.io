@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-08-01T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:21.036Z">
+<meta property="article:modified_time" content="2023-11-30T23:48:15.039Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/%E5%A4%AA%E5%BC%B1%E4%BA%86.jpg">
 
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:48:15" itemprop="dateModified" datetime="2023-12-01T07:48:15+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,7 +279,7 @@
 <p>“我来帮他解释下，这个话题就要从<strong>数据包的发送流程</strong>聊起”</p>
 <br>
 
-<h3 id="数据包的发送流程"><a href="#数据包的发送流程" class="headerlink" title="数据包的发送流程"></a>数据包的发送流程</h3><p>首先，我们两个手机的绿皮聊天软件客户端，要通信，中间会通过它们家服务器。大概长这样。</p>
+<h2 id="数据包的发送流程"><a href="#数据包的发送流程" class="headerlink" title="数据包的发送流程"></a>数据包的发送流程</h2><p>首先，我们两个手机的绿皮聊天软件客户端，要通信，中间会通过它们家服务器。大概长这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E4%B8%89%E7%AB%AF%E9%80%9A%E4%BF%A12.drawio.png" alt="聊天软件三端通信"></p>
 <p>但为了<strong>简化模型</strong>，我们把中间的服务器给省略掉，假设这是个端到端的通信。且为了保证消息的可靠性，我们盲猜它们之间用的是<strong>TCP 协议</strong>进行通信。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E4%B8%A4%E7%AB%AF%E9%80%9A%E4%BF%A12.drawio.png" alt="聊天软件两端通信"></p>
@@ -302,7 +302,7 @@
 <p>但为了不让大家<strong>保持蹲姿太久</strong>影响身体健康，我这边只重点讲下几个<strong>常见容易发生丢包的场景</strong>。</p>
 <br>
 
-<h3 id="建立连接时丢包"><a href="#建立连接时丢包" class="headerlink" title="建立连接时丢包"></a>建立连接时丢包</h3><p>TCP 协议会通过<strong>三次握手</strong>建立连接。大概长下面这样。</p>
+<h2 id="建立连接时丢包"><a href="#建立连接时丢包" class="headerlink" title="建立连接时丢包"></a>建立连接时丢包</h2><p>TCP 协议会通过<strong>三次握手</strong>建立连接。大概长下面这样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%BF%AE%E6%AD%A3%E7%89%882.png" alt="TCP三次握手"></p>
 <p>在服务端，第一次握手之后，会先建立个<strong>半连接</strong>，然后再发出第二次握手。这时候需要有个地方可以<strong>暂存</strong>这些半连接。这个地方就叫<strong>半连接队列</strong>。</p>
 <p>如果之后第三次握手来了，半连接就会升级为全连接，然后暂存到另外一个叫<strong>全连接队列</strong>的地方，坐等程序执行<code>accept()</code>方法将其取走使用。</p>
@@ -316,7 +316,7 @@
 <p>这个话题在之前写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/n17NjGRab1u5eXkOCro1gg">《没有 accept，能建立 TCP 连接吗？》</a>有更详细的聊过，感兴趣的可以回去看下。</p>
 <br>
 
-<h3 id="流量控制丢包"><a href="#流量控制丢包" class="headerlink" title="流量控制丢包"></a>流量控制丢包</h3><p>应用层能发网络数据包的软件有那么多，如果所有数据不加控制一股脑冲入到网卡，网卡会吃不消，那怎么办？让数据按一定的规则排个队依次处理，也就是所谓的<strong>qdisc</strong>(<strong>Q</strong>ueueing <strong>Disc</strong>iplines，排队规则)，这也是我们常说的<strong>流量控制</strong>机制。</p>
+<h2 id="流量控制丢包"><a href="#流量控制丢包" class="headerlink" title="流量控制丢包"></a>流量控制丢包</h2><p>应用层能发网络数据包的软件有那么多，如果所有数据不加控制一股脑冲入到网卡，网卡会吃不消，那怎么办？让数据按一定的规则排个队依次处理，也就是所谓的<strong>qdisc</strong>(<strong>Q</strong>ueueing <strong>Disc</strong>iplines，排队规则)，这也是我们常说的<strong>流量控制</strong>机制。</p>
 <p>排队，得先有个队列，而队列有个<strong>长度</strong>。</p>
 <p>我们可以通过下面的<code>ifconfig</code>命令查看到，里面涉及到的<code>txqueuelen</code>后面的数字<code>1000</code>，其实就是流控队列的长度。</p>
 <p>当发送数据过快，流控队列长度<code>txqueuelen</code>又不够大时，就容易出现<strong>丢包</strong>现象。</p>
@@ -329,10 +329,10 @@
 
 <br>
 
-<h3 id="网卡丢包"><a href="#网卡丢包" class="headerlink" title="网卡丢包"></a>网卡丢包</h3><p>网卡和它的驱动导致丢包的场景也比较常见，原因很多，比如<strong>网线质量差，接触不良</strong>。除此之外，我们来聊几个常见的场景。</p>
+<h2 id="网卡丢包"><a href="#网卡丢包" class="headerlink" title="网卡丢包"></a>网卡丢包</h2><p>网卡和它的驱动导致丢包的场景也比较常见，原因很多，比如<strong>网线质量差，接触不良</strong>。除此之外，我们来聊几个常见的场景。</p>
 <br>
 
-<h4 id="RingBuffer-过小导致丢包"><a href="#RingBuffer-过小导致丢包" class="headerlink" title="RingBuffer 过小导致丢包"></a>RingBuffer 过小导致丢包</h4><p>上面提到，在接收数据时，会将数据暂存到<code>RingBuffer</code>接收缓冲区中，然后等着内核触发软中断慢慢收走。如果这个<strong>缓冲区过小</strong>，而这时候发送的数据又过快，就有可能发生溢出，此时也会产生<strong>丢包</strong>。</p>
+<h3 id="RingBuffer-过小导致丢包"><a href="#RingBuffer-过小导致丢包" class="headerlink" title="RingBuffer 过小导致丢包"></a>RingBuffer 过小导致丢包</h3><p>上面提到，在接收数据时，会将数据暂存到<code>RingBuffer</code>接收缓冲区中，然后等着内核触发软中断慢慢收走。如果这个<strong>缓冲区过小</strong>，而这时候发送的数据又过快，就有可能发生溢出，此时也会产生<strong>丢包</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/RingBuffer%E6%BB%A1%E4%BA%86%E5%AF%BC%E8%87%B4%E4%B8%A2%E5%8C%85.drawio.png" alt="RingBuffer满了导致丢包"></p>
 <p>我们可以通过下面的命令去查看是否发生过这样的事情。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ifconfig</span></span><br><span class="line">eth0:  RX errors 0  dropped 0  overruns 0  frame 0</span><br></pre></td></tr></table></figure>
@@ -352,7 +352,7 @@
 <p><strong>RingBuffer</strong>增大之后，可以减少因为容量小而导致的丢包情况。</p>
 <br>
 
-<h4 id="网卡性能不足"><a href="#网卡性能不足" class="headerlink" title="网卡性能不足"></a>网卡性能不足</h4><p>网卡作为硬件，<strong>传输速度是有上限的</strong>。当网络传输速度过大，达到网卡上限时，就会发生丢包。这种情况一般常见于压测场景。</p>
+<h3 id="网卡性能不足"><a href="#网卡性能不足" class="headerlink" title="网卡性能不足"></a>网卡性能不足</h3><p>网卡作为硬件，<strong>传输速度是有上限的</strong>。当网络传输速度过大，达到网卡上限时，就会发生丢包。这种情况一般常见于压测场景。</p>
 <p>我们可以通过<code>ethtool</code>加网卡名，获得当前网卡支持的最大速度。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ethtool eth0</span></span><br><span class="line">Settings for eth0:</span><br><span class="line">	Speed: 10000Mb/s</span><br></pre></td></tr></table></figure>
 
@@ -366,7 +366,7 @@
 <p>遇到这个问题，优先看下你的服务是不是真有这么大的<strong>真实流量</strong>，如果是的话可以考虑下拆分服务，或者就忍痛充钱升级下配置吧。</p>
 <br>
 
-<h3 id="接收缓冲区丢包"><a href="#接收缓冲区丢包" class="headerlink" title="接收缓冲区丢包"></a>接收缓冲区丢包</h3><p>我们一般使用<code>TCP socket</code>进行网络编程的时候，内核都会分配一个<strong>发送缓冲区</strong>和一个<strong>接收缓冲区</strong>。</p>
+<h2 id="接收缓冲区丢包"><a href="#接收缓冲区丢包" class="headerlink" title="接收缓冲区丢包"></a>接收缓冲区丢包</h2><p>我们一般使用<code>TCP socket</code>进行网络编程的时候，内核都会分配一个<strong>发送缓冲区</strong>和一个<strong>接收缓冲区</strong>。</p>
 <p>当我们想要发一个数据包，会在代码里执行<code>send(msg)</code>，这时候数据包并不是一把梭直接就走网卡飞出去的。而是将数据拷贝到内核<strong>发送缓冲区</strong>就完事<strong>返回</strong>了，至于<strong>什么时候发数据，发多少数据</strong>，这个后续由内核自己做决定。之前写过的《<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/87BZzLmcntA1snJIIhUR0w">代码执行 send 成功后，数据就发出去了吗？</a>》里有比较详细的介绍。</p>
 <p><img src="https://cdn.xiaobaidebug.top/tcp_sendmsg%E9%80%BB%E8%BE%913.png" alt="tcp_sendmsg逻辑"></p>
 <p>而<strong>接收缓冲区</strong>作用也类似，从外部网络收到的数据包就暂存在这个地方，然后坐等用户空间的应用程序将数据包取走。</p>
@@ -391,11 +391,11 @@
 
 <br>
 
-<h3 id="两端之间的网络丢包"><a href="#两端之间的网络丢包" class="headerlink" title="两端之间的网络丢包"></a>两端之间的网络丢包</h3><p>前面提到的是两端机器内部的网络丢包，除此之外，两端之间那么长的一条链路都属于外部网络，这中间有各种路由器和交换机还有光缆啥的，丢包也是很经常发生的。</p>
+<h2 id="两端之间的网络丢包"><a href="#两端之间的网络丢包" class="headerlink" title="两端之间的网络丢包"></a>两端之间的网络丢包</h2><p>前面提到的是两端机器内部的网络丢包，除此之外，两端之间那么长的一条链路都属于外部网络，这中间有各种路由器和交换机还有光缆啥的，丢包也是很经常发生的。</p>
 <p>这些丢包行为发生在中间链路的某些个机器上，我们当然是没权限去登录这些机器。但我们可以通过一些命令观察整个链路的连通情况。</p>
 <br>
 
-<h4 id="ping-命令查看丢包"><a href="#ping-命令查看丢包" class="headerlink" title="ping 命令查看丢包"></a>ping 命令查看丢包</h4><p>比如我们知道目的地的域名是 <code>baidu.com</code>。想知道你的机器到 baidu 服务器之间，有没有产生丢包行为。可以使用 ping 命令。</p>
+<h3 id="ping-命令查看丢包"><a href="#ping-命令查看丢包" class="headerlink" title="ping 命令查看丢包"></a>ping 命令查看丢包</h3><p>比如我们知道目的地的域名是 <code>baidu.com</code>。想知道你的机器到 baidu 服务器之间，有没有产生丢包行为。可以使用 ping 命令。</p>
 <p><img src="https://cdn.xiaobaidebug.top/ping%E6%9F%A5%E7%9C%8B%E4%B8%A2%E5%8C%85.png" alt="ping查看丢包"></p>
 <p>倒数第二行里有个<code>100% packet loss</code>，意思是**丢包率 100%**。</p>
 <p>但这样其实你只能知道<strong>你的机器和目的机器之间有没有丢包。</strong></p>
@@ -403,7 +403,7 @@
 <p>有。</p>
 <br>
 
-<h4 id="mtr-命令"><a href="#mtr-命令" class="headerlink" title="mtr 命令"></a>mtr 命令</h4><p>mtr 命令可以查看到你的机器和目的机器之间的每个节点的丢包情况。</p>
+<h3 id="mtr-命令"><a href="#mtr-命令" class="headerlink" title="mtr 命令"></a>mtr 命令</h3><p>mtr 命令可以查看到你的机器和目的机器之间的每个节点的丢包情况。</p>
 <p>像下面这样执行命令。</p>
 <p><img src="https://cdn.xiaobaidebug.top/mtr_icmp.png" alt="mtr_icmp"></p>
 <p>其中**-r 是指 report**，以报告的形式打印结果。</p>
@@ -417,7 +417,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image-20220727215553645.png"></p>
 <br>
 
-<h3 id="发生丢包了怎么办"><a href="#发生丢包了怎么办" class="headerlink" title="发生丢包了怎么办"></a>发生丢包了怎么办</h3><p>说了这么多。只是想告诉大家，<strong>丢包是很常见的，几乎不可避免的一件事情</strong>。</p>
+<h2 id="发生丢包了怎么办"><a href="#发生丢包了怎么办" class="headerlink" title="发生丢包了怎么办"></a>发生丢包了怎么办</h2><p>说了这么多。只是想告诉大家，<strong>丢包是很常见的，几乎不可避免的一件事情</strong>。</p>
 <p>但问题来了，发生丢包了怎么办？</p>
 <p>这个好办，用<strong>TCP 协议</strong>去做传输。</p>
 <p><img src="https://cdn.xiaobaidebug.top/tcp%E6%98%AF%E4%BB%80%E4%B9%885.drawio.png" alt="TCP是什么"></p>
@@ -432,7 +432,7 @@
 <p>于是乎，问题就变成了，<strong>用了 TCP 协议，就一定不会丢包吗？</strong></p>
 <br>
 
-<h3 id="用了-TCP-协议就一定不会丢包吗"><a href="#用了-TCP-协议就一定不会丢包吗" class="headerlink" title="用了 TCP 协议就一定不会丢包吗"></a>用了 TCP 协议就一定不会丢包吗</h3><p>我们知道 TCP 位于<strong>传输层</strong>，在它的上面还有各种<strong>应用层协议</strong>，比如常见的 HTTP 或者各类 RPC 协议。</p>
+<h2 id="用了-TCP-协议就一定不会丢包吗"><a href="#用了-TCP-协议就一定不会丢包吗" class="headerlink" title="用了 TCP 协议就一定不会丢包吗"></a>用了 TCP 协议就一定不会丢包吗</h2><p>我们知道 TCP 位于<strong>传输层</strong>，在它的上面还有各种<strong>应用层协议</strong>，比如常见的 HTTP 或者各类 RPC 协议。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE5.drawio.png" alt="四层网络协议"></p>
 <p>TCP 保证的可靠性，是<strong>传输层的可靠性</strong>。也就是说，<strong>TCP 只保证数据从 A 机器的传输层可靠地发到 B 机器的传输层。</strong></p>
 <p>至于数据到了接收端的传输层之后，能不能保证到应用层，TCP 并不管。</p>
@@ -452,7 +452,7 @@
 <p>兄弟们觉得我做得对的，请在评论区扣个”<strong>正能量</strong>“。</p>
 <br>
 
-<h3 id="这类丢包问题怎么解决？"><a href="#这类丢包问题怎么解决？" class="headerlink" title="这类丢包问题怎么解决？"></a>这类丢包问题怎么解决？</h3><p>故事到这里也到尾声了，感动之余，我们来<strong>聊点掏心窝子的话</strong>。</p>
+<h2 id="这类丢包问题怎么解决？"><a href="#这类丢包问题怎么解决？" class="headerlink" title="这类丢包问题怎么解决？"></a>这类丢包问题怎么解决？</h2><p>故事到这里也到尾声了，感动之余，我们来<strong>聊点掏心窝子的话</strong>。</p>
 <p><strong>其实前面说的都对，没有一句是假话</strong>。</p>
 <p>但某绿皮聊天软件这么成熟，怎么可能没考虑过这一点呢。</p>
 <p>大家应该还记得我们文章开头提到过，<strong>为了简单</strong>，就将服务器那一方给省略了，从三端通信变成了两端通信，所以才有了这个丢包问题。</p>
@@ -477,7 +477,7 @@
 <p>所以看到这里大家应该明白了，我把服务端去掉，并不单纯是<strong>为了简单</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>数据从发送端到接收端，链路很长，任何一个地方都可能发生丢包，几乎可以说<strong>丢包不可避免</strong>。</p>
 </li>
 <li><p>平时没事也不用关注丢包，大部分时候 TCP 的重传机制保证了消息可靠性。</p>
@@ -492,11 +492,11 @@
 <p>最后给大家留个问题吧，<strong>mtr 命令是怎么知道每一跳的 IP 地址的</strong>？</p>
 <br>
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《Linux 内核技术实战》– 极客时间</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《Linux 内核技术实战》– 极客时间</p>
 <p>《云网络丢包故障定位全景指南》–极客重生</p>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我一想到读者里还有不少兄弟还是单身，我就夜不能寐。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我一想到读者里还有不少兄弟还是单身，我就夜不能寐。</p>
 <p>手心手背都是肉，<strong>一碗水要端平</strong>。</p>
 <p>犹豫了很久，为她指了条明路。</p>
 <p>“我读者里有很多<strong>微信不丢包</strong>的兄弟，他们都喜欢在我的文章底下<strong>点赞和再看</strong>。你可以考虑下他们”</p>
@@ -510,7 +510,7 @@
 <p>他们不敢，我敢。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -520,10 +520,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -645,7 +645,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">数据包的发送流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E6%97%B6%E4%B8%A2%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">建立连接时丢包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%A2%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">流量控制丢包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E4%B8%A2%E5%8C%85"><span class="nav-number">4.</span> <span class="nav-text">网卡丢包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RingBuffer-%E8%BF%87%E5%B0%8F%E5%AF%BC%E8%87%B4%E4%B8%A2%E5%8C%85"><span class="nav-number">4.1.</span> <span class="nav-text">RingBuffer 过小导致丢包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E6%80%A7%E8%83%BD%E4%B8%8D%E8%B6%B3"><span class="nav-number">4.2.</span> <span class="nav-text">网卡性能不足</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%A2%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">接收缓冲区丢包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%AB%AF%E4%B9%8B%E9%97%B4%E7%9A%84%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">两端之间的网络丢包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ping-%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E4%B8%A2%E5%8C%85"><span class="nav-number">6.1.</span> <span class="nav-text">ping 命令查看丢包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mtr-%E5%91%BD%E4%BB%A4"><span class="nav-number">6.2.</span> <span class="nav-text">mtr 命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E7%94%9F%E4%B8%A2%E5%8C%85%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">7.</span> <span class="nav-text">发生丢包了怎么办</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%BA%86-TCP-%E5%8D%8F%E8%AE%AE%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%B8%8D%E4%BC%9A%E4%B8%A2%E5%8C%85%E5%90%97"><span class="nav-number">8.</span> <span class="nav-text">用了 TCP 协议就一定不会丢包吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%99%E7%B1%BB%E4%B8%A2%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">这类丢包问题怎么解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">11.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">12.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">12.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">13.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">数据包的发送流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E6%97%B6%E4%B8%A2%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">建立连接时丢包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%A2%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">流量控制丢包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E4%B8%A2%E5%8C%85"><span class="nav-number">4.</span> <span class="nav-text">网卡丢包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RingBuffer-%E8%BF%87%E5%B0%8F%E5%AF%BC%E8%87%B4%E4%B8%A2%E5%8C%85"><span class="nav-number">4.1.</span> <span class="nav-text">RingBuffer 过小导致丢包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E6%80%A7%E8%83%BD%E4%B8%8D%E8%B6%B3"><span class="nav-number">4.2.</span> <span class="nav-text">网卡性能不足</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%A2%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">接收缓冲区丢包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%AB%AF%E4%B9%8B%E9%97%B4%E7%9A%84%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">两端之间的网络丢包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ping-%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E4%B8%A2%E5%8C%85"><span class="nav-number">6.1.</span> <span class="nav-text">ping 命令查看丢包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mtr-%E5%91%BD%E4%BB%A4"><span class="nav-number">6.2.</span> <span class="nav-text">mtr 命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E7%94%9F%E4%B8%A2%E5%8C%85%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">7.</span> <span class="nav-text">发生丢包了怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%86-TCP-%E5%8D%8F%E8%AE%AE%E5%B0%B1%E4%B8%80%E5%AE%9A%E4%B8%8D%E4%BC%9A%E4%B8%A2%E5%8C%85%E5%90%97"><span class="nav-number">8.</span> <span class="nav-text">用了 TCP 协议就一定不会丢包吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E7%B1%BB%E4%B8%A2%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">这类丢包问题怎么解决？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">11.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">12.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">12.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">13.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

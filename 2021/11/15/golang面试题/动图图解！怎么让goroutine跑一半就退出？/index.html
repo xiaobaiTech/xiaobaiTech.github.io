@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="article:published_time" content="2021-11-15T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:47.090Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.756Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/doutub_gif2.gif">
 
@@ -209,7 +209,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,7 +250,7 @@
 <p>可以看到<strong>打印 3</strong>这一行没出现了，协程确实提前结束了。</p>
 <p>其实面试题到这里就讲完了，这一波自问自答可还行？</p>
 <p>但这不是今天的重点，我们需要搞搞清楚内部的逻辑。</p>
-<h3 id="runtime-Goexit-是什么？"><a href="#runtime-Goexit-是什么？" class="headerlink" title="runtime.Goexit()是什么？"></a>runtime.Goexit()是什么？</h3><p>看一下内部实现。</p>
+<h2 id="runtime-Goexit-是什么？"><a href="#runtime-Goexit-是什么？" class="headerlink" title="runtime.Goexit()是什么？"></a>runtime.Goexit()是什么？</h2><p>看一下内部实现。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Goexit</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 以下函数省略一些逻辑...</span></span><br><span class="line">	gp := getg()</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">    <span class="comment">// 获取defer并执行</span></span><br><span class="line">		d := gp._defer</span><br><span class="line">		reflectcall(<span class="literal">nil</span>, unsafe.Pointer(d.fn), deferArgs(d), <span class="keyword">uint32</span>(d.siz), <span class="keyword">uint32</span>(d.siz))</span><br><span class="line">	&#125;</span><br><span class="line">	goexit1()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">goexit1</span><span class="params">()</span></span> &#123;</span><br><span class="line">	mcall(goexit0)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>从代码上看，<code>runtime.Goexit()</code>会先执行一下<code>defer</code>里的方法，这里就解释了开头的代码里为什么<strong>在 defer 里的打印 2</strong>能正常输出。</p>
@@ -268,7 +268,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/goexit.gif" alt="goexit"></p>
 <p>所以简单总结一下，<strong>只要执行 goexit 这个函数，当前协程就会退出，同时还能调度下一个可执行的协程出来跑。</strong></p>
 <p>看到这里，大家应该就能理解，开头的代码里，为什么<code>runtime.Goexit()</code>能让协程只执行一半就结束了。</p>
-<h3 id="goexit-的用途"><a href="#goexit-的用途" class="headerlink" title="goexit 的用途"></a>goexit 的用途</h3><p>看是看懂了，但是会忍不住疑惑。<strong>面试这么问问，那只能说明你遇到了一个喜欢为难年轻人的面试官</strong>，但正经人谁会没事跑一半协程就结束呢？所以<code>goexit</code>的<strong>真实用途</strong>是啥？</p>
+<h2 id="goexit-的用途"><a href="#goexit-的用途" class="headerlink" title="goexit 的用途"></a>goexit 的用途</h2><p>看是看懂了，但是会忍不住疑惑。<strong>面试这么问问，那只能说明你遇到了一个喜欢为难年轻人的面试官</strong>，但正经人谁会没事跑一半协程就结束呢？所以<code>goexit</code>的<strong>真实用途</strong>是啥？</p>
 <p>有个<strong>小细节</strong>，不知道大家平时 debug 的时候有没有关注过。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/0bec52deb6276987.jpeg"></p>
 <p>为了说明问题，这里先给出一段代码。</p>
@@ -279,14 +279,14 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20211024150223114.png"></p>
 <p>会发现，这个协程的堆栈底部是从<code>runtime.goexit()</code>里开始启动的。</p>
 <p>如果大家平时有注意观察，会发现，<strong>其实所有的堆栈底部，都是从这个函数开始的</strong>。我们继续跟跟代码。</p>
-<h3 id="goexit-是什么？"><a href="#goexit-是什么？" class="headerlink" title="goexit 是什么？"></a>goexit 是什么？</h3><p>从上面的<code>debug</code>堆栈里点进去会发现，这是个汇编函数，可以看出调用的是<code>runtime</code>包内的 <code>goexit1()</code> 函数。</p>
+<h2 id="goexit-是什么？"><a href="#goexit-是什么？" class="headerlink" title="goexit 是什么？"></a>goexit 是什么？</h2><p>从上面的<code>debug</code>堆栈里点进去会发现，这是个汇编函数，可以看出调用的是<code>runtime</code>包内的 <code>goexit1()</code> 函数。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The top-most function running on a goroutine</span></span><br><span class="line"><span class="comment">// returns to goexit+PCQuantum.</span></span><br><span class="line">TEXT runtime·goexit(SB),NOSPLIT,$<span class="number">0</span><span class="number">-0</span></span><br><span class="line">	BYTE	$<span class="number">0x90</span>	<span class="comment">// NOP</span></span><br><span class="line">	CALL	runtime·goexit1(SB)	<span class="comment">// does not return</span></span><br><span class="line">	<span class="comment">// traceback from goexit1 must hit code range of goexit</span></span><br><span class="line">	BYTE	$<span class="number">0x90</span>	<span class="comment">// NOP</span></span><br></pre></td></tr></table></figure>
 
 <p>于是跟到了<code>pruntime/proc.go</code>里的代码中。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略部分代码</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">goexit1</span><span class="params">()</span></span> &#123;</span><br><span class="line">	mcall(goexit0)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>是不是很熟悉，这不就是我们开头讲<code>runtime.Goexit()</code>里内部执行的<code>goexit0</code>吗。</p>
-<h3 id="为什么每个堆栈底部都是这个方法？"><a href="#为什么每个堆栈底部都是这个方法？" class="headerlink" title="为什么每个堆栈底部都是这个方法？"></a>为什么每个堆栈底部都是这个方法？</h3><p>我们首先需要知道的是，函数栈的执行过程，是先进后出。</p>
+<h2 id="为什么每个堆栈底部都是这个方法？"><a href="#为什么每个堆栈底部都是这个方法？" class="headerlink" title="为什么每个堆栈底部都是这个方法？"></a>为什么每个堆栈底部都是这个方法？</h2><p>我们首先需要知道的是，函数栈的执行过程，是先进后出。</p>
 <p>假设我们有以下代码</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	B()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span> &#123;</span><br><span class="line">	A()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -302,7 +302,7 @@
 
 <p>主要的逻辑是获取当前协程 G 所在的调度器 P，然后创建一个新 G，并在栈底插入一个 goexit。</p>
 <p>所以我们每次 debug 的时候，就都能看到函数栈底部有个 goexit 函数。</p>
-<h3 id="main-函数也是个协程，栈底也是-goexit？"><a href="#main-函数也是个协程，栈底也是-goexit？" class="headerlink" title="main 函数也是个协程，栈底也是 goexit？"></a>main 函数也是个协程，栈底也是 goexit？</h3><p>关于 main 函数栈底是不是也有个<code>goexit</code>，我们对下面代码断点看下。直接得出结果。</p>
+<h2 id="main-函数也是个协程，栈底也是-goexit？"><a href="#main-函数也是个协程，栈底也是-goexit？" class="headerlink" title="main 函数也是个协程，栈底也是 goexit？"></a>main 函数也是个协程，栈底也是 goexit？</h2><p>关于 main 函数栈底是不是也有个<code>goexit</code>，我们对下面代码断点看下。直接得出结果。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20211025073255360.png"></p>
 <p>main 函数栈底也是<code>goexit()</code>。</p>
 <p>从 <code>asm_amd64.s</code>可以看到 Go 程序启动的流程，这里提到的 <code>runtime·mainPC</code> 其实就是 <code>runtime.main</code>.</p>
@@ -312,19 +312,19 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// runtime/proc.go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 省略大量代码</span></span><br><span class="line">	fn := main_main <span class="comment">// 其实就是我们的main函数入口</span></span><br><span class="line">	fn()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//go:linkname main_main main.main</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main_main</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
 
 <p>结论是，<strong>其实 main 函数也是由 newproc 创建的，只要通过 newproc 创建的 goroutine，栈底就会有一个 goexit。</strong></p>
-<h3 id="os-Exit-和-runtime-Goexit-有什么区别"><a href="#os-Exit-和-runtime-Goexit-有什么区别" class="headerlink" title="os.Exit()和 runtime.Goexit()有什么区别"></a>os.Exit()和 runtime.Goexit()有什么区别</h3><p>最后再回到开头的问题，实现一下首尾呼应。</p>
+<h2 id="os-Exit-和-runtime-Goexit-有什么区别"><a href="#os-Exit-和-runtime-Goexit-有什么区别" class="headerlink" title="os.Exit()和 runtime.Goexit()有什么区别"></a>os.Exit()和 runtime.Goexit()有什么区别</h2><p>最后再回到开头的问题，实现一下首尾呼应。</p>
 <p>开头的面试题，除了<code>runtime.Goexit()</code>，是不是还可以改为用<code>os.Exit()</code>？</p>
 <p>同样都是带有”退出”的含义，两者退出的<strong>对象</strong>不同。<code>os.Exit()</code> 指的是整个<strong>进程</strong>退出；而<code>runtime.Goexit()</code>指的是<strong>协程</strong>退出。</p>
 <p>可想而知，改用<code>os.Exit()</code> 这种情况下，defer 里的内容就不会被执行到了。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Foo</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;打印1&quot;</span>)</span><br><span class="line">	<span class="keyword">defer</span> fmt.Println(<span class="string">&quot;打印2&quot;</span>)</span><br><span class="line">	os.Exit(<span class="number">0</span>)</span><br><span class="line">	fmt.Println(<span class="string">&quot;打印3&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span>  Foo()</span><br><span class="line">	fmt.Println(<span class="string">&quot;打印4&quot;</span>)</span><br><span class="line">	time.Sleep(<span class="number">1000</span>*time.Second)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出结果</span></span><br><span class="line">打印<span class="number">4</span></span><br><span class="line">打印<span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>通过 <code>runtime.Goexit()</code>可以做到提前结束协程，且结束前还能执行到 defer 的内容</li>
 <li><code>runtime.Goexit()</code>其实是对 goexit0 的封装，只要执行 goexit0 这个函数，当前协程就会退出，同时还能调度下一个可执行的协程出来跑。</li>
 <li>通过<code>newproc</code>可以创建出新的<code>goroutine</code>，它会在函数栈底部插入一个 goexit。</li>
 <li><code>os.Exit()</code> 指的是整个<strong>进程</strong>退出；而<code>runtime.Goexit()</code>指的是<strong>协程</strong>退出。两者含义有区别。</li>
 </ul>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>无用的知识又增加了。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>无用的知识又增加了。</p>
 <p>一般情况下，业务开发中，谁会没事执行这个函数呢？</p>
 <p><strong>但是开发中不关心，不代表面试官不关心！</strong></p>
 <p>下次面试官问你，<strong>如果想在 goroutine 执行一半就退出协程，该怎么办？</strong>你知道该怎么回答了吧？</p>
@@ -349,12 +349,12 @@
 <p>加我，我们建了个划水吹牛皮群，在群里，你可以跟你下次跳槽可能遇到的同事或面试官聊点有趣的话题。就<strong>超！开！心！</strong></p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>饶大的《哪来里的 goexit？》- <a target="_blank" rel="noopener" href="https://qcrao.com/2021/06/07/where-is-goexit-from/">https://qcrao.com/2021/06/07/where-is-goexit-from/</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>饶大的《哪来里的 goexit？》- <a target="_blank" rel="noopener" href="https://qcrao.com/2021/06/07/where-is-goexit-from/">https://qcrao.com/2021/06/07/where-is-goexit-from/</a></p>
 
     </div>
 
@@ -475,7 +475,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime-Goexit-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">runtime.Goexit()是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goexit-%E7%9A%84%E7%94%A8%E9%80%94"><span class="nav-number">2.</span> <span class="nav-text">goexit 的用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goexit-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">goexit 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%AF%8F%E4%B8%AA%E5%A0%86%E6%A0%88%E5%BA%95%E9%83%A8%E9%83%BD%E6%98%AF%E8%BF%99%E4%B8%AA%E6%96%B9%E6%B3%95%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">为什么每个堆栈底部都是这个方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-%E5%87%BD%E6%95%B0%E4%B9%9F%E6%98%AF%E4%B8%AA%E5%8D%8F%E7%A8%8B%EF%BC%8C%E6%A0%88%E5%BA%95%E4%B9%9F%E6%98%AF-goexit%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">main 函数也是个协程，栈底也是 goexit？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-Exit-%E5%92%8C-runtime-Goexit-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">6.</span> <span class="nav-text">os.Exit()和 runtime.Goexit()有什么区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">10.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#runtime-Goexit-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">runtime.Goexit()是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#goexit-%E7%9A%84%E7%94%A8%E9%80%94"><span class="nav-number">2.</span> <span class="nav-text">goexit 的用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#goexit-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">goexit 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%AF%8F%E4%B8%AA%E5%A0%86%E6%A0%88%E5%BA%95%E9%83%A8%E9%83%BD%E6%98%AF%E8%BF%99%E4%B8%AA%E6%96%B9%E6%B3%95%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">为什么每个堆栈底部都是这个方法？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-%E5%87%BD%E6%95%B0%E4%B9%9F%E6%98%AF%E4%B8%AA%E5%8D%8F%E7%A8%8B%EF%BC%8C%E6%A0%88%E5%BA%95%E4%B9%9F%E6%98%AF-goexit%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">main 函数也是个协程，栈底也是 goexit？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os-Exit-%E5%92%8C-runtime-Goexit-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">6.</span> <span class="nav-text">os.Exit()和 runtime.Goexit()有什么区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">10.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

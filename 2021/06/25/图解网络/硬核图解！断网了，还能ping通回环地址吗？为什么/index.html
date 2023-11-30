@@ -46,7 +46,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/image-20210530191958500.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="article:published_time" content="2021-06-25T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:47.774Z">
+<meta property="article:modified_time" content="2023-11-30T23:38:34.945Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/cache_1623425479_3538.gif">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:38:34" itemprop="dateModified" datetime="2023-12-01T07:38:34+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,7 +260,7 @@
 <p><strong>不能。</strong></p>
 <p>首先我们需要进入基础科普环节。</p>
 <p>不懂的同学看了就懂了，懂的看了就当查漏补缺吧。</p>
-<h3 id="什么是-127-0-0-1"><a href="#什么是-127-0-0-1" class="headerlink" title="什么是 127.0.0.1"></a>什么是 127.0.0.1</h3><p>首先，这是个 <code>IPV4</code> 地址。</p>
+<h2 id="什么是-127-0-0-1"><a href="#什么是-127-0-0-1" class="headerlink" title="什么是 127.0.0.1"></a>什么是 127.0.0.1</h2><p>首先，这是个 <code>IPV4</code> 地址。</p>
 <p><code>IPV4</code> 地址有 <code>32</code> 位，一个字节有 <code>8</code> 位，共 <code>4</code> 个字节。</p>
 <p>其中<strong>127 开头的都属于回环地址</strong>，也是 <code>IPV4</code> 的特殊地址，没什么道理，就是人为规定的。</p>
 <p>而<code>127.0.0.1</code>是<strong>众多</strong>回环地址中的一个。之所以不是 <code>127.0.0.2</code> ，而是 <code>127.0.0.1</code>，是因为源码里就是这么定义的，也没什么道理。</p>
@@ -276,13 +276,13 @@
 <blockquote>
 <p>多说一句： 在 IPV4 下用的是 <strong>ping 127.0.0.1</strong> 命令。 在 IPV6 下用的是 <strong>ping6 ::1</strong> 命令。</p>
 </blockquote>
-<h3 id="什么是-ping"><a href="#什么是-ping" class="headerlink" title="什么是 ping"></a>什么是 ping</h3><p>ping 是应用层命令，可以理解为它跟游戏或者聊天软件属于同一层。只不过聊天软件可以收发消息，还能点个赞什么的，有很多复杂的功能。而 ping 作为一个小软件，它的功能比较简单，就是<strong>尝试</strong>发送一个小小的消息到目标机器上，判断目的机器是否<strong>可达</strong>，其实也就是判断目标机器网络是否能连通。</p>
+<h2 id="什么是-ping"><a href="#什么是-ping" class="headerlink" title="什么是 ping"></a>什么是 ping</h2><p>ping 是应用层命令，可以理解为它跟游戏或者聊天软件属于同一层。只不过聊天软件可以收发消息，还能点个赞什么的，有很多复杂的功能。而 ping 作为一个小软件，它的功能比较简单，就是<strong>尝试</strong>发送一个小小的消息到目标机器上，判断目的机器是否<strong>可达</strong>，其实也就是判断目标机器网络是否能连通。</p>
 <p>ping 应用的底层，用的是网络层的<strong>ICMP 协议</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/IP%E5%92%8CICMP%E5%92%8CPing%E6%89%80%E5%9C%A8%E5%88%86%E5%B1%82.png" alt="IP和ICMP和Ping所在分层"></p>
 <p>虽然 ICMP 协议和 IP 协议<strong>都属于网络层协议</strong>，但其实<strong>ICMP 也是利用了 IP 协议进行消息的传输</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ip%E5%92%8Cicmp%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="ip和icmp的关系"></p>
 <p>所以，大家在这里完全可以简单的理解为 ping 某个 IP 就是往某个 IP 地址发个消息。</p>
-<h3 id="TCP-发数据和-ping-的区别"><a href="#TCP-发数据和-ping-的区别" class="headerlink" title="TCP 发数据和 ping 的区别"></a>TCP 发数据和 ping 的区别</h3><p>一般情况下，我们会使用 TCP 进行网络数据传输，那么我们可以看下它和 ping 的区别。</p>
+<h2 id="TCP-发数据和-ping-的区别"><a href="#TCP-发数据和-ping-的区别" class="headerlink" title="TCP 发数据和 ping 的区别"></a>TCP 发数据和 ping 的区别</h2><p>一般情况下，我们会使用 TCP 进行网络数据传输，那么我们可以看下它和 ping 的区别。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ping%E5%92%8C%E6%99%AE%E9%80%9A%E5%8F%91%E6%B6%88%E6%81%AF%E7%9A%84%E5%85%B3%E7%B3%BB2.png" alt="ping和普通发消息的关系"></p>
 <p>ping 和其他应用层软件都属于<strong>应用层</strong>。</p>
 <p>那么我们横向对比一下，比方说聊天软件，如果用的是 TCP 的方式去发送消息。</p>
@@ -293,7 +293,7 @@
 <p>然后进入传输层，带上<code>TCP</code>头。网络层带上<code>IP</code>头，数据链路层带上 <code>MAC</code>头等一系列操作后。进入网卡的<strong>发送队列 ring buffer</strong> ，顺着网卡就发出去了。</p>
 <p>回到 <code>ping</code> ， 整个过程也基本跟 <code>TCP</code> 发数据类似，差异的地方主要在于，创建 <code>socket</code> 的时候用的是 <code>socket(AF_INET,SOCK_RAW,IPPROTO_ICMP)</code>，<code>SOCK_RAW</code> 是原始套接字 ，<strong>工作在网络层</strong>， 所以构建<code>ICMP</code>（网络层协议）的数据，是再合适不过了。ping 在进入内核态后最后也是调用的 <code>sock_sendmsg</code> 方法，进入到网络层后加上<strong>ICMP 和 IP 头</strong>后，数据链路层加上<strong>MAC 头</strong>，也是顺着网卡发出。因此 本质上 ping 跟 普通应用发消息 在程序流程上没太大差别。</p>
 <p>这也解释了<strong>为什么当你发现怀疑网络有问题的时候，别人第一时间是问你能 ping 通吗？</strong>因为可以简单理解为 ping 就是自己组了个数据包，让系统按着其他软件发送数据的路径往外发一遍，能通的话说明其他软件发的数据也能通。</p>
-<h3 id="为什么断网了还能-ping-通-127-0-0-1"><a href="#为什么断网了还能-ping-通-127-0-0-1" class="headerlink" title="为什么断网了还能 ping 通 127.0.0.1"></a>为什么断网了还能 ping 通 127.0.0.1</h3><p>前面提到，有网的情况下，ping 最后是<strong>通过网卡</strong>将数据发送出去的。</p>
+<h2 id="为什么断网了还能-ping-通-127-0-0-1"><a href="#为什么断网了还能-ping-通-127-0-0-1" class="headerlink" title="为什么断网了还能 ping 通 127.0.0.1"></a>为什么断网了还能 ping 通 127.0.0.1</h2><p>前面提到，有网的情况下，ping 最后是<strong>通过网卡</strong>将数据发送出去的。</p>
 <p>那么断网的情况下，网卡已经不工作了，ping 回环地址却一切正常，我们可以看下这种情况下的工作原理。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/ping%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80.png" alt="ping回环地址"></p>
 <p>从应用层到传输层再到网络层。这段路径跟 ping 外网的时候是几乎是一样的。到了网络层，系统会根据目的 IP，在路由表中获取对应的<strong>路由信息</strong>，而这其中就包含选择<strong>哪个网卡</strong>把消息发出。</p>
@@ -303,7 +303,7 @@
 <p>专门处理软中断的工具人**”ksoftirqd”** （这是个<strong>内核线程</strong>），它在收到软中断后就会立马去链表里把消息取出，然后顺着数据链路层、网络层等层层往上传递最后给到应用程序。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%B7%A5%E5%85%B7%E4%BA%BAksoftirqd.png" alt="工具人ksoftirqd"></p>
 <p>ping 回环地址和<strong>通过 TCP 等各种协议发送数据到回环地址</strong>都是走这条路径。整条路径从发到收，都没有经过”真网卡”。<strong>之所以 127.0.0.1 叫本地回环地址，可以理解为，消息发出到这个地址上的话，就不会出网络，在本机打个转就又回来了。</strong>所以断网，依然能 <code>ping</code> 通 <code>127.0.0.1</code>。</p>
-<h3 id="ping-回环地址和-ping-本机地址有什么区别"><a href="#ping-回环地址和-ping-本机地址有什么区别" class="headerlink" title="ping 回环地址和 ping 本机地址有什么区别"></a>ping 回环地址和 ping 本机地址有什么区别</h3><p>我们在 mac 里执行 <code>ifconfig</code> 。</p>
+<h2 id="ping-回环地址和-ping-本机地址有什么区别"><a href="#ping-回环地址和-ping-本机地址有什么区别" class="headerlink" title="ping 回环地址和 ping 本机地址有什么区别"></a>ping 回环地址和 ping 本机地址有什么区别</h2><p>我们在 mac 里执行 <code>ifconfig</code> 。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ifconfig</span></span><br><span class="line">lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu 16384</span><br><span class="line">	inet 127.0.0.1 netmask 0xff000000</span><br><span class="line">	...</span><br><span class="line">en0: flags=8863&lt;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500</span><br><span class="line">	inet 192.168.31.6 netmask 0xffffff00 broadcast 192.168.31.255</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 
 <p>能看到 <strong>lo0</strong>，表示本地回环接口，对应的地址，就是我们前面提到的 <strong>127.0.0.1</strong> ，也就是<strong>回环地址</strong>。</p>
@@ -316,7 +316,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210611225140197.png" alt="ping 本机地址"></p>
 <p>可以看到 ping 本机 IP 跟 ping 回环地址一样，相关的网络数据，都是走的 <strong>lo0</strong>，本地回环接口，也就是前面提到的**”假网卡”**。</p>
 <p>只要走了本地回环接口，那数据都不会发送到网络中，在本机网络协议栈中兜一圈，就发回来了。因此 <strong>ping 回环地址和 ping 本机地址没有区别</strong>。</p>
-<h3 id="127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗"><a href="#127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗" class="headerlink" title="127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗"></a>127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</h3><p>回到文章开头动图里的提问，算是面试八股文里的老常客了。</p>
+<h2 id="127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗"><a href="#127-0-0-1-和-localhost-以及-0-0-0-0-有区别吗" class="headerlink" title="127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗"></a>127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</h2><p>回到文章开头动图里的提问，算是面试八股文里的老常客了。</p>
 <p>以前第一次用 <code>nginx</code> 的时候，发现用这几个 <code>IP</code>，都能正常访问到 <code>nginx</code> 的欢迎网页。一度认为这几个 <code>IP</code> 都是一样的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210530190253656.png" alt="访问127.0.0.1:80"></p>
 <p><img src="https://cdn.xiaobaidebug.top/image/image-20210530190335350.png" alt="访问localhost:80"></p>
@@ -334,7 +334,7 @@
 
 <p>举个例子。刚刚提到的 <code>127.0.0.1</code> 和 <code>192.168.31.6</code> ，都是本机的 IPV4 地址，如果监听 <code>0.0.0.0</code> ，那么用上面两个地址，都能访问到这个服务器。</p>
 <p>当然， 客户端 <code>connect</code> 时，不能使用 <code>0.0.0.0</code> 。必须指明要连接哪个服务器 IP。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p><code>127.0.0.1</code> 是<strong>回环地址</strong>。<code>localhost</code>是<strong>域名</strong>，但默认等于 <code>127.0.0.1</code>。</p>
 </li>
 <li><p><code>ping</code> 回环地址和 <code>ping</code> 本机地址，是一样的，走的是<strong>lo0 “假网卡”<strong>，都会经过网络层和数据链路层等逻辑，最后在快要出网卡前</strong>狠狠拐了个弯</strong>， 将数据插入到一个<strong>链表</strong>后就<strong>软中断</strong>通知 <strong>ksoftirqd</strong> 来进行<strong>收数据</strong>的逻辑，<strong>压根就不出网络</strong>。所以断网了也能 <code>ping</code> 通回环地址。</p>
@@ -342,13 +342,13 @@
 <li><p>如果服务器 <code>listen</code> 的是 <code>0.0.0.0</code>，那么此时用<code>127.0.0.1</code>和本机地址<strong>都可以</strong>访问到服务。</p>
 </li>
 </ul>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近工作上的事情太忙，本来就黑的黑眼圈，就更黑了，鸽了大家这么久实在不好意思哈。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近工作上的事情太忙，本来就黑的黑眼圈，就更黑了，鸽了大家这么久实在不好意思哈。</p>
 <p>这篇文章里，有几张大图本来都是动图，但是发现动起来之后发现字太小，点开来放大之后图又不会动了。有些影响体验，我就先改成静态图吧。</p>
 <p>欢迎大家加我微信（公众号里右下角“联系我”），互相围观朋友圈砍一刀啥的哈哈。</p>
 <p>如果文章对你有帮助，看下文章底部右下角，做点正能量的事情（<strong>点两下</strong>）支持一下。（<strong>疯狂暗示，拜托拜托，这对我真的很重要！</strong>）</p>
 <p>我是小白，我们下期见。</p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《127.0.0.1 之本机网络通信过程知多少 ?！》—— 推荐关注飞哥的《开发内功修炼》</p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《127.0.0.1 之本机网络通信过程知多少 ?！》—— 推荐关注飞哥的《开发内功修炼》</p>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
 <li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VLHCu6b5Anx8HEj_gQZfOg">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></p>
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ">动图图解！GMP 模型里为什么要有 P？背后的原因让人暖心</a></p>
@@ -370,7 +370,7 @@
 <li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ">硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？</a></p>
 </li>
 </ul>
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p>关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p>关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 
     </div>
 
@@ -491,7 +491,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-127-0-0-1"><span class="nav-number">1.</span> <span class="nav-text">什么是 127.0.0.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-ping"><span class="nav-number">2.</span> <span class="nav-text">什么是 ping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-%E5%8F%91%E6%95%B0%E6%8D%AE%E5%92%8C-ping-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">TCP 发数据和 ping 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%96%AD%E7%BD%91%E4%BA%86%E8%BF%98%E8%83%BD-ping-%E9%80%9A-127-0-0-1"><span class="nav-number">4.</span> <span class="nav-text">为什么断网了还能 ping 通 127.0.0.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ping-%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%92%8C-ping-%E6%9C%AC%E6%9C%BA%E5%9C%B0%E5%9D%80%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">ping 回环地址和 ping 本机地址有什么区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#127-0-0-1-%E5%92%8C-localhost-%E4%BB%A5%E5%8F%8A-0-0-0-0-%E6%9C%89%E5%8C%BA%E5%88%AB%E5%90%97"><span class="nav-number">6.</span> <span class="nav-text">127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">10.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-127-0-0-1"><span class="nav-number">1.</span> <span class="nav-text">什么是 127.0.0.1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-ping"><span class="nav-number">2.</span> <span class="nav-text">什么是 ping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%8F%91%E6%95%B0%E6%8D%AE%E5%92%8C-ping-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">TCP 发数据和 ping 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%96%AD%E7%BD%91%E4%BA%86%E8%BF%98%E8%83%BD-ping-%E9%80%9A-127-0-0-1"><span class="nav-number">4.</span> <span class="nav-text">为什么断网了还能 ping 通 127.0.0.1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ping-%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%E5%92%8C-ping-%E6%9C%AC%E6%9C%BA%E5%9C%B0%E5%9D%80%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">ping 回环地址和 ping 本机地址有什么区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#127-0-0-1-%E5%92%8C-localhost-%E4%BB%A5%E5%8F%8A-0-0-0-0-%E6%9C%89%E5%8C%BA%E5%88%AB%E5%90%97"><span class="nav-number">6.</span> <span class="nav-text">127.0.0.1 和 localhost 以及 0.0.0.0 有区别吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">10.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
