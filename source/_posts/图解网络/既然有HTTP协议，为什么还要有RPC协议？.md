@@ -21,7 +21,7 @@ categories: "图解网络"
 
 <br>
 
-### 从 TCP 聊起
+## 从 TCP 聊起
 
 作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。
 
@@ -47,7 +47,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-### 使用纯裸 TCP 会有什么问题
+## 使用纯裸 TCP 会有什么问题
 
 八股文常背，TCP 是有三个特点，**面向连接**、**可靠**、基于**字节流**。
 
@@ -65,7 +65,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 ![消息对比](https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E5%AF%B9%E6%AF%94_%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC.drawio.png)
 
-这就是所谓的**粘包问题**，之前也写过一篇专门的[文章](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)聊过这个问题。
+这就是所谓的**粘包问题**，之前也写过一篇专门的[文章](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)聊过这个问题。
 
 说这个的目的是为了告诉大家，纯裸 TCP 是不能直接拿来用的，你需要在这个基础上加入一些**自定义的规则**，用于区分**消息边界**。
 
@@ -81,7 +81,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-### HTTP 和 RPC
+## HTTP 和 RPC
 
 我们回过头来看网络的分层图。
 
@@ -127,7 +127,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-#### 那既然有 RPC 了，为什么还要有 HTTP 呢？
+### 那既然有 RPC 了，为什么还要有 HTTP 呢？
 
 现在电脑上装的各种**联网**软件，比如 xx 管家，xx 卫士，它们都作为**客户端（client）**需要跟**服务端（server）**建立连接收发消息，此时都会用到应用层协议，在这种**client/server (c/s)**架构下，它们可以使用自家造的 RPC 协议，因为它只管连自己公司的服务器就 ok 了。
 
@@ -141,13 +141,13 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-### HTTP 和 RPC 有什么区别
+## HTTP 和 RPC 有什么区别
 
 我们来看看 RPC 和 HTTP 区别比较明显的几个点。
 
 <br>
 
-#### 服务发现
+### 服务发现
 
 首先要向某个服务器发起请求，你得先建立连接，而建立连接的前提是，你得知道**IP 地址和端口**。这个找到服务对应的 IP 端口的过程，其实就是**服务发现**。
 
@@ -159,7 +159,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-#### 底层连接形式
+### 底层连接形式
 
 以主流的**HTTP1.1**协议为例，其默认在建立底层 TCP 连接之后会一直保持这个连接（**keep alive**），之后的请求和响应都会复用这条连接。
 
@@ -173,7 +173,7 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-#### 传输的内容
+### 传输的内容
 
 基于 TCP 传输的消息，说到底，无非都是**消息头 header 和消息体 body。**
 
@@ -207,13 +207,13 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-##### 为什么既然有了 HTTP2，还要有 RPC 协议？
+#### 为什么既然有了 HTTP2，还要有 RPC 协议？
 
 这个是由于 HTTP2 是 2015 年出来的。那时候很多公司内部的 RPC 协议都已经跑了好些年了，基于历史原因，一般也没必要去换了。
 
 <br>
 
-### 总结
+## 总结
 
 - 纯裸 TCP 是能收发数据，但它是个**无边界**的数据流，上层需要定义**消息格式**用于定义**消息边界**。于是就有了各种协议，HTTP 和各类 RPC 协议就是在 TCP 之上定义的应用层协议。
 - **RPC 本质上不算是协议，而是一种调用方式**，而像 gRPC 和 thrift 这样的具体实现，才是协议，它们是实现了 RPC 调用的协议。目的是希望程序员能像调用本地方法那样去调用远端的服务方法。同时 RPC 有很多种实现方式，**不一定非得基于 TCP 协议**。
@@ -227,13 +227,13 @@ fd = socket(AF_INET,SOCK_STREAM,0);
 
 <br>
 
-### 参考资料
+## 参考资料
 
 https://www.zhihu.com/question/41609070
 
 <br>
 
-### 最后
+## 最后
 
 按照惯例，我应该在这里唯唯诺诺的求大家叫我两声**靓仔**的。
 
@@ -259,7 +259,7 @@ https://www.zhihu.com/question/41609070
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -276,8 +276,8 @@ https://www.zhihu.com/question/41609070
 
 <br>
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

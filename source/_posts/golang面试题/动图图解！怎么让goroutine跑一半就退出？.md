@@ -87,7 +87,7 @@ func main() {
 
 但这不是今天的重点，我们需要搞搞清楚内部的逻辑。
 
-### runtime.Goexit()是什么？
+## runtime.Goexit()是什么？
 
 看一下内部实现。
 
@@ -161,7 +161,7 @@ func goexit0(gp *g) {
 
 看到这里，大家应该就能理解，开头的代码里，为什么`runtime.Goexit()`能让协程只执行一半就结束了。
 
-### goexit 的用途
+## goexit 的用途
 
 看是看懂了，但是会忍不住疑惑。**面试这么问问，那只能说明你遇到了一个喜欢为难年轻人的面试官**，但正经人谁会没事跑一半协程就结束呢？所以`goexit`的**真实用途**是啥？
 
@@ -199,7 +199,7 @@ func main() {
 
 如果大家平时有注意观察，会发现，**其实所有的堆栈底部，都是从这个函数开始的**。我们继续跟跟代码。
 
-### goexit 是什么？
+## goexit 是什么？
 
 从上面的`debug`堆栈里点进去会发现，这是个汇编函数，可以看出调用的是`runtime`包内的 `goexit1()` 函数。
 
@@ -224,7 +224,7 @@ func goexit1() {
 
 是不是很熟悉，这不就是我们开头讲`runtime.Goexit()`里内部执行的`goexit0`吗。
 
-### 为什么每个堆栈底部都是这个方法？
+## 为什么每个堆栈底部都是这个方法？
 
 我们首先需要知道的是，函数栈的执行过程，是先进后出。
 
@@ -282,7 +282,7 @@ func newproc1(fn *funcval, argp unsafe.Pointer, narg int32, callergp *g, callerp
 
 所以我们每次 debug 的时候，就都能看到函数栈底部有个 goexit 函数。
 
-### main 函数也是个协程，栈底也是 goexit？
+## main 函数也是个协程，栈底也是 goexit？
 
 关于 main 函数栈底是不是也有个`goexit`，我们对下面代码断点看下。直接得出结果。
 
@@ -316,7 +316,7 @@ func main_main()
 
 结论是，**其实 main 函数也是由 newproc 创建的，只要通过 newproc 创建的 goroutine，栈底就会有一个 goexit。**
 
-### os.Exit()和 runtime.Goexit()有什么区别
+## os.Exit()和 runtime.Goexit()有什么区别
 
 最后再回到开头的问题，实现一下首尾呼应。
 
@@ -353,14 +353,14 @@ func main() {
 
 ```
 
-### 总结
+## 总结
 
 - 通过 `runtime.Goexit()`可以做到提前结束协程，且结束前还能执行到 defer 的内容
 - `runtime.Goexit()`其实是对 goexit0 的封装，只要执行 goexit0 这个函数，当前协程就会退出，同时还能调度下一个可执行的协程出来跑。
 - 通过`newproc`可以创建出新的`goroutine`，它会在函数栈底部插入一个 goexit。
 - `os.Exit()` 指的是整个**进程**退出；而`runtime.Goexit()`指的是**协程**退出。两者含义有区别。
 
-### 最后
+## 最后
 
 无用的知识又增加了。
 
@@ -403,12 +403,12 @@ func main() {
 
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)
 
-### 参考资料
+## 参考资料
 
 饶大的《哪来里的 goexit？》- https://qcrao.com/2021/06/07/where-is-goexit-from/

@@ -9,11 +9,11 @@ categories: "golang面试题"
 
 <!-- more -->
 
-## 问题
+# 问题
 
 怎么避免**内存逃逸**？
 
-## 怎么答
+# 怎么答
 
 在`runtime/stubs.go:133`有个函数叫`noescape`。`noescape`可以在逃逸分析中**隐藏一个指针**。让这个指针在逃逸分析中**不会被检测为逃逸**。
 
@@ -30,7 +30,7 @@ categories: "golang面试题"
 }
 ```
 
-## 举例
+# 举例
 
 - 通过一个例子加深理解，接下来尝试下怎么通过 `go build -gcflags=-m` 查看逃逸的情况。
 
@@ -113,7 +113,7 @@ $go build -gcflags=-m main.go
 ./main.go:28:45: NewATrick &s does not escape
 ```
 
-## 解释
+# 解释
 
 - 上段代码对`A`和`ATrick`同样的功能有两种实现：他们包含一个 `string` ，然后用 `String()` 方法返回这个字符串。但是从逃逸分析看`ATrick` 版本没有逃逸。
 - `noescape()` 函数的作用是遮蔽输入和输出的依赖关系。使编译器不认为 `p` 会通过 `x` 逃逸， 因为 `uintptr()` 产生的引用是编译器无法理解的。
@@ -123,7 +123,7 @@ $go build -gcflags=-m main.go
 
 - **面试中秀一秀是可以的**，如果在实际项目中如果使用这种 unsafe 包大概率会被同事打死。**不建议使用！** 毕竟包的名字就叫做 `unsafe`, 而且源码中的注释也写明了 `USE CAREFULLY! `。
 
-#### 文章推荐：
+### 文章推荐：
 
 - [golang 面试题：简单聊聊内存逃逸？](https://mp.weixin.qq.com/s?__biz=MzAwMDAxNjU4Mg==&mid=2247483686&idx=1&sn=e48c51107191f02da5751a19a54f7d41&chksm=9aee288fad99a199c126d5ff735af7320356ce4bb5753ae59ac6231e596354499414b5705b79&token=2092782362&lang=zh_CN#rd)
 - [golang 面试题：字符串转成 byte 数组，会发生内存拷贝吗？](https://mp.weixin.qq.com/s?__biz=MzAwMDAxNjU4Mg==&mid=2247483669&idx=1&sn=88f754ddabc04eb3f66ba8ac37ee1461&chksm=9aee28bcad99a1aa1ada41cfccaffc7ef4719a9bc11c1bef45b7d1b5427c1faa12d8d0c3156f&token=2092782362&lang=zh_CN#rd)

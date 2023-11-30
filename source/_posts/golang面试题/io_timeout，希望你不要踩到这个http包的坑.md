@@ -5,11 +5,11 @@ tags:
 categories: "golang面试题"
 ---
 
-> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
 <br>
 
-### 问题
+## 问题
 
 我们来看一段日常代码。
 
@@ -105,7 +105,7 @@ func Get(url string) ([]byte, error) {
 
 <br>
 
-### 排查
+## 排查
 
 ![五层网络协议对应的消息体变化分析](https://cdn.xiaobaidebug.top/image/%E4%BA%94%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%AF%B9%E5%BA%94%E7%9A%84%E6%B6%88%E6%81%AF%E4%BD%93%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90.png)
 
@@ -164,7 +164,7 @@ func Get(url string) ([]byte, error) {
 
 <br>
 
-### 超时原因
+## 超时原因
 
 大家知道`HTTP`是应用层协议，传输层用的是`TCP`协议。
 
@@ -198,7 +198,7 @@ TCP 连接每次都是三次握手。每次断开都要四次挥手。
 
 也就是说只要通过 `http.Transport` 设置了 `err = conn.SetDeadline(time.Now().Add(time.Second * 3)) `，并且你用了**长连接**，哪怕服务端处理再快，客户端设置的超时再长，总有一刻，你的程序会报超时错误。
 
-### 正确姿势
+## 正确姿势
 
 原本预期是给每次调用设置一个超时，而不是给整个连接设置超时。
 
@@ -303,7 +303,7 @@ Get http://www.baidu.com/: EOF
 
 到这里，其实问题已经解决了，下面会在源码层面分析出现问题的原因。对读源码不感兴趣的朋友们可以不用接着往下看，直接拉到文章底部**右下角**，做点正能量的事情（**点两下**）支持一下。（**疯狂暗示，拜托拜托，这对我真的很重要！**）
 
-### 源码分析
+## 源码分析
 
 **用的 go 版本是 1.12.7**。
 
@@ -613,7 +613,7 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 
 至此。我们的代码里就收到了 `io timeout` 的报错。
 
-### 总结
+## 总结
 
 - 不要在 `http.Transport`中设置超时，那是连接的超时，不是请求的超时。否则可能会出现莫名 `io timeout`报错。
 
@@ -623,7 +623,7 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 
 我是小白，我们下期见。
 
-### 文章推荐：
+## 文章推荐：
 
 - [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ)
 - [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
@@ -633,7 +633,7 @@ func netpolldeadlineimpl(pd *pollDesc, seq uintptr, read, write bool) {
 - [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
 - [硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ)
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:**【小白 debug】**
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)

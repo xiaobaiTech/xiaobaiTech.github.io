@@ -7,7 +7,7 @@ categories: "图解网络"
 
 ![](https://cdn.xiaobaidebug.top/image/2021-2-19/1613693230446-%E9%BB%98%E8%AE%A4%E6%96%87%E4%BB%B61613437659307.png)
 
-> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613317170976-%E4%B8%8D%E8%A6%81%E6%89%93%E6%89%B0%E6%88%91%E5%AD%A6HTTP.jpg" style="zoom:100%" />
 
@@ -38,7 +38,7 @@ HTTP 全称**超⽂文本传输协议**，也就是**H**yper**T**ext **T**ransfe
 
 有点抽象？不知道小白说的啥？那实操一下，用`wireshark`抓包看一下猫片里的请求报文和响应报文具体长什么样子吧
 
-## 请求报文
+# 请求报文
 
 ```http
 GET /cmaskboss/164203142_30_1.enhance.webmask HTTP/1.1
@@ -59,7 +59,7 @@ Range: bytes=0-16
 
 这上面第一行的 GET 就是**请求方法**，`/cmaskboss/164203142_30_1.enhance.webmask` 则是 **URL** , 而`HTTP/1.1`则是**协议版本**。接下来从`Host`开始到最后一行`Range`，都是**Headers 头**。
 
-## 响应报文
+# 响应报文
 
 ```http
 HTTP/1.1 206 Partial Content
@@ -95,17 +95,17 @@ X-Cdn-Request-ID: 7e2c783ca7d392624118593ec1dc66bc
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613043758890-image.png" style="zoom:100%" />
 
-## 1.请求数据
+# 1.请求数据
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613046030107-image.png" style="zoom:100%" />
 
-## 2.响应数据
+# 2.响应数据
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613046094269-image.png" style="zoom:100%" />
 
-## 3.Request URL
+# 3.Request URL
 
-### URL 是什么
+## URL 是什么
 
 URL 代表着是统一资源定位符（Uniform Resource Locator）。作用是为了告诉使用者 某个资源在 Web 上的地址。这个资源可以是一个 HTML 页面，一个 CSS 文档，一幅图像或一个猫片等等。上面我们请求猫片的 URL 就是 `https://upos-sz-staticks3.bilivideo.com/cmaskboss/164203142_30_1.enhance.webmask` 这里面细分，又可以分为好几个部分。
 
@@ -131,7 +131,7 @@ URL 代表着是统一资源定位符（Uniform Resource Locator）。作用是�
 
 从域名最后一个/开始到?为止，是文件名部分；如果没有?，则是从域名最后一个/开始到#为止，是文件名部分；如果没有?和#，那么就从域名的最后一个/从开始到结束，都是文件名部分。本例中的文件名是`164203142_30_1.enhance.webmask`，文件名也不是一个 URL 的必须部分。
 
-### URL 和 URI 的区别
+## URL 和 URI 的区别
 
 - **URL**:Uniform Resource Locator **统一资源定位符**；
 - **URI**: Uniform Resource Identifier **统一资源标识符**；
@@ -141,7 +141,7 @@ URL 代表着是统一资源定位符（Uniform Resource Locator）。作用是�
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613045259027-Untitled%20Diagram%20(3).jpg" style="zoom:100%" />
 
-## 4.Request Method
+# 4.Request Method
 
 HTTP 定义了一组**请求方法**，以表明要对给定资源执行的操作。指示针对给定资源要执行的期望动作.。虽然他们也可以是名词，但这些请求方法有时被称为 HTTP 动词.。每一个请求方法都实现了不同的语义。
 
@@ -151,11 +151,11 @@ HTTP 定义了一组**请求方法**，以表明要对给定资源执行的操�
 
 常见的各个请求方法的具体功能如下：
 
-### GET
+## GET
 
 请求指定的页面信息，并返回消息主体(body)+头信息(header)。
 
-### HEAD：
+## HEAD：
 
 HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)，不返回消息主体(body)。大家不要以为它没用，它跟 GET 和 POST 一样，在 http/1.0 的时候就存在了，实属三元老之一了。主要用途
 
@@ -163,21 +163,21 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 
 - 如果请求的是一个比较大的资源，比如一个超大视频和文件，你只想知道它到底有多大，而不需要整个下载下来，这时候使用 HEAD 请求，返回的 headers 会带有文件的大小（`content-lenght`）。
 
-### POST
+## POST
 
 向服务器提交数据。这个方法用途广泛，几乎目前所有的提交操作都是靠这个完成。POST 跟 GET 最常用，但最大的区别在于，POST 每次调用都可能会修改数据，是非幂等的，而 GET 类似于只读，是幂等的。
 
-### PUT：
+## PUT：
 
 这个方法比较少见。在 HTTP 规范中 POST 是非等幂的，多次调用会产生不同的结果。比如：创建一个用户,由于网络原因或是其他原因多创建了几次,那么将会有多个用户被创建。而 PUT id/xiaobai 则会创建一个 id 为 xiaobai 的用户，多次调用还是会创建的结果是一样的，所以 PUT 是等幂的。但是一般为了避免造成心智负担，实战中也会使用 POST 替代 PUT。
 
-### DELETE：
+## DELETE：
 
 删除某一个资源。基本上这个也很少见，一般实战中如果是删除操作，也是使用 POST 来替代。
 
-### OPTIONS：
+## OPTIONS：
 
-#### options 是什么
+### options 是什么
 
 它用于获取当前 URL 所支持的方法。若请求成功，则它会在 HTTP 响应头部中带上给各种“Allow”的头，表明某个请求在对应的服务器中都支持哪种请求方法。比如下图：
 
@@ -197,7 +197,7 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-11/1613057652579-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B.jpg" style="zoom:100%" />
 
-#### 什么时候需要使用 options
+### 什么时候需要使用 options
 
 在**跨域**（记住这个词，待会解释）的情况下，浏览器发起**复杂请求前**会**自动**发起 options 请求。跨域共享标准规范要求，对那些可能对服务器数据产生副作用的 HTTP 请求方法（特别是 GET 以外的 HTTP 请求，或者搭配某些 MIME 类型的 POST 请求），浏览器必须首先使用 options 方法发起一个预检请求，从而获知服务端是否允许该跨域请求。服务器确认允许之后，才发起实际的 HTTP 请求。
 
@@ -206,7 +206,7 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 - 跨域
 - 复杂请求
 
-#### 什么是简单请求和复杂请求。
+### 什么是简单请求和复杂请求。
 
 某些请求不会触发 CORS 预检请求，这样的请求一般称为"简单请求"，而会触发预检的请求则为"复杂请求"。
 
@@ -226,13 +226,13 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 - 请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器；
 - 请求中没有使用 ReadableStream 对象。
 
-2.复杂请求
+  2.复杂请求
 
 - 不满足简单请求的，都是复杂请求
 
 由此可见，因为上述请求在获取网上资源的请求 Headers 里带有 `Access-Control-Request-Headers: range` , 而`range`正好不在简单请求的条件 2 中提到的 Headers 范围里，因此属于**复杂请求**，于是触发预检 options 请求。
 
-#### 什么是跨域
+### 什么是跨域
 
 刚刚提到了一个词叫**跨域**，那什么是跨域呢？在了解跨域之前，首先要了解一个概念：**同源**。所谓**同源**是指，**域名、协议、端口均相同**。
 
@@ -246,13 +246,13 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 
 而**非同源**之间网页调用就是我们所说的**跨域**。在**浏览器**同源策略限制下，向不同**源**发送 XHR 请求，**浏览器**认为该请求不受信任，禁止请求，具体表现为请求后不正常响应。
 
-#### options 带来什么问题
+### options 带来什么问题
 
 由此可见，复杂请求的条件其实非常容易满足，而一旦满足复杂请求的条件，则浏览器便会发送 2 次请求（一次预检 options，一次复杂请求），这一次 options 就一来一回（一个 RTT），显然会导致延迟和不必要的网络资源浪费，高并发情况下则可能为服务器带来严重的性能消耗。
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-13/1613176456625-%E5%8A%A0%E5%86%95%E4%B8%BA%E7%8E%8B%20(2).jpg" style="zoom:100%" />
 
-#### 如何优化 options
+### 如何优化 options
 
 每次复杂请求前都会调用一次 options，这其实非常没有必要。因为大部分时候相同的请求，短时间内获得的结果是不会变的，是否可以通过浏览器缓存省掉这一次查询？
 
@@ -260,15 +260,15 @@ HEAD 和 GET 本质是一样的，区别在于 HEAD 只返回头信息(header)�
 
 ![options优化后](https://cdn.xiaobaidebug.top/image/options%E4%BC%98%E5%8C%96%E5%90%8E.jpg)
 
-## 5.Status Code
+# 5.Status Code
 
-### 状态码是什么
+## 状态码是什么
 
 HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，浏览器会向网页所在服务器发出请求。服务器则会根据请求作出响应，而状态码则是响应的一部分，代表着本次请求的结果。所有状态码的第一个数字代表了响应的大概含义，组合上第二第三个数字则可以表示更具体的原因。如果请求失败了，通过这个状态码，大概初步判断出这次请求失败的原因。以下是五类状态码的含义。
 
 ![](https://cdn.xiaobaidebug.top/image/2021-2-11/1613045090544-%E7%8A%B6%E6%80%81%E7%A0%81%E8%A1%A8%E6%A0%BC.jpg)
 
-### 状态码流程
+## 状态码流程
 
 可以根据以下流程图了解下各类状态码间的关系。
 
@@ -286,7 +286,7 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-16/1613406108083-5xx%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg" style="zoom:100%" />
 
-### 常见状态码介绍
+## 常见状态码介绍
 
 - 200 OK
 
@@ -324,9 +324,9 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 
   ![](<https://cdn.xiaobaidebug.top/image/2021-2-20/1613777517520-504%E7%9A%84%E8%BF%87%E7%A8%8B%20(1).jpg>)
 
-## 6. Headers
+# 6. Headers
 
-### Content-Length
+## Content-Length
 
 `Content-Length`是 HTTP 的消息长度, 用**十进制数字**表示。`Content-Length`首部指出报文中消息的当前实际字节大小。如果消息文本进行了 gzip 压缩的话， `Content-Length`指的就是压缩后的大小而不是原始大小。
 
@@ -392,7 +392,7 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 
   这次情况不太一样，会发现请求一直阻塞没有返回。这是因为输入的 body 是 `1234567`，共**7 个数字**，但是输入的 `Content-Length`为 100。也就是服务端一直认为这次的 body**长度为 100**，但是目前只收到了**部分消息（长度为 7）**，剩余的长度为 93 的消息由于各种原因**还在路上**，因此选择**傻傻等待剩下的消息**，就造成了上面提到的阻塞。
 
-### Range
+## Range
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613299089850-image.png" style="zoom:100%" />
 
@@ -405,9 +405,9 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 - 如果服务器不支持，直接忽略 Range 头，浏览器会正常按流式加载整个视频文件，以状态码 200 响应即可。另外，当我们在 html 中放一个 video 标签，浏览器会直接发起一个 `Range: bytes=0-` 的请求，向服务器请求从开始到结尾的完整文件。
 - 如果服务器支持 Range Requests，会读取视频文件，并将他的第 162653 ～ 242638 字节提取出来，响应码为 206，则浏览器会在接收到足够字节（比如当前播放进度往后推 20s）时结束掉请求，以节省网络流量；当播放进度继续往前，缓存不够时，浏览器会发起一个新的 Range Requests 请求，请求的 Range 直接从缓存结尾的字节开始，只加载剩余的部分文件。同时返回的 Response Headers 中有一个 content-range 的字段域，用于告诉了客户端发送了多少数据。content-range 描述了响应覆盖的范围和整个实体长度。一般格式：`Content-Range：开始字节位置-结束字节位置／文件大小（byte）`。
 
-### Connection
+## Connection
 
-#### 长连接和短连接
+### 长连接和短连接
 
 - Connection: close
 
@@ -419,7 +419,7 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 
 在 http1.1 中 Request Header 和 Reponse Header 中都有可能出现一个 Connection: keep-alive 头信息。Request Header 里的 Connection: keep-alive 头是为了告诉服务端，客户端想要以长连接形式进行通信。而 Response Header 里的 Connection: keep-alive 头是服务端告诉客户端，我的服务器支持以长连接的方式进行通信。如果不能使用长连接，会**返回 Connection: close ，相当于告诉客户端“我不支持长连接，你死了这条心，老老实实用短连接吧**” 。
 
-#### HTTP 为什么要使用长连接
+### HTTP 为什么要使用长连接
 
 我们知道 HTTP 建立在 TCP 传输层协议之上，而 TCP 的建立需要三次握手，关闭需要四次挥手，这些步骤都需要时间，带给 HTTP 的就是请求响应时延。如果使用短连接，那么每次数据传输都需要经历一次上面提到的几个步骤，如果能只连接一次，保持住这个连接不断开，期间通信就可以省下建立连接和断开连接的过程，对于提升 HTTP 性能有很大的帮助。
 
@@ -432,9 +432,9 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 - **长连接**可以**省去较多的 TCP 建立和关闭的操作，减少浪费，节约时间**。对于频繁请求资源的客户来说，较适用长连接。但是在长连接的应用场景下，需要有一方主动关闭连接。如果客户端和服务端之间的连接一直不关闭的话，连接数则会越来越多，严重的时候会造成资源占用过高。
 - 解决方案也比较简单。如果这些连接其实长时间内并没有任何数据传输的话，那其实属于空闲连接，这时候可以在服务端设置空闲连接的存活时间，超过一定时间后由服务端主动断掉，从而保证无用连接及时释放。
 
-### Cookies
+## Cookies
 
-#### Cookies 是什么
+### Cookies 是什么
 
 1. Cookie 是浏览器访问服务器后，服务器传给浏览器的一段数据。里面一般带有该浏览器的身份信息。
 
@@ -442,7 +442,7 @@ HTTP Status Code 是常说的 HTTP 状态码。当用户访问一个网页时，
 
 3. 此后每次浏览器访问该服务器，都必须带上这段数据。服务器用使用这段数据确认浏览器身份信息。
 
-#### Cookie 的作用
+### Cookie 的作用
 
 Cookie 一般有两个作用。
 
@@ -453,21 +453,21 @@ Cookie 一般有两个作用。
 - 同理，用户 B 用浏览器访问“猫猫网” 时，就给 B 分配了一段 Cookie 数据，内含「uid=b」。B 之后访问“猫猫网”的时候，就会一直带上「uid=b」这段数据。
 - 因此“猫猫网”的服务器通过 Cookie 数据就能区分 A 和 B 两个用户了。
 
-2.持久化用户信息。
+  2.持久化用户信息。
 
 - 因为 cookies 的数据会被用户浏览器保存到本地下。因此可以利用这一特点保持一些简单的用户数据。
 - 比如一些博客网站，可以通过 cookies 记录下用户的性别年龄等信息，以此进行一些个性化展示。
 - 当然上面提到的都是一些比较粗糙的场景，是为了方便大家理解 cookies 的功能。实际使用 cookies 会非常谨慎。
 
-### Referrer Policy 和 Referrer
+## Referrer Policy 和 Referrer
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-1/1612146090912-image.png" style="zoom:100%" />
 
-#### Referrer 是什么
+### Referrer 是什么
 
 Referrer 是 HTTP 请求 header 的报文头，用于指明当前流量的来源参考页面，常被用于分析用户来源等信息。通过这个信息，我们可以知道访客是怎么来到当前页面的。比如在上面的请求截图里，可以看出我是使用`https://www.bilibili.com/`访问的视频资源。
 
-#### Referrer Policy 是什么
+### Referrer Policy 是什么
 
 - Referrer 字段，会用来指定该请求是从哪个页面跳转页来的，里面的信息是浏览器填的。
 
@@ -477,19 +477,19 @@ Referrer 是 HTTP 请求 header 的报文头，用于指明当前流量的来源
 
 比如在上面的请求截图里，可以看出我是使用`strict-origin-when-cross-origin`策略，含义是跨域时将当前页面 URL 过滤掉参数及路径部分，仅将协议、域名和端口（如果有的话）当作 Referrer。否则 Referrer 还是传递当前页的全路径。同时当发生降级（比如从 https:// 跳转到 http:// ）时，不传递 Referrer 报头。
 
-### Cache-control
+## Cache-control
 
-#### 什么是 cache-control
+### 什么是 cache-control
 
 cache-control，用于控制浏览器缓存。简而言之，当某人访问网站时，其浏览器将在本地保存某些资源，例如图像和网站数据。当该用户重新访问同一网站时，缓存控制设置的规则会确定该用户是否从本地缓存中加载这些资源，或者浏览器是否必须向服务器发送新资源的请求。
 
-#### 什么是浏览器缓存
+### 什么是浏览器缓存
 
 浏览器缓存是指浏览器本地保存网站资源，以便不必再次通过网络从服务器获取它们。例如，“猫猫网”的背景图像可以保存到本地缓存中，这样在用户第二次访问该页面时，该图像将从用户的本地文件加载，剩下网络获取资源的时间，页面加载速度就会更快。
 
 但是浏览器也不会永远把这些网站资源放在本地，否则本地磁盘就会炸，所以会限定保存资源的时间，这叫生存时间（TTL）。如果 TTL 过期后用户请求缓存的资源，浏览器必须再次通过网络与服务器建立连接并重新下载这个资源。
 
-#### 常见的缓存控制策略
+### 常见的缓存控制策略
 
 - cache-control: private
   具有“private”指令的响应只能由客户端缓存，不能由中间代理（例如 CDN 或代理）缓存。这些资源通常是包含私密数据的资源，例如显示用户个人信息的网站。
@@ -507,7 +507,7 @@ cache-control，用于控制浏览器缓存。简而言之，当某人访问网�
 
   从网页截图里可以看出，使用的缓存控制指令是`cache-control: no-cache`。它表示，只有先检查资源没有更新版本后，才可使用所请求资源的缓存版本。那么问题来了，怎么判断资源是否有更新版本呢？这就需要 `ETag`。
 
-### ETag
+## ETag
 
 <img src="https://cdn.xiaobaidebug.top/image/2021-2-14/1613297647760-image.png" style="zoom:100%" />
 

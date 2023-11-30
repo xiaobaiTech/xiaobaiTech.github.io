@@ -58,7 +58,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-09-18T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:21.301Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image-20220827161615614.png">
 
@@ -228,7 +228,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,7 +279,7 @@
 <p>在真正回答这个问题之前，我们先来聊下一些相关的知识背景。</p>
 <br>
 
-<h3 id="使用-HTTP-不断轮询"><a href="#使用-HTTP-不断轮询" class="headerlink" title="使用 HTTP 不断轮询"></a>使用 HTTP 不断轮询</h3><p>其实问题的痛点在于，<strong>怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。</strong></p>
+<h2 id="使用-HTTP-不断轮询"><a href="#使用-HTTP-不断轮询" class="headerlink" title="使用 HTTP 不断轮询"></a>使用 HTTP 不断轮询</h2><p>其实问题的痛点在于，<strong>怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。</strong></p>
 <p>最常见的解决方案是，<strong>网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息。</strong></p>
 <p>这其实时一种<strong>伪</strong>服务器推的形式。</p>
 <p>它其实并不是服务器主动发消息到客户端，而是客户端自己不断偷偷请求服务器，只是用户无感知而已。</p>
@@ -297,7 +297,7 @@
 <p>有，而且实现起来成本还非常低。</p>
 <br>
 
-<h3 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h3><p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3s，规定时间内没返回，就认为是超时。</p>
+<h2 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h2><p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3s，规定时间内没返回，就认为是超时。</p>
 <p>如果我们的 HTTP 请求<strong>将超时设置的很大</strong>，比如 30s，<strong>在这 30s 内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。</strong></p>
 <p>这样就减少了 HTTP 请求的个数，并且由于大部分情况下，用户都会在某个 30s 的区间内做扫码操作，所以响应也是及时的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%95%BF%E8%BD%AE%E8%AF%A2.drawio.png" alt="长轮询"></p>
@@ -315,7 +315,7 @@
 <p>这就得说下<strong>websocket</strong>了。</p>
 <br>
 
-<h3 id="websocket-是什么"><a href="#websocket-是什么" class="headerlink" title="websocket 是什么"></a>websocket 是什么</h3><p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
+<h2 id="websocket-是什么"><a href="#websocket-是什么" class="headerlink" title="websocket 是什么"></a>websocket 是什么</h2><p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
 <p>而现在使用最广泛的<code>HTTP1.1</code>，也是基于 TCP 协议的，<strong>同一时间里</strong>，客户端和服务器<strong>只能有一方主动</strong>发数据，这就是所谓的<strong>半双工</strong>。</p>
 <p>也就是说，好好的全双工 TCP，被 HTTP 用成了半双工。</p>
 <p>为什么？</p>
@@ -326,7 +326,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E5%9C%A8%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.drawio.png" alt="websocket在四层网络协议中的位置"></p>
 <br>
 
-<h3 id="怎么建立-websocket-连接"><a href="#怎么建立-websocket-连接" class="headerlink" title="怎么建立 websocket 连接"></a>怎么建立 websocket 连接</h3><p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的<strong>websocket 协议</strong>。</p>
+<h2 id="怎么建立-websocket-连接"><a href="#怎么建立-websocket-连接" class="headerlink" title="怎么建立 websocket 连接"></a>怎么建立 websocket 连接</h2><p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的<strong>websocket 协议</strong>。</p>
 <p>为了兼容这些使用场景。浏览器在<strong>TCP 三次握手</strong>建立连接之后，都<strong>统一使用 HTTP 协议</strong>先进行一次通信。</p>
 <ul>
 <li>如果此时是<strong>普通的 HTTP 请求</strong>，那后续双方就还是老样子继续用普通 HTTP 协议进行交互，这点没啥疑问。</li>
@@ -349,7 +349,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E5%BB%BA%E7%AB%8Bwebsocket%E8%BF%9E%E6%8E%A5.drawio.png" alt="建立websocket连接.drawio"></p>
 <br>
 
-<h3 id="websocket-抓包"><a href="#websocket-抓包" class="headerlink" title="websocket 抓包"></a>websocket 抓包</h3><p>我们可以用 wireshark 抓个包，实际看下数据包的情况。</p>
+<h2 id="websocket-抓包"><a href="#websocket-抓包" class="headerlink" title="websocket 抓包"></a>websocket 抓包</h2><p>我们可以用 wireshark 抓个包，实际看下数据包的情况。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image-20220825222212533.png" alt="客户端请求升级为websocket"></p>
 <p>上面这张图，注意画了红框的第<code>2445</code>行报文，是 websocket 的<strong>第一次握手</strong>，意思是发起了一次带有<code>特殊Header</code>的 HTTP 请求。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%BB%98%E5%9B%BEddddd.drawio.png" alt="服务器同意升级为websocket协议"></p>
@@ -363,7 +363,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/HTTP%E5%92%8Cwebsocket%E7%9A%84%E5%85%B3%E7%B3%BB.drawio.png" alt="HTTP和websocket的关系"></p>
 <br>
 
-<h3 id="websocket-的消息格式"><a href="#websocket-的消息格式" class="headerlink" title="websocket 的消息格式"></a>websocket 的消息格式</h3><p>上面提到在完成协议升级之后，两端就会用 webscoket 的数据格式进行通信。</p>
+<h2 id="websocket-的消息格式"><a href="#websocket-的消息格式" class="headerlink" title="websocket 的消息格式"></a>websocket 的消息格式</h2><p>上面提到在完成协议升级之后，两端就会用 webscoket 的数据格式进行通信。</p>
 <p>数据包在 websocket 中被叫做<strong>帧</strong>。</p>
 <p>我们来看下它的数据格式长什么样子。</p>
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F2.drawio.png" alt="websocket报文格式"></p>
@@ -401,12 +401,12 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E6%B6%88%E6%81%AF%E8%BE%B9%E7%95%8C%E9%95%BF%E5%BA%A6%E6%A0%87%E5%BF%976.drawio.png" alt="消息边界长度标志"></p>
 <br>
 
-<h3 id="websocket-的使用场景"><a href="#websocket-的使用场景" class="headerlink" title="websocket 的使用场景"></a>websocket 的使用场景</h3><p>websocket 完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
+<h2 id="websocket-的使用场景"><a href="#websocket-的使用场景" class="headerlink" title="websocket 的使用场景"></a>websocket 的使用场景</h2><p>websocket 完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
 <p>回到文章开头的问题，在使用 websocket 协议的网页游戏里，怪物移动以及攻击玩家的行为是<strong>服务器逻辑</strong>产生的，对玩家产生的伤害等数据，都需要由<strong>服务器主动发送给客户端</strong>，客户端获得数据后展示对应的效果。</p>
 <p><img src="https://cdn.xiaobaidebug.top/websocket%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF.drawio.png" alt="websocket的使用场景"></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>TCP 协议本身是<strong>全双工</strong>的，但我们最常用的 HTTP1.1，虽然是基于 TCP 的协议，但它是<strong>半双工</strong>的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的 websocket 协议。</li>
 <li>在 HTTP1.1 里。只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用<strong>定时轮询或者长轮询</strong>的方式实现<strong>服务器推送</strong>(comet)的效果。</li>
 <li>对于客户端和服务端之间需要频繁交互的复杂场景，比如网页游戏，都可以考虑使用 websocket 协议。</li>
@@ -416,7 +416,7 @@
 <hr>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
 <p>我有个不成熟的请求。</p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
 
@@ -428,7 +428,7 @@
 <p>如果实在叫不出口的话，能帮我<strong>点下关注</strong>和右下角的<strong>点赞+在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -438,10 +438,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -563,7 +563,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-HTTP-%E4%B8%8D%E6%96%AD%E8%BD%AE%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">使用 HTTP 不断轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E8%BD%AE%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">长轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">websocket 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%BB%BA%E7%AB%8B-websocket-%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">怎么建立 websocket 连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket-%E6%8A%93%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">websocket 抓包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket-%E7%9A%84%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">websocket 的消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#websocket-%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.</span> <span class="nav-text">websocket 的使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">9.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">9.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-HTTP-%E4%B8%8D%E6%96%AD%E8%BD%AE%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">使用 HTTP 不断轮询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%BF%E8%BD%AE%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">长轮询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">websocket 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%BB%BA%E7%AB%8B-websocket-%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">怎么建立 websocket 连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket-%E6%8A%93%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">websocket 抓包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket-%E7%9A%84%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">websocket 的消息格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket-%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.</span> <span class="nav-text">websocket 的使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">9.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">9.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

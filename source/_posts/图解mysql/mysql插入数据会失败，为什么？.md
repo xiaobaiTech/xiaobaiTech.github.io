@@ -38,7 +38,7 @@ categories: "图解mysql"
 
 <br>
 
-### 复现问题
+## 复现问题
 
 我们来简单复现下这个问题。
 
@@ -70,7 +70,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-### 编码和字符集的关系
+## 编码和字符集的关系
 
 虽然我们平时可以在编辑器上输入各种中文英文字母，但这些都是给人读的，不是给计算机读的，其实计算机真正保存和传输数据都是以**二进制**0101 的格式进行的。
 
@@ -116,7 +116,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-### mysql 的字符集
+## mysql 的字符集
 
 想看下 mysql 支持哪些字符集。可以执行 `show charset;`
 
@@ -126,7 +126,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-#### utf8 和 utf8mb4 的区别
+### utf8 和 utf8mb4 的区别
 
 上面提到 utf-8 是在 unicode 的基础上做的优化，既然 unicode 有办法表示所有字符，那 utf-8 也一样可以表示所有字符，为了避免混淆，我在后面叫它**大 utf8**。
 
@@ -168,7 +168,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-#### 那 utf8mb4 对比 utf8mb3 有什么劣势吗？
+### 那 utf8mb4 对比 utf8mb3 有什么劣势吗？
 
 我们知道数据库表里，字段类型如果是 char(2)的话，里面的 2 是指**字符个数**，也就是说**不管这张表用的是什么字符集**，都能放上 2 个字符。
 
@@ -182,7 +182,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-#### 如何查看数据库表的字符集
+### 如何查看数据库表的字符集
 
 如果我们不知道自己的表是用的哪种字符集，可以通过下面的方式进行查看。
 
@@ -190,7 +190,7 @@ Incorrect string value: '\xF0\x9F\x98\x81' for column 'name' at row 1
 
 <br>
 
-### 再看报错原因
+## 再看报错原因
 
 到这里，我们回到文章开头的问题。
 
@@ -214,19 +214,19 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 <br>
 
-### 总结
+## 总结
 
 - ASCII 编码支持数字和字母。大佬们为了支持中文引入了 GB2312 编码格式，其他国家的大佬们为了支持更多语言和符号，也引入了相应的编码格式。为了统一这些各种编码格式，大佬们又引入了 unicode 编码格式，而 utf-8 则在 unicode 的基础上做了优化，压缩了空间。
 - mysql 默认的 utf8 字符集，其实只是 utf8mb3，并不完整，当插入 emoji 表情等特殊字符时，会报错，导致插入、更新数据失败。改成 utf8mb4 就好了，它能支持更多字符。
 - mysql 建表时如果不知道该选什么字符集，无脑选 utf8mb4 就行了，你会感谢我的。
 
-### 参考资料
+## 参考资料
 
 《从根儿上理解 mysql》
 
 <br>
 
-### 最后
+## 最后
 
 原本 A 同学设计这张表的时候非常简单，也有字符串类型的字段，但字段含义决定了肯定不会有奇奇怪怪的字符，用 utf8 很合理，还省空间。
 
@@ -266,7 +266,7 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -281,8 +281,8 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 ![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

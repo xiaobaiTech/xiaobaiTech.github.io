@@ -59,7 +59,7 @@ select * from page order by id limit 990, 10;
 
 <br>
 
-### 两种 limit 的执行过程
+## 两种 limit 的执行过程
 
 上面的两种查询方式。对应 `limit offset, size` 和 `limit size` 两种方式。
 
@@ -116,7 +116,7 @@ select * from page where user_name = "小白10";
 
 <br>
 
-#### 基于主键索引的 limit 执行过程
+### 基于主键索引的 limit 执行过程
 
 那么回到文章开头的问题里。
 
@@ -174,7 +174,7 @@ select * from page  where id >=(6000000) order by id limit 10;
 
 <br>
 
-#### 基于非主键索引的 limit 执行过程
+### 基于非主键索引的 limit 执行过程
 
 上面提到的是主键索引的执行过程，我们再来看下基于**非主键索引**的 limit 执行过程。
 
@@ -222,7 +222,7 @@ select * from page t1, (select id from page order by user_name limit 6000000, 10
 
 <br>
 
-### 深度分页问题
+## 深度分页问题
 
 深度分页问题，是个很恶心的问题，恶心就恶心在，这个问题，它其实**无解**。
 
@@ -236,7 +236,7 @@ select * from page t1, (select id from page order by user_name limit 6000000, 10
 
 <br>
 
-#### 如果你是想取出全表的数据
+### 如果你是想取出全表的数据
 
 有些需求是这样的，我们有一张数据库表，但我们希望将这个数据库表里的所有数据取出，异构到 es，或者 hive 里，这时候如果直接执行
 
@@ -264,7 +264,7 @@ select * from page;
 
 <br>
 
-#### 如果是给用户做分页展示
+### 如果是给用户做分页展示
 
 如果深度分页背后的原始需求只是产品经理希望做一个展示页的功能，比如商品展示页，那么我们就应该好好跟产品经理 battle 一下了。
 
@@ -306,7 +306,7 @@ select * from page;
 
 <br>
 
-### 总结
+## 总结
 
 - `limit offset, size` 比 `limit size` 要慢，且 offset 的值越大，sql 的执行速度越慢。
 
@@ -318,13 +318,13 @@ select * from page;
 
 <br>
 
-### 参考资料
+## 参考资料
 
 《MySQL 的 Limit 子句底层原理你不可不知》https://blog.csdn.net/qq_34115899/article/details/120727513
 
 <br>
 
-### 最后
+## 最后
 
 关于深度分页，如果大家有更好的想法，欢迎评论区说出来。
 
@@ -352,7 +352,7 @@ select * from page;
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -367,8 +367,8 @@ select * from page;
 
 ![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

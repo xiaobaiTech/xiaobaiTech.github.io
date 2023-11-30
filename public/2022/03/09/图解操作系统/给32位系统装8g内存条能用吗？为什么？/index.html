@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/1696069689495.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="article:published_time" content="2022-03-09T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:18:18.452Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/421646663617_.pic_hd.jpg">
 
@@ -209,7 +209,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:18:18" itemprop="dateModified" datetime="2023-10-06T12:18:18+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,7 +243,7 @@
 <p>我们当然很清楚，装软件的时候，一般 64 位的系统就选 64 位的软件，肯定不出错，但是这又是为什么呢？既然 CPU，软件，操作系统，数值大小都有 32 位和 64 位，他们之间就可以随意组合成各种问题，比如 32 位的系统能装 64 位的软件吗？32 位的系统能计算 int64 的数值吗？他们之间到底有什么关系？这篇文章会尝试解释清楚。</p>
 <br>
 
-<h3 id="从代码到到可执行文件"><a href="#从代码到到可执行文件" class="headerlink" title="从代码到到可执行文件"></a>从代码到到可执行文件</h3><p>我们从熟悉的场景开始说起，比方说，我们写代码的时候，会在代码编辑器里写入。</p>
+<h2 id="从代码到到可执行文件"><a href="#从代码到到可执行文件" class="headerlink" title="从代码到到可执行文件"></a>从代码到到可执行文件</h2><p>我们从熟悉的场景开始说起，比方说，我们写代码的时候，会在代码编辑器里写入。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">         <span class="keyword">int</span> i,j;</span><br><span class="line">         i = <span class="number">3</span>;</span><br><span class="line">         j = <span class="number">2</span>;</span><br><span class="line">         <span class="keyword">return</span> i + j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但这个代码是给人看的，机器可看不懂，于是这段代码，还会经过被编译器转成<strong>汇编码</strong>。</p>
@@ -259,7 +259,7 @@
 <p>也就是说我们平时写的代码，最后会变成一堆 01 机器码，放在可执行文件里，躺在磁盘上。</p>
 <br>
 
-<h3 id="从可执行文件到进程"><a href="#从可执行文件到进程" class="headerlink" title="从可执行文件到进程"></a>从可执行文件到进程</h3><p>一旦我们执行以下命令</p>
+<h2 id="从可执行文件到进程"><a href="#从可执行文件到进程" class="headerlink" title="从可执行文件到进程"></a>从可执行文件到进程</h2><p>一旦我们执行以下命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./可执行文件名</span><br></pre></td></tr></table></figure>
 
 <p>这个可执行文件就会加载进<strong>内存</strong>中，成为一个<strong>进程</strong>，运行起来。</p>
@@ -268,7 +268,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E4%B8%8ECPU%E7%9A%84%E6%89%A7%E8%A1%8C%E9%80%BB%E8%BE%91.drawio-20220419210036155.png" alt="进程内存与CPU的执行逻辑"></p>
 <br>
 
-<h4 id="CPU-位数的含义"><a href="#CPU-位数的含义" class="headerlink" title="CPU 位数的含义"></a>CPU 位数的含义</h4><p>上面这个流程里，最重要的几个关键词，分别是<strong>CPU 寄存器，总线，内存</strong>。</p>
+<h3 id="CPU-位数的含义"><a href="#CPU-位数的含义" class="headerlink" title="CPU 位数的含义"></a>CPU 位数的含义</h3><p>上面这个流程里，最重要的几个关键词，分别是<strong>CPU 寄存器，总线，内存</strong>。</p>
 <p>CPU 的寄存器，说白了就是个存放数值的小盒子，盒子的大小，叫<strong>位宽</strong>。32 位 CPU 能放入最大 2^32 的数值。64 位就是最大 2^64 的值。这里的 32 位位宽的 CPU 就是我们常说的 32 位 CPU，同理 64 位 CPU 也是一样。</p>
 <p>而<strong>CPU 跟内存</strong>之间，是用<strong>总线</strong>来进行信号传输的，总线可以分为<strong>数据总线，控制总线，地址总线</strong>。功能如其名，举个例子说明下他们的作用吧。在一个进程的运行过程中，CPU 会根据进程的机器码一行行执行操作。</p>
 <p>比如现在有一行是将 A 地址的数据与 B 地址的数据相加，那么 CPU 就会通过<strong>控制总线</strong>，发送信号给内存这个设备，告诉它，现在 CPU 要通过<strong>地址总线</strong>在内存中找到<strong>A 数据的地址</strong>，然后取得 A 数据的值，假设是 100，那么这个 100，就会通过<strong>数据总线</strong>回传到 CPU 的某个寄存器中。B 也一样，假设 B=200，放到另一个寄存器中，此时 A 和 B 相加后，结果是 300，然后控制 CPU 通过<strong>地址总线</strong>找到返回的参数地址，再把数据结果通过<strong>数据总线</strong>传回内存中。这一存一取，CPU 都是通过<strong>控制总线</strong>对内存发出指令的。</p>
@@ -278,7 +278,7 @@
 <p>64 位 CPU，按理说总线宽度是 64 位，但实际上是 48 位（也有看到说是 40 位或 46 位的，没关系，你知道它很大就行了），所以寻址范围能到 2^48 次方，也就是 256T。</p>
 <br>
 
-<h4 id="系统和软件的位数的含义"><a href="#系统和软件的位数的含义" class="headerlink" title="系统和软件的位数的含义"></a>系统和软件的位数的含义</h4><p>上面提到了 32 位 CPU 和 64 位 CPU 的内存寻址范围，那么相应的操作系统，和软件（其实操作系统也能说是软件），也应该按 CPU 所能支持的范围去构建自己的寻址范围。</p>
+<h3 id="系统和软件的位数的含义"><a href="#系统和软件的位数的含义" class="headerlink" title="系统和软件的位数的含义"></a>系统和软件的位数的含义</h3><p>上面提到了 32 位 CPU 和 64 位 CPU 的内存寻址范围，那么相应的操作系统，和软件（其实操作系统也能说是软件），也应该按 CPU 所能支持的范围去构建自己的寻址范围。</p>
 <p>比方说下面这个图，在操作系统上运行一个用户态进程，会分为用户态和内核态，并设定一定的内存布局。操作系统和软件都需要以这个内存布局为基础运行程序。比如 32 位，内核态分配了 1 个 G，用户态分配了 3G，这种时候，你总不能将程序的运行内存边界设定在大于 10G 的地方。所以，系统和软件的位数，可以理解为，这个系统或软件内存寻址的范围位数。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/32%E5%92%8C64%E4%BD%8D%E7%9A%84%E5%86%85%E5%AD%98%E5%B7%AE%E5%BC%82.png" alt="32和64位的内存差异"></p>
 <p>一般情况下，由于现在我们的 CPU 架构在设计上都是<strong>完全向前兼容</strong>的，别说 32 位了，16 位的都还兼容着，因此 64 位的 CPU 是能装上 32 位操作系统的。</p>
@@ -287,29 +287,29 @@
 <p>同理，32 位 CPU 也不能装 64 位的操作系统的。</p>
 <br>
 
-<h4 id="程序数值-int32-和-int64-的含义"><a href="#程序数值-int32-和-int64-的含义" class="headerlink" title="程序数值 int32 和 int64 的含义"></a>程序数值 int32 和 int64 的含义</h4><p>这个我们平时写代码接触的最多，比较好理解了。int32 也就是用 4 个字节，32 位的内存去存储数据，int64 也就是用 8 个字节，64 位去存数据。这个数值就是刚刚 CPU 运行流程中放在<strong>内存里</strong>的数据。</p>
+<h3 id="程序数值-int32-和-int64-的含义"><a href="#程序数值-int32-和-int64-的含义" class="headerlink" title="程序数值 int32 和 int64 的含义"></a>程序数值 int32 和 int64 的含义</h3><p>这个我们平时写代码接触的最多，比较好理解了。int32 也就是用 4 个字节，32 位的内存去存储数据，int64 也就是用 8 个字节，64 位去存数据。这个数值就是刚刚 CPU 运行流程中放在<strong>内存里</strong>的数据。</p>
 <br>
 
 <p>那么问题又来了。</p>
 <br>
 
-<h4 id="32-位的-CPU-能进行-int64-位的数值计算吗？"><a href="#32-位的-CPU-能进行-int64-位的数值计算吗？" class="headerlink" title="32 位的 CPU 能进行 int64 位的数值计算吗？"></a>32 位的 CPU 能进行 int64 位的数值计算吗？</h4><p>先说结论，<strong>能</strong>。但比起 64 位的 CPU，<strong>性能会慢一些</strong>。</p>
+<h3 id="32-位的-CPU-能进行-int64-位的数值计算吗？"><a href="#32-位的-CPU-能进行-int64-位的数值计算吗？" class="headerlink" title="32 位的 CPU 能进行 int64 位的数值计算吗？"></a>32 位的 CPU 能进行 int64 位的数值计算吗？</h3><p>先说结论，<strong>能</strong>。但比起 64 位的 CPU，<strong>性能会慢一些</strong>。</p>
 <p>如果说我用的是 64 位的<strong>CPU</strong>，那么我在计算两个 int64 的<strong>数值</strong>相加时，我就能将数据通过 64 位的<strong>总线</strong>，一次性存入到 64 位的<strong>寄存器</strong>，并在进行计算后返回到内存中。整个过程一步到位，一气呵成。</p>
 <p>但如果我现在用的是 32 位的 CPU，那就憋屈一点了，我虽然在代码里放了个 int64 的数值，但实际上 CPU 的寄存器根本放不下这么大的数据，因此最简单的方法是，将 int64 的数值，拆成前后两半，现在两个 int64 相加，就变成了 4 个 int32 的数值相加，并且后半部分加好了之后，拿到进位，才能去计算前面的部分，这里光是执行的指令数就比 64 位的 CPU 要多。所以理论上，会更慢些。</p>
 <br>
 
-<h3 id="系统位数会限制内存吗？"><a href="#系统位数会限制内存吗？" class="headerlink" title="系统位数会限制内存吗？"></a>系统位数会限制内存吗？</h3><p>上面提到了 CPU 位数，系统位数，软件位数，以及数值位数之间的区别与联系。</p>
+<h2 id="系统位数会限制内存吗？"><a href="#系统位数会限制内存吗？" class="headerlink" title="系统位数会限制内存吗？"></a>系统位数会限制内存吗？</h2><p>上面提到了 CPU 位数，系统位数，软件位数，以及数值位数之间的区别与联系。</p>
 <p>现在，我们回到标题里提到的问题。</p>
 <br>
 
-<h4 id="32-位-CPU-和系统插-8g-内存条，能用吗？"><a href="#32-位-CPU-和系统插-8g-内存条，能用吗？" class="headerlink" title="32 位 CPU 和系统插 8g 内存条，能用吗？"></a>32 位 CPU 和系统插 8g 内存条，能用吗？</h4><p>系统能正常工作，但<strong>一般用不到 8G</strong>，因为 32 位系统的总线寻址能力为 2 的 32 次方，也就是 4G，<strong>哪怕装了 8G 的内存，真正能被用到的其实只有 4g，多少有点浪费。</strong></p>
+<h3 id="32-位-CPU-和系统插-8g-内存条，能用吗？"><a href="#32-位-CPU-和系统插-8g-内存条，能用吗？" class="headerlink" title="32 位 CPU 和系统插 8g 内存条，能用吗？"></a>32 位 CPU 和系统插 8g 内存条，能用吗？</h3><p>系统能正常工作，但<strong>一般用不到 8G</strong>，因为 32 位系统的总线寻址能力为 2 的 32 次方，也就是 4G，<strong>哪怕装了 8G 的内存，真正能被用到的其实只有 4g，多少有点浪费。</strong></p>
 <p>注意上面提到的是<strong>一般</strong>，为什么这么说，因为这里有例外，32 位系统里，有些是可以支持超过 4G 内存的，比如<strong>Windows Server 2003</strong>就能最大支持 64G 的内存，它通过使用 <strong>PAE</strong> （Intel <strong>P</strong>hysical <strong>A</strong>ddress <strong>E</strong>xtension）技术向程序提供更多的物理内存，PAE 本质上是通过<strong>分页管理</strong>的方式将 32 位的总线寻址能力增加到 36 位。因此<strong>理论上</strong>寻址能力达到 2 的 36 次方，也就是 64G。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/PAE%E8%83%BD%E8%AE%A932%E4%BD%8D%E7%B3%BB%E7%BB%9F%E8%8E%B7%E5%BE%97%E5%A4%A7%E4%BA%8E4G%E7%9A%84%E5%86%85%E5%AD%98.drawio.png" alt="PAE能让32位系统获得大于4G的内存"></p>
 <p>至于实现细节大家也不用关心，现在用到这玩意的机器也该淘汰的差不多了，而且都是 windows server，注意<strong>Windows Server 2003</strong> 名字里带个<strong>server</strong>，是用来做服务器的，我们一般也用不到，知道这件事，除了能帮助我们更好的装 x 外，就没什么作用了。</p>
 <p>所以，<strong>你当 32 位系统最大只能用到 4G 内存，那也没毛病。</strong></p>
 <br>
 
-<h4 id="64-位-CPU-装-32-位操作系统，再插上-8g-的内存条，寻址能力还是-4G-吗"><a href="#64-位-CPU-装-32-位操作系统，再插上-8g-的内存条，寻址能力还是-4G-吗" class="headerlink" title="64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗"></a>64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗</h4><p>上面提到 32 位 CPU 就算插上 8G 内存条，寻址能力也还是 4G，那如果说我现在换用 64 位的 CPU，但装了个 32 位的操作系统，这时候插入 8G 内存条，寻址能力能超过 4G 吗？</p>
+<h3 id="64-位-CPU-装-32-位操作系统，再插上-8g-的内存条，寻址能力还是-4G-吗"><a href="#64-位-CPU-装-32-位操作系统，再插上-8g-的内存条，寻址能力还是-4G-吗" class="headerlink" title="64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗"></a>64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗</h3><p>上面提到 32 位 CPU 就算插上 8G 内存条，寻址能力也还是 4G，那如果说我现在换用 64 位的 CPU，但装了个 32 位的操作系统，这时候插入 8G 内存条，寻址能力能超过 4G 吗？</p>
 <p>寻址能力，除了受到 cpu 的限制外，还受到操作系统的限制，如果操作系统就是按着 32 位的指令和寻址范围（4G）来编译的话，那么它就会缺少 64 位系统该有的指令，它在运行软件的时候就不能做到超过这个限制，因此<strong>寻址能力还会是 4G。</strong></p>
 <br>
 
@@ -318,7 +318,7 @@
 <p><strong>为什么我们平时写的代码不直接转成机器码，而要先转成汇编，这是不是多此一举？</strong></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>CPU 位数主要指的是寄存器的位宽，</li>
 <li>32 位 CPU 只能装 32 位的系统和软件，且能计算 int64，int32 的数值。内存寻址范围是 4G。</li>
 <li>64 位 CPU，同时兼容 32 位和 64 位的系统和软件，并且进行 int64 数值计算的时候，性能比 32 位 CPU 更好，内存寻址范围可以达到 256T。</li>
@@ -327,7 +327,7 @@
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>刚工作的时候一直觉得 int32，有 21 个亿，这么大的数值肯定够用了吧，结果现实好几次打脸。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>刚工作的时候一直觉得 int32，有 21 个亿，这么大的数值肯定够用了吧，结果现实好几次打脸。</p>
 <p>以前做游戏的时候，血量一开始是定义为 int32，游戏设定是可以通过充钱，提升角色的属性，还能提升血量上限，谁也没想到，老板们通过氪金，硬是把血量给打到了 int32 最大值。于是策划提了个一句话需求：”血量要支持到 int64 大小”，这是我见过最简单的策划案，但也让人加班加的最凶。</p>
 <p>那是我第一次感受到了钞能力。</p>
 <img src="https://cdn.xiaobaidebug.top/image/1593863685553.jpg" width = "50%"   align=center />
@@ -339,7 +339,7 @@
 <p>算了。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -348,10 +348,10 @@
 
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -473,7 +473,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E4%BB%A3%E7%A0%81%E5%88%B0%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">从代码到到可执行文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%88%B0%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">从可执行文件到进程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU-%E4%BD%8D%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">CPU 位数的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%BD%AF%E4%BB%B6%E7%9A%84%E4%BD%8D%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.2.</span> <span class="nav-text">系统和软件的位数的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E6%95%B0%E5%80%BC-int32-%E5%92%8C-int64-%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.3.</span> <span class="nav-text">程序数值 int32 和 int64 的含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32-%E4%BD%8D%E7%9A%84-CPU-%E8%83%BD%E8%BF%9B%E8%A1%8C-int64-%E4%BD%8D%E7%9A%84%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97%E5%90%97%EF%BC%9F"><span class="nav-number">2.4.</span> <span class="nav-text">32 位的 CPU 能进行 int64 位的数值计算吗？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BD%8D%E6%95%B0%E4%BC%9A%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">系统位数会限制内存吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#32-%E4%BD%8D-CPU-%E5%92%8C%E7%B3%BB%E7%BB%9F%E6%8F%92-8g-%E5%86%85%E5%AD%98%E6%9D%A1%EF%BC%8C%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">32 位 CPU 和系统插 8g 内存条，能用吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64-%E4%BD%8D-CPU-%E8%A3%85-32-%E4%BD%8D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%8C%E5%86%8D%E6%8F%92%E4%B8%8A-8g-%E7%9A%84%E5%86%85%E5%AD%98%E6%9D%A1%EF%BC%8C%E5%AF%BB%E5%9D%80%E8%83%BD%E5%8A%9B%E8%BF%98%E6%98%AF-4G-%E5%90%97"><span class="nav-number">3.2.</span> <span class="nav-text">64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%BB%A3%E7%A0%81%E5%88%B0%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">从代码到到可执行文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%88%B0%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">从可执行文件到进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-%E4%BD%8D%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">CPU 位数的含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%BD%AF%E4%BB%B6%E7%9A%84%E4%BD%8D%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.2.</span> <span class="nav-text">系统和软件的位数的含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E6%95%B0%E5%80%BC-int32-%E5%92%8C-int64-%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">2.3.</span> <span class="nav-text">程序数值 int32 和 int64 的含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#32-%E4%BD%8D%E7%9A%84-CPU-%E8%83%BD%E8%BF%9B%E8%A1%8C-int64-%E4%BD%8D%E7%9A%84%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97%E5%90%97%EF%BC%9F"><span class="nav-number">2.4.</span> <span class="nav-text">32 位的 CPU 能进行 int64 位的数值计算吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BD%8D%E6%95%B0%E4%BC%9A%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">系统位数会限制内存吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#32-%E4%BD%8D-CPU-%E5%92%8C%E7%B3%BB%E7%BB%9F%E6%8F%92-8g-%E5%86%85%E5%AD%98%E6%9D%A1%EF%BC%8C%E8%83%BD%E7%94%A8%E5%90%97%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">32 位 CPU 和系统插 8g 内存条，能用吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#64-%E4%BD%8D-CPU-%E8%A3%85-32-%E4%BD%8D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%8C%E5%86%8D%E6%8F%92%E4%B8%8A-8g-%E7%9A%84%E5%86%85%E5%AD%98%E6%9D%A1%EF%BC%8C%E5%AF%BB%E5%9D%80%E8%83%BD%E5%8A%9B%E8%BF%98%E6%98%AF-4G-%E5%90%97"><span class="nav-number">3.2.</span> <span class="nav-text">64 位 CPU 装 32 位操作系统，再插上 8g 的内存条，寻址能力还是 4G 吗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

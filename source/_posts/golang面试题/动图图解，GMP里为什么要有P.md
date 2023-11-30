@@ -5,9 +5,9 @@ tags:
 categories: "golang面试题"
 ---
 
-> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
-### GM 模型是什么
+## GM 模型是什么
 
 ![GM图](https://cdn.xiaobaidebug.top/image/GM%E5%9B%BE.png)
 
@@ -25,7 +25,7 @@ categories: "golang面试题"
 
 ![GM模型](https://cdn.xiaobaidebug.top/image/GM%E6%A8%A1%E5%9E%8B.gif)
 
-### GMP 模型是什么
+## GMP 模型是什么
 
 ![GMP图](https://cdn.xiaobaidebug.top/image/GMP图.png)
 
@@ -53,7 +53,7 @@ categories: "golang面试题"
 
 ![GMP模型-循环执行](https://cdn.xiaobaidebug.top/image/GMP%E6%A8%A1%E5%9E%8B4.gif)
 
-### 为什么 P 的逻辑不直接加在 M 上
+## 为什么 P 的逻辑不直接加在 M 上
 
 主要还是因为`M`其实是**内核**线程，内核只知道自己在跑线程，而`golang`的运行时（包括调度，垃圾回收等）其实都是**用户空间**里的逻辑。操作系统内核哪里还知道，也不需要知道用户空间的 golang 应用原来还有那么多花花肠子。这一切逻辑交给应用层自己去做就好，毕竟改内核线程的逻辑也不合适啊。
 
@@ -61,7 +61,7 @@ categories: "golang面试题"
 
 我是小白，我们下期见。
 
-### 参考资料
+## 参考资料
 
 [1]《Golang 调度器 GMP 原理与调度全分析》 ——Aceld :https://learnku.com/articles/41728
 
@@ -69,7 +69,7 @@ categories: "golang面试题"
 
 [3]《深度解密 Go 语言之 Scheduler》 ——qcrao :https://qcrao.com/2019/09/02/dive-into-go-scheduler/#%E4%BB%80%E4%B9%88%E6%98%AF-scheduler
 
-### 文章推荐：
+## 文章推荐：
 
 - [i/o timeout，希望你不要踩到这个 net/http 包的坑](https://mp.weixin.qq.com/s/UBiZp2Bfs7z1_mJ-JnOT1Q)
 - [妙啊! 程序猿的第一本互联网黑话指南](https://mp.weixin.qq.com/s/btksE3RUxtioSYrYpChEeQ)
@@ -80,7 +80,7 @@ categories: "golang面试题"
 - [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
 - [硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ)
 
-###### 别说了，关注公众号:【小白 debug】，一起在知识的海洋里呛水吧
+##### 别说了，关注公众号:【小白 debug】，一起在知识的海洋里呛水吧
 
 关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)

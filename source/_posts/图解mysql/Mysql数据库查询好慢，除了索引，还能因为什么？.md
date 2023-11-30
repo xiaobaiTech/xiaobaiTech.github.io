@@ -21,7 +21,7 @@ mysql 查询为什么会慢，关于这个问题，在实际开发经常会遇�
 
 <br>
 
-### 数据库查询流程
+## 数据库查询流程
 
 我们先来看下，一条查询语句下来，会经历哪些流程。
 
@@ -89,7 +89,7 @@ InnoDB 中，因为直接操作磁盘会比较慢，所以加了一层内存提�
 
 <br>
 
-### 慢查询分析
+## 慢查询分析
 
 如果上面的流程比较慢的话，我们可以通过开启`profiling`看到流程慢在哪。
 
@@ -156,7 +156,7 @@ mysql> show profile for query 1;
 
 <br>
 
-### 索引相关原因
+## 索引相关原因
 
 索引相关的问题，一般能用 explain 命令帮助分析。通过它能看到**用了哪些索引**，大概会**扫描多少行**之类的信息。
 
@@ -184,7 +184,7 @@ mysql 会在**优化器阶段**里看下选择哪个索引，查询速度会更�
 
 <br>
 
-#### 索引不符合预期
+### 索引不符合预期
 
 实际开发中有些情况比较特殊，比如有些数据库表一开始数据量小，索引少，执行 sql 时，确实使用了符合你预期的索引。但随时时间边长，开发的人变多了，数据量也变大了，甚至还可能会加入一些其他重复多余的索引，就有可能出现用着用着，用到了不符合你预期的其他索引了。从而导致查询突然变慢。
 
@@ -196,7 +196,7 @@ mysql 会在**优化器阶段**里看下选择哪个索引，查询速度会更�
 
 <br>
 
-#### 走了索引还是很慢
+### 走了索引还是很慢
 
 有些 sql，用`explain`命令看，明明是走索引的，但还是很慢。一般是两种情况：
 
@@ -216,7 +216,7 @@ mysql 会在**优化器阶段**里看下选择哪个索引，查询速度会更�
 
 <br>
 
-### 连接数过小
+## 连接数过小
 
 索引相关的原因我们聊完了，我们来聊聊，**除了索引之外，还有哪些因素会限制我们的查询速度的。**
 
@@ -238,7 +238,7 @@ mysql 会在**优化器阶段**里看下选择哪个索引，查询速度会更�
 
 <br>
 
-#### 数据库连接数过小
+### 数据库连接数过小
 
 Mysql 的最大连接数默认是`100`, 最大可以达到`16384`。
 
@@ -261,7 +261,7 @@ mysql> show variables like 'max_connections';
 
 <br>
 
-#### 应用侧连接数过小
+### 应用侧连接数过小
 
 数据库连接大小是调整过了，但貌似问题还是没有变化？还是有很多 sql 执行达到了几分钟，甚至超时？
 
@@ -290,7 +290,7 @@ func Init() {
 
 <br>
 
-### buffer pool 太小
+## buffer pool 太小
 
 连接数是上去了，速度也提升了。
 
@@ -339,7 +339,7 @@ mysql> show global variables like 'innodb_buffer_pool_size';
 
 <br>
 
-#### 怎么知道 buffer pool 是不是太小了？
+### 怎么知道 buffer pool 是不是太小了？
 
 这个我们可以看**buffer pool 的缓存命中率**。
 
@@ -365,7 +365,7 @@ buffer pool 命中率 = 1 - (Innodb_buffer_pool_reads/Innodb_buffer_pool_read_re
 
 <br>
 
-### 还有哪些骚操作？
+## 还有哪些骚操作？
 
 前面提到的是在**存储引擎层**里加入了 buffer pool 用于缓存内存页，这样可以加速查询。
 
@@ -379,14 +379,14 @@ buffer pool 命中率 = 1 - (Innodb_buffer_pool_reads/Innodb_buffer_pool_read_re
 
 <br>
 
-### 总结
+## 总结
 
 - 数据查询过慢一般是索引问题，可能是因为选错索引，也可能是因为查询的行数太多。
 - 客户端和数据库连接数过小，会限制 sql 的查询并发数，增大连接数可以提升速度。
 - innodb 里会有一层内存 buffer pool 用于提升查询速度，命中率一般>99%，如果低于这个值，可以考虑增大 buffer pool 的大小，这样也可以提升速度。
 - 查询缓存（query cache）确实能为查询提速，但一般不建议打开，因为限制比较大，并且 8.0 以后的 Mysql 里已经将这个功能干掉了。
 
-### 最后
+## 最后
 
 最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。
 
@@ -406,7 +406,7 @@ buffer pool 命中率 = 1 - (Innodb_buffer_pool_reads/Innodb_buffer_pool_read_re
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -421,8 +421,8 @@ buffer pool 命中率 = 1 - (Innodb_buffer_pool_reads/Innodb_buffer_pool_read_re
 
 ![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

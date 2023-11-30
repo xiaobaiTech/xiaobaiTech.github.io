@@ -31,7 +31,7 @@ categories: "图解mysql"
 
 毕竟面试官都这么问了，那当然是有可能的，那至于是为啥，以及怎么做到的，今天我们来好好聊聊。
 
-### 正常的主从更新流程
+## 正常的主从更新流程
 
 比如我在主库和从库都有张 user 表，此时有以下两条数据。
 
@@ -122,7 +122,7 @@ mysql> show variables like "%log_bin%";
 
 <br>
 
-### 主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？
+## 主库更新后，主库都读到最新值了，从库还有可能读到旧值吗？
 
 这是可能的，上面提到的主从同步的 5 个步骤里，第 3 到第 5 步骤，都需要时间去执行，而这些步骤的执行时间总和，就是我们常说的**主从延迟**。
 
@@ -154,7 +154,7 @@ mysql> show slave status \G;
 
 <br>
 
-### 主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？
+## 主库更新后，从库都读到最新值了，主库还有可能读到旧值吗？
 
 那另一个问题就来了，如果从库都读到最新值了，那说明**主库肯定已经更新完成了**，那此时读主库是不是只能读到最新值呢？
 
@@ -162,7 +162,7 @@ mysql> show slave status \G;
 
 <br>
 
-#### mysql 的四种隔离级别
+### mysql 的四种隔离级别
 
 这个绝对是面试八股文老股了。mysql 有四种隔离级别，分别是**读未提交（Read uncommitted），读提交（Read committed），可重复读（Repeatable read）和串行化（Serializable）**。在不同的隔离级别下，并发读写效果会不太一样。
 
@@ -254,7 +254,7 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -267,8 +267,8 @@ SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE-READ;
 
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

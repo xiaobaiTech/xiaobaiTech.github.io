@@ -49,7 +49,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-04-26T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:47.774Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.518Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%814.drawio.png">
 
@@ -219,7 +219,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -265,7 +265,7 @@
 <p>那就从事务是怎么回滚的开始聊起吧。</p>
 <br>
 
-<h3 id="事务的回滚是怎么实现的"><a href="#事务的回滚是怎么实现的" class="headerlink" title="事务的回滚是怎么实现的"></a>事务的回滚是怎么实现的</h3><p>我们在执行事务的时候，一般都是下面这样的格式</p>
+<h2 id="事务的回滚是怎么实现的"><a href="#事务的回滚是怎么实现的" class="headerlink" title="事务的回滚是怎么实现的"></a>事务的回滚是怎么实现的</h2><p>我们在执行事务的时候，一般都是下面这样的格式</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span>;</span><br><span class="line">操作<span class="number">1</span>;</span><br><span class="line">操作<span class="number">2</span>;</span><br><span class="line">操作<span class="number">3</span>;</span><br><span class="line">xxxxx</span><br><span class="line">....</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
 
 <p>在提交事务之前，会执行各种操作，里面可以包含各种逻辑。</p>
@@ -287,7 +287,7 @@
 <p>有了这个版本链，当某个事务执行到一半发现失败时，就直接回滚，这时候就可以顺着这个版本链，回到执行事务前的状态。</p>
 <br>
 
-<h3 id="当前读和快照读是什么"><a href="#当前读和快照读是什么" class="headerlink" title="当前读和快照读是什么"></a>当前读和快照读是什么</h3><p>有了上面的 undo 日志版本链之后，我们可以看到<strong>最新的数据在表头</strong>，在这之后的都是一个个旧的数据版本。不管是最新的，还是旧的数据版本，我们都叫它数据<strong>快照</strong>。</p>
+<h2 id="当前读和快照读是什么"><a href="#当前读和快照读是什么" class="headerlink" title="当前读和快照读是什么"></a>当前读和快照读是什么</h2><p>有了上面的 undo 日志版本链之后，我们可以看到<strong>最新的数据在表头</strong>，在这之后的都是一个个旧的数据版本。不管是最新的，还是旧的数据版本，我们都叫它数据<strong>快照</strong>。</p>
 <p><strong>当前读</strong>，读的就是版本链的表头，也就是<strong>最新的数据</strong>。</p>
 <p><strong>快照读</strong>，读的就是版本链里的其中一个快照，当然如果这个快照正好就是表头，那此时快照读和当前读的结果一样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%BD%93%E5%89%8D%E8%AF%BB%E5%92%8C%E5%BF%AB%E7%85%A7%E8%AF%BB.drawio.png" alt="当前读和快照读"></p>
@@ -303,7 +303,7 @@
 <p>答案是<strong>不会</strong>，不管是 select … for update 这些（特殊的）读操作，还是 insert、update 这些写操作，<strong>都会对这行数据加锁</strong>。而生成 undo 日志快照，也是在<strong>写操作</strong>的情况下生成的，执行写操作前<strong>也需要获得锁</strong>。所以写操作需要阻塞等待<strong>当前读</strong>完成后，获得锁后才能更新版本链。</p>
 <br>
 
-<h3 id="read-view"><a href="#read-view" class="headerlink" title="read view"></a>read view</h3><p>数据库里可以同时并发执行非常多的事务, <strong>每个事务都会被分配一个事务 ID, 这个 ID 是递增的，越新的事务，ID 越大。</strong></p>
+<h2 id="read-view"><a href="#read-view" class="headerlink" title="read view"></a>read view</h2><p>数据库里可以同时并发执行非常多的事务, <strong>每个事务都会被分配一个事务 ID, 这个 ID 是递增的，越新的事务，ID 越大。</strong></p>
 <p>而数据表里某行数据的 undo 日志版本链，每个 undo 日志上面也有一个事务 id (<code>trx_id</code>)，它是创建这个 undo 日志的<strong>事务 id</strong>。</p>
 <p>并不是所有事务都会生成 undo 日志，也就是说某行数据的 undo 日志版本链上只有<strong>部分</strong>事务的 id。但是，<strong>所有</strong>事务都有可能会访问这行数据对应的版本链。而且版本链上虽然有很多 undo 日志快照，但也不是所有 undo 日志都能被读，毕竟有些 undo 日志，创建它们的事务还没提交呢，人家随时可能失败并回滚。</p>
 <p>现在的问题就成了，<strong>现在有一个事务，通过快照读的方式去读 undo 日志版本链，那它能读哪些快照？并且它应该读哪个快照？</strong></p>
@@ -313,7 +313,7 @@
 <p>概念太多，有点乱？没事的，继续往下看，后面会有例子的。</p>
 <br>
 
-<h4 id="事务能读哪些快照"><a href="#事务能读哪些快照" class="headerlink" title="事务能读哪些快照"></a>事务能读哪些快照</h4><p>有了这些基础信息之后，我们先看下事务在 read view 下，他<strong>能读哪些快照呢？</strong></p>
+<h3 id="事务能读哪些快照"><a href="#事务能读哪些快照" class="headerlink" title="事务能读哪些快照"></a>事务能读哪些快照</h3><p>有了这些基础信息之后，我们先看下事务在 read view 下，他<strong>能读哪些快照呢？</strong></p>
 <p>记住一个大前提：<strong>事务只能读到自己产生的 undo 日志数据（事务提不提交都行），或者是其他事务已经提交完成的数据</strong>。</p>
 <p>现在事务（假设就叫<strong>事务 A</strong>吧）有了 read view 之后，不管看哪个 undo 日志版本链，我们都可以把 read view 往版本链上一放。版本链就被分成了好几部分。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/readview2.drawio.png" alt="readview"></p>
@@ -334,7 +334,7 @@
 </ul>
 <br>
 
-<h4 id="事务会读哪个快照"><a href="#事务会读哪个快照" class="headerlink" title="事务会读哪个快照"></a>事务会读哪个快照</h4><p>上面提到，事务在 read view 的可见范围里，有机会能读到 N 多快照。但那么<strong>多快照版本，事务具体会读哪个快照呢？</strong></p>
+<h3 id="事务会读哪个快照"><a href="#事务会读哪个快照" class="headerlink" title="事务会读哪个快照"></a>事务会读哪个快照</h3><p>上面提到，事务在 read view 的可见范围里，有机会能读到 N 多快照。但那么<strong>多快照版本，事务具体会读哪个快照呢？</strong></p>
 <p>事务会<strong>从表头开始</strong>遍历这个 undo 日志版本链，它会拿每个 undo 日志里的 trx_id 去跟自己的 read view 的上下边界去做判断。<strong>第一个出现的小于 max_trx_id 的快照</strong>。</p>
 <ul>
 <li>如果快照是自己产生，那<strong>提不提交都行</strong>，就决定是读它了。</li>
@@ -344,11 +344,11 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/readview%E4%B8%8Eundo%E7%89%88%E6%9C%AC%E9%93%BE3.drawio.png" alt="readview与undo版本链"></p>
 <br>
 
-<h4 id="MVCC-是什么"><a href="#MVCC-是什么" class="headerlink" title="MVCC 是什么"></a>MVCC 是什么</h4><p>像上面这种，维护一个多快照的<strong>undo 日志版本链</strong>，事务根据自己的<code>read view</code>去决定具体读那个 undo 日志<strong>快照</strong>，最理想的情况下是每个事务都读自己的一份快照，然后在这个快照上做自己的逻辑，只有在写数据的时候，才去操作最新的行数据，这样<strong>读和写就被分开了</strong>，比起单行数据没有快照的方式，它能更好的解决读写冲突，所以数据库并发性能也更好。其实这就是面试里常问的<strong>MVCC</strong>，全称<strong>M</strong>ulti-<strong>V</strong>ersion <strong>C</strong>oncurrency <strong>C</strong>ontrol，即<strong>多版本并发控制。</strong></p>
+<h3 id="MVCC-是什么"><a href="#MVCC-是什么" class="headerlink" title="MVCC 是什么"></a>MVCC 是什么</h3><p>像上面这种，维护一个多快照的<strong>undo 日志版本链</strong>，事务根据自己的<code>read view</code>去决定具体读那个 undo 日志<strong>快照</strong>，最理想的情况下是每个事务都读自己的一份快照，然后在这个快照上做自己的逻辑，只有在写数据的时候，才去操作最新的行数据，这样<strong>读和写就被分开了</strong>，比起单行数据没有快照的方式，它能更好的解决读写冲突，所以数据库并发性能也更好。其实这就是面试里常问的<strong>MVCC</strong>，全称<strong>M</strong>ulti-<strong>V</strong>ersion <strong>C</strong>oncurrency <strong>C</strong>ontrol，即<strong>多版本并发控制。</strong></p>
 <p><img src="https://cdn.xiaobaidebug.top/image/MVCC.png" alt="MVCC"></p>
 <br>
 
-<h3 id="四个隔离级别是怎么实现的"><a href="#四个隔离级别是怎么实现的" class="headerlink" title="四个隔离级别是怎么实现的"></a>四个隔离级别是怎么实现的</h3><p>之前的写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2UxF7GJrAW2nY8bB57ZogQ">一篇文章</a>最后留了个问题，四个隔离级别是怎么实现的。</p>
+<h2 id="四个隔离级别是怎么实现的"><a href="#四个隔离级别是怎么实现的" class="headerlink" title="四个隔离级别是怎么实现的"></a>四个隔离级别是怎么实现的</h2><p>之前的写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2UxF7GJrAW2nY8bB57ZogQ">一篇文章</a>最后留了个问题，四个隔离级别是怎么实现的。</p>
 <p>知道了<strong>undo 日志版本链</strong>和<strong>MVCC</strong>之后，我们再回过头来看下这个问题。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E5%9B%9B%E5%B1%82%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.png" alt="四层隔离级别"></p>
 <p><strong>读未提交</strong>，每次读到的都是最新的数据，也不管数据行所在的事务是否提交。实现也很简单，只需要每次都读 undo 日志版本链的<strong>链表头</strong>（最新的快照）就行了。</p>
@@ -358,7 +358,7 @@
 <p><strong>串行化</strong>目的就是让并发事务看起来就像单线程执行一样，那实现也很简单，<strong>和读未提交隔离级别一样</strong>，串行化隔离界别下事务只读 undo 日志链的链表头，也就是<strong>最新版本的快照</strong>，并且就算是普通 select，也会在版本链的<strong>最新快照</strong>上加入<strong>读锁</strong>。这样其他事务想写，也得等这个读锁释放掉才行。所有对这行数据进行操作的事务，都老老实实地阻塞等待加锁，一个接一个进行处理，从效果上看就跟单线程处理一样。</p>
 <br>
 
-<h3 id="再看文章开头的例子"><a href="#再看文章开头的例子" class="headerlink" title="再看文章开头的例子"></a>再看文章开头的例子</h3><p>我们用上面提到的概念，重新回到文章开头的例子，梳理一遍。</p>
+<h2 id="再看文章开头的例子"><a href="#再看文章开头的例子" class="headerlink" title="再看文章开头的例子"></a>再看文章开头的例子</h2><p>我们用上面提到的概念，重新回到文章开头的例子，梳理一遍。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%814.drawio.png" alt="user表数据库原始状态"></p>
 <p>我们<strong>假设</strong>数据库一开始的三条数据，都是由<code>trx_id=1</code>的事务<code>insert</code>生成的。</p>
 <p>于是数据表一开始长下面这样。每行数据只有一个快照。注意快照里，<code>trx_id</code>填的是创建它们的事务 id，也就是刚刚提到的事务<code>1</code>。<code>roll_pointer</code>原本应该指向 insert 产生的 undo 日志，为了简化，这里写为<code>null</code>（insert undo 日志在事务提交后可以被清理掉）。</p>
@@ -383,14 +383,14 @@
 <p>你该知道怎么回答了吧？</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>事务通过 undo 日志实现回滚的功能，从而实现事务的原子性（Atomicity）。</li>
 <li>多个事务生成的 undo 日志构成一条版本链。<strong>快照读</strong>时事务根据 read view 来决定具体读哪个快照。<strong>当前读</strong>时事务直接读最新的快照版本。</li>
 <li>mysql 的 innodb 引擎通过 MVCC 提升了读写并发。</li>
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
 <p>我有个不成熟的请求。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/u=2281575747,3550568508&fm=253&fmt=auto&app=120&f=JPEG.jpeg"></p>
 <br>
@@ -401,7 +401,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -409,10 +409,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 <p><img src="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -534,7 +534,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9B%9E%E6%BB%9A%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">事务的回滚是怎么实现的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E8%AF%BB%E5%92%8C%E5%BF%AB%E7%85%A7%E8%AF%BB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">当前读和快照读是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-view"><span class="nav-number">3.</span> <span class="nav-text">read view</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E8%83%BD%E8%AF%BB%E5%93%AA%E4%BA%9B%E5%BF%AB%E7%85%A7"><span class="nav-number">3.1.</span> <span class="nav-text">事务能读哪些快照</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%BC%9A%E8%AF%BB%E5%93%AA%E4%B8%AA%E5%BF%AB%E7%85%A7"><span class="nav-number">3.2.</span> <span class="nav-text">事务会读哪个快照</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MVCC-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.3.</span> <span class="nav-text">MVCC 是什么</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text">四个隔离级别是怎么实现的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E7%9C%8B%E6%96%87%E7%AB%A0%E5%BC%80%E5%A4%B4%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">再看文章开头的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">7.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9B%9E%E6%BB%9A%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">事务的回滚是怎么实现的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E8%AF%BB%E5%92%8C%E5%BF%AB%E7%85%A7%E8%AF%BB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">当前读和快照读是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#read-view"><span class="nav-number">3.</span> <span class="nav-text">read view</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E8%83%BD%E8%AF%BB%E5%93%AA%E4%BA%9B%E5%BF%AB%E7%85%A7"><span class="nav-number">3.1.</span> <span class="nav-text">事务能读哪些快照</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%BC%9A%E8%AF%BB%E5%93%AA%E4%B8%AA%E5%BF%AB%E7%85%A7"><span class="nav-number">3.2.</span> <span class="nav-text">事务会读哪个快照</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVCC-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.3.</span> <span class="nav-text">MVCC 是什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text">四个隔离级别是怎么实现的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E7%9C%8B%E6%96%87%E7%AB%A0%E5%BC%80%E5%A4%B4%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">再看文章开头的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">7.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -41,7 +41,7 @@ categories: "图解mysql"
 
 <br>
 
-### 事务的回滚是怎么实现的
+## 事务的回滚是怎么实现的
 
 我们在执行事务的时候，一般都是下面这样的格式
 
@@ -100,7 +100,7 @@ except Exception:
 
 <br>
 
-### 当前读和快照读是什么
+## 当前读和快照读是什么
 
 有了上面的 undo 日志版本链之后，我们可以看到**最新的数据在表头**，在这之后的都是一个个旧的数据版本。不管是最新的，还是旧的数据版本，我们都叫它数据**快照**。
 
@@ -130,7 +130,7 @@ select * from user where phone_no=2；
 
 <br>
 
-### read view
+## read view
 
 数据库里可以同时并发执行非常多的事务, **每个事务都会被分配一个事务 ID, 这个 ID 是递增的，越新的事务，ID 越大。**
 
@@ -150,7 +150,7 @@ select * from user where phone_no=2；
 
 <br>
 
-#### 事务能读哪些快照
+### 事务能读哪些快照
 
 有了这些基础信息之后，我们先看下事务在 read view 下，他**能读哪些快照呢？**
 
@@ -176,7 +176,7 @@ select * from user where phone_no=2；
 
 <br>
 
-#### 事务会读哪个快照
+### 事务会读哪个快照
 
 上面提到，事务在 read view 的可见范围里，有机会能读到 N 多快照。但那么**多快照版本，事务具体会读哪个快照呢？**
 
@@ -191,7 +191,7 @@ select * from user where phone_no=2；
 
 <br>
 
-#### MVCC 是什么
+### MVCC 是什么
 
 像上面这种，维护一个多快照的**undo 日志版本链**，事务根据自己的`read view`去决定具体读那个 undo 日志**快照**，最理想的情况下是每个事务都读自己的一份快照，然后在这个快照上做自己的逻辑，只有在写数据的时候，才去操作最新的行数据，这样**读和写就被分开了**，比起单行数据没有快照的方式，它能更好的解决读写冲突，所以数据库并发性能也更好。其实这就是面试里常问的**MVCC**，全称**M**ulti-**V**ersion **C**oncurrency **C**ontrol，即**多版本并发控制。**
 
@@ -199,7 +199,7 @@ select * from user where phone_no=2；
 
 <br>
 
-### 四个隔离级别是怎么实现的
+## 四个隔离级别是怎么实现的
 
 之前的写的[一篇文章](https://mp.weixin.qq.com/s/2UxF7GJrAW2nY8bB57ZogQ)最后留了个问题，四个隔离级别是怎么实现的。
 
@@ -219,7 +219,7 @@ select * from user where phone_no=2；
 
 <br>
 
-### 再看文章开头的例子
+## 再看文章开头的例子
 
 我们用上面提到的概念，重新回到文章开头的例子，梳理一遍。
 
@@ -265,7 +265,7 @@ select * from user where phone_no=2；
 
 <br>
 
-### 总结
+## 总结
 
 - 事务通过 undo 日志实现回滚的功能，从而实现事务的原子性（Atomicity）。
 - 多个事务生成的 undo 日志构成一条版本链。**快照读**时事务根据 read view 来决定具体读哪个快照。**当前读**时事务直接读最新的快照版本。
@@ -273,7 +273,7 @@ select * from user where phone_no=2；
 
 <br>
 
-### 最后
+## 最后
 
 最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。
 
@@ -293,7 +293,7 @@ select * from user where phone_no=2；
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -308,8 +308,8 @@ select * from user where phone_no=2；
 
 ![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

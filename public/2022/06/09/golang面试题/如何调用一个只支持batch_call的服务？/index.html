@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"xiaobaidebug.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  我们先来说下标题是什么意思。   为了更好的理解我说的是啥，我们来举个例子。 假设你现在在做一个类似 B 站的系统，里面">
+  <meta name="description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  我们先来说下标题是什么意思。   为了更好的理解我说的是啥，我们来举个例子。 假设你现在在做一个类似 B 站的系统，里面放了各种视频。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何调用一个只支持batch_call的服务？">
 <meta property="og:url" content="https://xiaobaidebug.top/2022/06/09/golang%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E5%8F%AA%E6%94%AF%E6%8C%81batch_call%E7%9A%84%E6%9C%8D%E5%8A%A1%EF%BC%9F/index.html">
 <meta property="og:site_name" content="小白debug">
-<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  我们先来说下标题是什么意思。   为了更好的理解我说的是啥，我们来举个例子。 假设你现在在做一个类似 B 站的系统，里面">
+<meta property="og:description" content="文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https:&#x2F;&#x2F;github.com&#x2F;xiaobaiTech&#x2F;golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。  我们先来说下标题是什么意思。   为了更好的理解我说的是啥，我们来举个例子。 假设你现在在做一个类似 B 站的系统，里面放了各种视频。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220529201338638.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/batch_call%E4%B8%8A%E4%B8%8B%E6%B8%B8.drawio.png">
@@ -51,7 +51,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-06-09T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:21.272Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image-20220529201338638.png">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,7 +245,7 @@
 
       
         <blockquote>
-<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
+<p>文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub <a target="_blank" rel="noopener" href="https://github.com/xiaobaiTech/golangFamily">https://github.com/xiaobaiTech/golangFamily</a> , 有大厂面试完整考点和成长路线，欢迎 Star。</p>
 </blockquote>
 <p>我们先来说下标题是什么意思。</p>
 <br>
@@ -281,7 +281,7 @@
 <p>这可如何是好？</p>
 <br>
 
-<h3 id="为什么下游需要-batch-call"><a href="#为什么下游需要-batch-call" class="headerlink" title="为什么下游需要 batch call"></a>为什么下游需要 batch call</h3><p>本着<strong>先问是不是，再问为什么</strong>的精神，我们先看看为啥下游的要求会如此别致。</p>
+<h2 id="为什么下游需要-batch-call"><a href="#为什么下游需要-batch-call" class="headerlink" title="为什么下游需要 batch call"></a>为什么下游需要 batch call</h2><p>本着<strong>先问是不是，再问为什么</strong>的精神，我们先看看为啥下游的要求会如此别致。</p>
 <p>为什么同样都是处理多张图片，下游不搞成支持并发而要搞成批量调用（batch call）？</p>
 <p>这个设定有点奇怪？</p>
 <p>其实不奇怪，在算法服务中<strong>甚至很常见</strong>，举个例子你就明白了。</p>
@@ -314,13 +314,13 @@
 <p>这里的调用，就需要分为<strong>同步调用和异步调用</strong>了。</p>
 <br>
 
-<h3 id="同步调用和异步调用的区别"><a href="#同步调用和异步调用的区别" class="headerlink" title="同步调用和异步调用的区别"></a>同步调用和异步调用的区别</h3><p>同步调用，意思是上游发起请求后，<strong>阻塞等待</strong>，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的 http 调用一样。</p>
+<h2 id="同步调用和异步调用的区别"><a href="#同步调用和异步调用的区别" class="headerlink" title="同步调用和异步调用的区别"></a>同步调用和异步调用的区别</h2><p>同步调用，意思是上游发起请求后，<strong>阻塞等待</strong>，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的 http 调用一样。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="同步调用"></p>
 <p>异步调用，意思是上游发起请求后<strong>立马返回</strong>，下游收到消息后慢慢处理，处理完之后再通过某个形式通知上游。常见的形式是使用消息队列，也就是 mq。将消息发给 mq 后，下游消费 mq 消息，触发处理逻辑，然后再把处理结果发到 mq，上游消费 mq 的结果。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82.png" alt="异步调用"></p>
 <br>
 
-<h3 id="异步调用的形式接入"><a href="#异步调用的形式接入" class="headerlink" title="异步调用的形式接入"></a>异步调用的形式接入</h3><p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png" alt="异步调用的实现方式"></p>
+<h2 id="异步调用的形式接入"><a href="#异步调用的形式接入" class="headerlink" title="异步调用的形式接入"></a>异步调用的形式接入</h2><p><img src="https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png" alt="异步调用的实现方式"></p>
 <p>回到我们文章开头提到的例子，当上游服务收到一个请求（一个视频和它对应的图片），这时候上游服务作为生产者将这个数据写入到 mq 中，请求返回。然后新造一个 C 服务，负责批量消费 mq 里的消息。这时候服务 C 就可以根据下游服务的性能控制自己的消费速度，比如一次性消费 10 条数据（视频），每个数据下面挂了 10 个图片，那我一次 batch 的图片数量就是 10*10=100 张，原来的 10 次请求就变为了 1 次请求。这对下游就相当的友好了。</p>
 <p>下游返回结果后，服务 C 将结果写入到 mq 的另外一个 topic 下，由上游去做消费，这样就结束了整个调用流程。</p>
 <br>
@@ -331,11 +331,11 @@
 <p><strong>其实对于这种上下游服务处理性能不一致的场景，最适合用的就是异步调用。而且涉及到的服务性能差距越大，服务个数越多，这个方案的优势就越明显。</strong></p>
 <br>
 
-<h3 id="同步调用的方式接入"><a href="#同步调用的方式接入" class="headerlink" title="同步调用的方式接入"></a>同步调用的方式接入</h3><p>虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。</p>
+<h2 id="同步调用的方式接入"><a href="#同步调用的方式接入" class="headerlink" title="同步调用的方式接入"></a>同步调用的方式接入</h2><p>虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。</p>
 <p>这就需要采用同步调用的方案，但怎么才能把同步接口改造得更适合这种调用场景，这也是这篇文章的重点。</p>
 <br>
 
-<h4 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h4><p>如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。</p>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><p>如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。</p>
 <p><strong>这样的组件一般也不需要你自己写，几乎任何一个语言里都会有现成的。</strong></p>
 <p>比如 golang 里可以用<code>golang.org/x/time/rate</code>库，它其实是用令牌桶算法实现的限流器。如果不知道令牌桶是啥也没关系，不影响理解。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%99%90%E6%B5%81%E5%99%A8%E9%80%BB%E8%BE%91.png" alt="限流器逻辑"></p>
@@ -343,7 +343,7 @@
 <p>限流只能保证下游算法服务不被压垮，并不能提升单次调用 batch 的图片数量，有没有什么办法可以解决这个问题呢？</p>
 <br>
 
-<h4 id="参考-Nagle-算法的做法"><a href="#参考-Nagle-算法的做法" class="headerlink" title="参考 Nagle 算法的做法"></a>参考 Nagle 算法的做法</h4><p>我们熟悉的 TCP 协议里，有个算法叫 Nagle 算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。</p>
+<h3 id="参考-Nagle-算法的做法"><a href="#参考-Nagle-算法的做法" class="headerlink" title="参考 Nagle 算法的做法"></a>参考 Nagle 算法的做法</h3><p>我们熟悉的 TCP 协议里，有个算法叫 Nagle 算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。</p>
 <p>当我们想要发送一些数据包时，数据包会被放入到一个缓冲区中，不立刻发送，那什么时候会发送呢？</p>
 <p>数据包会在以下两个情况被发送：</p>
 <ul>
@@ -381,14 +381,14 @@
 <p><img src="https://cdn.xiaobaidebug.top/image-20220529171810510.png"></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>为了充分利用<strong>GPU</strong>并行计算的能力，不少算法服务会希望上游通过加大<strong>batch</strong>的同时减少并发的方式进行接口调用。</li>
 <li>对于上下游性能差距明显的服务，建议配合<strong>mq</strong>采用<strong>异步调用</strong>的方式将服务串联起来。</li>
 <li>如果非得使用<strong>同步调用</strong>的方式进行调用，建议模仿<strong>Nagle 算法</strong>的形式，攒一批数据再发起请求，这样既可以增大 batch，同时减少并发，真·一举两得，<strong>亲测有效</strong>。</li>
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。</p>
 <p>性能不够？<strong>下游加机器，gpu 卡，买！</strong></p>
 <p>然后下个季度再提起一个技术优化，<strong>性能提升 xx%，cpu，gpu 减少 xx%。</strong></p>
 <p>有没有闻到？</p>
@@ -409,7 +409,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -417,10 +417,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" alt="" style="zoom:50%;" />
 
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -542,7 +542,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8B%E6%B8%B8%E9%9C%80%E8%A6%81-batch-call"><span class="nav-number">1.</span> <span class="nav-text">为什么下游需要 batch call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E5%92%8C%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">同步调用和异步调用的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%BD%A2%E5%BC%8F%E6%8E%A5%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">异步调用的形式接入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E6%96%B9%E5%BC%8F%E6%8E%A5%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">同步调用的方式接入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-number">4.1.</span> <span class="nav-text">限流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83-Nagle-%E7%AE%97%E6%B3%95%E7%9A%84%E5%81%9A%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">参考 Nagle 算法的做法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">6.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8B%E6%B8%B8%E9%9C%80%E8%A6%81-batch-call"><span class="nav-number">1.</span> <span class="nav-text">为什么下游需要 batch call</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E5%92%8C%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">同步调用和异步调用的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%BD%A2%E5%BC%8F%E6%8E%A5%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">异步调用的形式接入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E6%96%B9%E5%BC%8F%E6%8E%A5%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">同步调用的方式接入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-number">4.1.</span> <span class="nav-text">限流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83-Nagle-%E7%AE%97%E6%B3%95%E7%9A%84%E5%81%9A%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">参考 Nagle 算法的做法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">6.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

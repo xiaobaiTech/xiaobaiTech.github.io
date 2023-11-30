@@ -5,7 +5,7 @@ tags:
 categories: "golang面试题"
 ---
 
-> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【教程】获 golang 免费视频教程。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
+> 文章持续更新，可以微信搜一搜「小白 debug」第一时间阅读，回复【面试】获免费面试题集。本文已经收录在 GitHub https://github.com/xiaobaiTech/golangFamily , 有大厂面试完整考点和成长路线，欢迎 Star。
 
 我们先来说下标题是什么意思。
 
@@ -65,7 +65,7 @@ categories: "golang面试题"
 
 <br>
 
-### 为什么下游需要 batch call
+## 为什么下游需要 batch call
 
 本着**先问是不是，再问为什么**的精神，我们先看看为啥下游的要求会如此别致。
 
@@ -129,7 +129,7 @@ categories: "golang面试题"
 
 <br>
 
-### 同步调用和异步调用的区别
+## 同步调用和异步调用的区别
 
 同步调用，意思是上游发起请求后，**阻塞等待**，下游处理逻辑后返回结果给上游。常见的形式就像我们平时做的 http 调用一样。
 
@@ -141,7 +141,7 @@ categories: "golang面试题"
 
 <br>
 
-### 异步调用的形式接入
+## 异步调用的形式接入
 
 ![异步调用的实现方式](https://cdn.xiaobaidebug.top/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F.drawio.png)
 
@@ -161,7 +161,7 @@ categories: "golang面试题"
 
 <br>
 
-### 同步调用的方式接入
+## 同步调用的方式接入
 
 虽然异步调用在这种场景下的优势很明显，但也有个缺点，就是它需要最上游的调用方能接受用异步的方式去消费结果。其实涉及到算法的服务调用链，都是比较耗时的，用异步接口非常合理。但合理归合理，有些最上游他不一定听你的，就是不能接受异步调用。
 
@@ -169,7 +169,7 @@ categories: "golang面试题"
 
 <br>
 
-#### 限流
+### 限流
 
 如果直接将请求打到下游算法服务，下游根本吃不消，因此首先需要做的就是给在上游调用下游的地方，加入一个速率限制（rate limit）。
 
@@ -185,7 +185,7 @@ categories: "golang面试题"
 
 <br>
 
-#### 参考 Nagle 算法的做法
+### 参考 Nagle 算法的做法
 
 我们熟悉的 TCP 协议里，有个算法叫 Nagle 算法，设计它的目的，就是为了避免一次传过少数据，提高数据包的有效数据负载。
 
@@ -281,7 +281,7 @@ func CallAPI() error {
 
 <br>
 
-### 总结
+## 总结
 
 - 为了充分利用**GPU**并行计算的能力，不少算法服务会希望上游通过加大**batch**的同时减少并发的方式进行接口调用。
 - 对于上下游性能差距明显的服务，建议配合**mq**采用**异步调用**的方式将服务串联起来。
@@ -289,7 +289,7 @@ func CallAPI() error {
 
 <br>
 
-### 最后
+## 最后
 
 讲了那么多可以提升性能的方式，现在需求来了，如果你资源充足，但时间不充足，那还是直接同步调用一把梭吧。
 
@@ -325,7 +325,7 @@ func CallAPI() error {
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -340,8 +340,8 @@ func CallAPI() error {
 
 ![](https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

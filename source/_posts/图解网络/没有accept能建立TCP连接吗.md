@@ -81,7 +81,7 @@ int main()
 
 <br>
 
-### 三次握手的细节分析
+## 三次握手的细节分析
 
 我们先看面试八股文的老股，三次握手。
 
@@ -93,7 +93,7 @@ int main()
 
 <br>
 
-#### 半连接队列、全连接队列是什么
+### 半连接队列、全连接队列是什么
 
 ![半连接队列和全连接队列](https://cdn.xiaobaidebug.top/image/%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E5%92%8C%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%973.png)
 
@@ -111,7 +111,7 @@ int main()
 
 <br>
 
-#### 为什么半连接队列要设计成哈希表
+### 为什么半连接队列要设计成哈希表
 
 先对比下**全连接里队列**，他本质是个链表，因为也是线性结构，说它是个队列也没毛病。它里面放的都是已经建立完成的连接，这些连接正等待被取走。而服务端取走连接的过程中，并不关心具体是哪个连接，只要是个连接就行，所以直接从队列头取就行了。这个过程算法复杂度为`O(1)`。
 
@@ -123,9 +123,9 @@ int main()
 
 <br>
 
-#### 怎么观察两个队列的大小
+### 怎么观察两个队列的大小
 
-##### 查看全连接队列
+#### 查看全连接队列
 
 ```sh
 # ss -lnt
@@ -155,7 +155,7 @@ Every 2.0s: netstat -s | grep overflowed                                Fri Sep 
 
 <br>
 
-##### 查看半连接队列
+#### 查看半连接队列
 
 半连接队列没有命令可以直接查看到，但因为半连接队列里，放的都是`SYN_RECV` 状态的连接，那可以通过统计处于这个状态的连接的数量，间接获得半连接队列的长度。
 
@@ -186,7 +186,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 <br>
 
-#### 全连接队列满了会怎么样？
+### 全连接队列满了会怎么样？
 
 如果队列满了，服务端还收到客户端的第三次握手 ACK，默认当然会丢弃这个 ACK。
 
@@ -209,7 +209,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 <br>
 
-#### 半连接队列要是满了会怎么样
+### 半连接队列要是满了会怎么样
 
 **一般是丢弃**，但这个行为可以通过 `tcp_syncookies` 参数去控制。但比起这个，更重要的是先了解下半连接队列为什么会被打满。
 
@@ -234,7 +234,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 <br>
 
-##### 会有一个 cookies 队列吗
+#### 会有一个 cookies 队列吗
 
 生成是`cookies`，保存在哪呢？**是不是会有一个队列保存这些 cookies？**
 
@@ -248,7 +248,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 <br>
 
-##### cookies 方案为什么不直接取代半连接队列？
+#### cookies 方案为什么不直接取代半连接队列？
 
 目前看下来`syn cookies`方案省下了半连接队列所需要的队列内存，还能解决 **SYN Flood 攻击**，那为什么不直接取代半连接队列？
 
@@ -262,7 +262,7 @@ Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 
 
 <br>
 
-#### 没有 listen，为什么还能建立连接
+### 没有 listen，为什么还能建立连接
 
 那既然没有`accept`方法能建立连接，那是不是没有`listen`方法，也能建立连接？是的，之前写的一篇文章提到过客户端是可以自己连自己的形成连接（**TCP 自连接**），也可以两个客户端同时向对方发出请求建立连接（**TCP 同时打开**），这两个情况都有个共同点，就是**没有服务端参与，也就是没有 listen，就能建立连接。**
 
@@ -288,7 +288,7 @@ TCP 同时打开的情况也类似，只不过从一个客户端变成了两个�
 
 <br>
 
-### 总结
+## 总结
 
 - **每一个**`socket`执行`listen`时，内核都会自动创建一个半连接队列和全连接队列。
 
@@ -306,7 +306,7 @@ TCP 同时打开的情况也类似，只不过从一个客户端变成了两个�
 
 <br>
 
-### 参考资料
+## 参考资料
 
 小林图解网络 -- 推荐大家关注《小林 coding》
 
@@ -328,7 +328,7 @@ TCP 同时打开的情况也类似，只不过从一个客户端变成了两个�
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -341,8 +341,8 @@ TCP 同时打开的情况也类似，只不过从一个客户端变成了两个�
 
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

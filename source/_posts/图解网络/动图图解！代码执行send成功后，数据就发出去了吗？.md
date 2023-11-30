@@ -27,9 +27,9 @@ categories: "图解网络"
 
 <br>
 
-## Socket 缓冲区
+# Socket 缓冲区
 
-### 什么是 socket 缓冲区
+## 什么是 socket 缓冲区
 
 编程的时候，如果要跟某个 IP 建立连接，我们需要调用操作系统提供的 `socket API`。
 
@@ -63,7 +63,7 @@ categories: "图解网络"
 
 <br>
 
-#### 怎么观察 socket 缓冲区
+### 怎么观察 socket 缓冲区
 
 如果想要查看 socket 缓冲区，可以在 linux 环境下执行 `netstat -nt` 命令。
 
@@ -80,7 +80,7 @@ tcp        0     60 172.22.66.69:22         122.14.220.252:59889    ESTABLISHED
 
 <br>
 
-## TCP 部分
+# TCP 部分
 
 我们在使用 TCP 建立连接之后，一般会使用 send 发送数据。
 
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
 <br>
 
-### 执行 send 发送的字节，会立马发送吗？
+## 执行 send 发送的字节，会立马发送吗？
 
 答案是不确定！执行 send 之后，数据只是拷贝到了 socket 缓冲区。至于什么时候会发数据，发多少数据，**全听操作系统安排**。
 
@@ -133,11 +133,11 @@ int tcp_sendmsg()
 
 <br>
 
-### 如果缓冲区满了会怎么办
+## 如果缓冲区满了会怎么办
 
 前面提到的情况里是，发送缓冲区有足够的空间，可以用于拷贝待发送数据。
 
-#### 如果发送缓冲区空间不足，或者满了，执行发送，会怎么样？
+### 如果发送缓冲区空间不足，或者满了，执行发送，会怎么样？
 
 这里分两种情况。
 
@@ -193,7 +193,7 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 <br>
 
-#### 如果接收缓冲区为空，执行 recv 会怎么样？
+### 如果接收缓冲区为空，执行 recv 会怎么样？
 
 接收缓冲区也是类似的情况。
 
@@ -213,7 +213,7 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 <br>
 
-### 如果 socket 缓冲区还有数据，执行 close 了，会怎么样？
+## 如果 socket 缓冲区还有数据，执行 close 了，会怎么样？
 
 首先我们要知道，**一般正常情况下，发送缓冲区和接收缓冲区 都应该是空的。**
 
@@ -227,7 +227,7 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 <br>
 
-#### 如果接收缓冲区有数据时，执行 close 了，会怎么样？
+### 如果接收缓冲区有数据时，执行 close 了，会怎么样？
 
 `socket close` 时，主要的逻辑在 `tcp_close()` 里实现。
 
@@ -263,7 +263,7 @@ void tcp_close(struct sock *sk, long timeout)
 
 <br>
 
-#### 如果发送缓冲区有数据时，执行 close 了，会怎么样？
+### 如果发送缓冲区有数据时，执行 close 了，会怎么样？
 
 以前以为，这种情况下，内核会把发送缓冲区数据清空，然后四次挥手。
 
@@ -299,9 +299,9 @@ void tcp_send_fin(struct sock *sk)
 
 <br>
 
-## UDP 部分
+# UDP 部分
 
-### UDP 也有缓冲区吗
+## UDP 也有缓冲区吗
 
 说完 TCP 了，我们聊聊 UDP。这对好基友，同时都是传输层里的重要协议。既然前面提到 TCP 有发送、接收缓冲区，那 UDP 有吗？
 
@@ -317,7 +317,7 @@ UDP socket 也是 socket，一个 socket 就是会有收和发两个缓冲区。
 
 <br>
 
-### UDP 不用发送缓冲区？
+## UDP 不用发送缓冲区？
 
 事实上，UDP 不仅`有`发送缓冲区，也`用`发送缓冲区。
 
@@ -358,7 +358,7 @@ int udp_sendmsg()
 
 <br>
 
-## 最后
+# 最后
 
 这篇文章，我也就写了 20 个小时吧。画图也就画吐了**而已**，每天早上 7 点钟爬起来写一个多小时再去上班。
 
@@ -374,14 +374,14 @@ int udp_sendmsg()
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
 
 <br>
 
-### 文章推荐：
+## 文章推荐：
 
 - [程序员防猝死指南](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
 - [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0H8WL6QeZ2VbO1hHPkn8Ug)

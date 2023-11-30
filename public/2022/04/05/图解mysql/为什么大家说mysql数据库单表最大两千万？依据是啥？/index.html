@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-04-05T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:47.774Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png">
 
@@ -214,7 +214,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:47" itemprop="dateModified" datetime="2023-10-06T12:07:47+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,7 +255,7 @@
 <p>“这个 2kw 是个建议值，我们要来看下这个 2kw 是怎么来的”</p>
 <br>
 
-<h3 id="数据库单表行数最大多大？"><a href="#数据库单表行数最大多大？" class="headerlink" title="数据库单表行数最大多大？"></a>数据库单表行数最大多大？</h3><p>我们先看下单表行数理论最大值是多少。</p>
+<h2 id="数据库单表行数最大多大？"><a href="#数据库单表行数最大多大？" class="headerlink" title="数据库单表行数最大多大？"></a>数据库单表行数最大多大？</h2><p>我们先看下单表行数理论最大值是多少。</p>
 <p>建表的 SQL 是这么写的，</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `idx_age` (`age`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">100037</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
 
@@ -273,11 +273,11 @@
 <p>那除了主键，还有哪些因素会影响行数？</p>
 <br>
 
-<h3 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h3><p>索引内部是用的 B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
+<h2 id="索引的结构"><a href="#索引的结构" class="headerlink" title="索引的结构"></a>索引的结构</h2><p>索引内部是用的 B+树，这个也是八股文老股了，大家估计也背得很熟了。</p>
 <p>为了不让大家有过于强烈的审丑疲劳，今天我尝试从另外一个角度给大家讲讲这玩意。</p>
 <br>
 
-<h4 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h4><p>假设我们有这么一张 user 数据表。</p>
+<h3 id="页的结构"><a href="#页的结构" class="headerlink" title="页的结构"></a>页的结构</h3><p>假设我们有这么一张 user 数据表。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
 <p>其中 id 是<strong>唯一主键</strong>。</p>
 <p>这看起来的一行行数据，为了方便，我们后面就叫它们<strong>record</strong>吧。</p>
@@ -292,7 +292,7 @@
 <p>页是需要读写的，16k 说小也不小，写一半电源线被拔了也是有可能发生的，所以为了保证数据页的正确性，还引入了校验码。这个被加到了<strong>页尾</strong>。</p>
 <p>那剩下的空间，才是用来放我们的 record 的。而 record 如果行数特别多的话，进入到页内时挨个遍历，效率也不太行，所以为这些数据生成了一个<strong>页目录</strong>，具体实现细节不重要。只需要知道，它可以通过<strong>二分查找</strong>的方式将查找效率**从 O(n) 变成 O(lgn)**。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png" alt="页结构"><br></p>
-<h4 id="从页到索引"><a href="#从页到索引" class="headerlink" title="从页到索引"></a>从页到索引</h4><p>如果想查一条 record，我们可以把表空间里每一页都捞出来，再把里面的 record 捞出来挨个判断是不是我们要找的。</p>
+<h3 id="从页到索引"><a href="#从页到索引" class="headerlink" title="从页到索引"></a>从页到索引</h3><p>如果想查一条 record，我们可以把表空间里每一页都捞出来，再把里面的 record 捞出来挨个判断是不是我们要找的。</p>
 <p>行数量小的时候，这么操作也没啥问题。</p>
 <p><strong>行数量大了，性能就慢了</strong>，于是为了加速搜索，我们可以在每个数据页里选出<strong>主键 id 最小</strong>的 record，而且只需要它们的<strong>主键 id 和所在页的页号</strong>。组成<strong>新的 record</strong>，放入到一个新生成的一个数据页中，这个<strong>新数据页跟之前的页结构没啥区别，而且大小还是 16k。</strong></p>
 <p>但为了跟之前的数据页进行区分。数据页里加入了<strong>页层级（page level）</strong>的信息，从 0 开始往上算。于是页与页之间就有了<strong>上下层级</strong>的概念，就像下面这样。</p>
@@ -310,7 +310,7 @@
 <p>这个过程中查询了三个页，如果这三个页都在磁盘中（没有被提前加载到内存中），那么<strong>最多</strong>需要经历三次<strong>磁盘 IO 查询</strong>，它们才能被加载到内存中。</p>
 <br>
 
-<h3 id="B-树承载的记录数量"><a href="#B-树承载的记录数量" class="headerlink" title="B+树承载的记录数量"></a>B+树承载的记录数量</h3><p>从上面的结构里可以看出 B+树的<strong>最末级叶子结点</strong>里放了 record 数据。而<strong>非叶子结点</strong>里则放了用来加速查询的索引数据。</p>
+<h2 id="B-树承载的记录数量"><a href="#B-树承载的记录数量" class="headerlink" title="B+树承载的记录数量"></a>B+树承载的记录数量</h2><p>从上面的结构里可以看出 B+树的<strong>最末级叶子结点</strong>里放了 record 数据。而<strong>非叶子结点</strong>里则放了用来加速查询的索引数据。</p>
 <p>也就是说</p>
 <p>同样一个 16k 的页，非叶子节点里每一条数据都指向一个新的页，而新的页有两种可能。</p>
 <ul>
@@ -327,7 +327,7 @@
 <p>那这棵 B+树放的<strong>行数据总量</strong>等于 <code>(x ^ (z-1)) * y</code>。</p>
 <br>
 
-<h4 id="x-怎么算"><a href="#x-怎么算" class="headerlink" title="x 怎么算"></a>x 怎么算</h4><p>我们回去看数据页的结构。</p>
+<h3 id="x-怎么算"><a href="#x-怎么算" class="headerlink" title="x 怎么算"></a>x 怎么算</h3><p>我们回去看数据页的结构。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png" alt="页结构"></p>
 <p>非叶子节点里主要放索引查询相关的数据，放的是主键和指向页号。</p>
 <p>主键假设是<code>bigint（8Byte）</code>，而页号在源码里叫<code>FIL_PAGE_OFFSET（4Byte）</code>，那么非叶子节点里的一条数据是<code>12Byte</code>左右。</p>
@@ -336,25 +336,25 @@
 <p>而上面的 B+树，它能指向 1280 个新的节点，恐怖如斯，可以说<strong>扇出非常高</strong>了。</p>
 <br>
 
-<h4 id="y-的计算"><a href="#y-的计算" class="headerlink" title="y 的计算"></a>y 的计算</h4><p>叶子节点和非叶子节点的数据结构是一样的，所以也假设剩下<code>15kb</code>可以发挥。</p>
+<h3 id="y-的计算"><a href="#y-的计算" class="headerlink" title="y 的计算"></a>y 的计算</h3><p>叶子节点和非叶子节点的数据结构是一样的，所以也假设剩下<code>15kb</code>可以发挥。</p>
 <p>叶子节点里放的是真正的行数据。假设一条行数据<code>1kb</code>，所以一页里能放<strong>y=15 行</strong>。</p>
 <br>
 
-<h4 id="行总数计算"><a href="#行总数计算" class="headerlink" title="行总数计算"></a>行总数计算</h4><p>回到 <code>(x ^ (z-1)) * y </code> 这个公式。</p>
+<h3 id="行总数计算"><a href="#行总数计算" class="headerlink" title="行总数计算"></a>行总数计算</h3><p>回到 <code>(x ^ (z-1)) * y </code> 这个公式。</p>
 <p>已知<code>x=1280</code>，<code>y=15</code>。</p>
 <p>假设 B+树是<strong>两层</strong>，那<code>z=2</code>。则是<code>(1280 ^ (2-1)) * 15 ≈ 2w </code></p>
 <p>假设 B+树是<strong>三层</strong>，那<code>z=3</code>。则是<code>(1280 ^ (3-1)) * 15 ≈ 2.5kw</code></p>
 <p><strong>这个 2.5kw，就是我们常说的单表建议最大行数 2kw 的由来。</strong>毕竟再加一层，数据就大得有点离谱了。三层数据页对应最多三次磁盘 IO，也比较合理。</p>
 <br>
 
-<h3 id="行数超一亿就慢了吗？"><a href="#行数超一亿就慢了吗？" class="headerlink" title="行数超一亿就慢了吗？"></a>行数超一亿就慢了吗？</h3><p>上面假设单行数据用了 1kb，所以一个数据页能放个 15 行数据。</p>
+<h2 id="行数超一亿就慢了吗？"><a href="#行数超一亿就慢了吗？" class="headerlink" title="行数超一亿就慢了吗？"></a>行数超一亿就慢了吗？</h2><p>上面假设单行数据用了 1kb，所以一个数据页能放个 15 行数据。</p>
 <p>如果我单行数据用不了这么多，比如只用了<code>250byte</code>。那么单个数据页能放 60 行数据。</p>
 <p>那同样是三层 B+树，单表支持的行数就是 <code>(1280 ^ (3-1)) * 60 ≈ 1个亿</code>。</p>
 <p>你看我一个亿的数据，其实也就三层 B+树，在这个 B+树里要查到某行数据，最多也是三次磁盘 IO。所以并不慢。</p>
 <p>这就很好的解释了文章开头，为什么我单表 1 个亿，但查询性能没啥大毛病。</p>
 <br>
 
-<h3 id="B-树承载的记录数量-1"><a href="#B-树承载的记录数量-1" class="headerlink" title="B 树承载的记录数量"></a>B 树承载的记录数量</h3><p>既然都聊到这里了，我们就顺着这个话题多聊一些吧。</p>
+<h2 id="B-树承载的记录数量-1"><a href="#B-树承载的记录数量-1" class="headerlink" title="B 树承载的记录数量"></a>B 树承载的记录数量</h2><p>既然都聊到这里了，我们就顺着这个话题多聊一些吧。</p>
 <p>我们都知道，现在 mysql 的索引都是 B+树，而有一种树，跟 B+树很像，叫<strong>B 树，也叫 B-树</strong>。</p>
 <p>它跟 B+树最大的区别在于，<strong>B+树只在末级叶子结点处放数据表行数据，而 B 树则会在叶子和非叶子结点上都放。</strong></p>
 <p>于是，B 树的结构就类似这样</p>
@@ -370,15 +370,15 @@
 <p>为此，<strong>B+树比 B 树更适合成为 mysql 的索引。</strong></p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>B+树叶子和非叶子结点的数据页都是 16k，且数据结构一致，区别在于叶子节点放的是真实的行数据，而非叶子结点放的是主键和下一个页的地址。</li>
 <li>B+树一般有两到三层，由于其高扇出，三层就能支持 2kw 以上的数据，且一次查询最多 1~3 次磁盘 IO，性能也还行。</li>
 <li>存储同样量级的数据，B 树比 B+树层级更高，因此磁盘 IO 也更多，所以 B+树更适合成为 mysql 索引。</li>
 <li>索引结构不会影响单表最大行数，2kw 也只是推荐值，超过了这个值可能会导致 B+树层级更高，影响查询性能。</li>
 <li>单表最大值还受主键大小和磁盘大小限制。</li>
 </ul>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>《MYSQL 内核：INNODB 存储引擎 卷 1》</p>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><br>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《MYSQL 内核：INNODB 存储引擎 卷 1》</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><br>
 
 <p>虽然我在单表里塞了 1 亿条数据，但这个操作的前提是，我很清楚这不会太影响性能。</p>
 <p>这波解释，毫无破绽，无懈可击。</p>
@@ -398,7 +398,7 @@
 <p>如果实在叫不出口的话，能帮我点下右下角的<strong>点赞和在看</strong>吗？</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -406,10 +406,10 @@
 <img src="https://cdn.xiaobaidebug.top/image-20220522162616202.png" width = "50%"   align=center />
 
 <p><img src="https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -531,7 +531,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E8%A1%8C%E6%95%B0%E6%9C%80%E5%A4%A7%E5%A4%9A%E5%A4%A7%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">数据库单表行数最大多大？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">索引的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">页的结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E9%A1%B5%E5%88%B0%E7%B4%A2%E5%BC%95"><span class="nav-number">2.2.</span> <span class="nav-text">从页到索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E6%89%BF%E8%BD%BD%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">B+树承载的记录数量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#x-%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-number">3.1.</span> <span class="nav-text">x 怎么算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#y-%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">3.2.</span> <span class="nav-text">y 的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E6%80%BB%E6%95%B0%E8%AE%A1%E7%AE%97"><span class="nav-number">3.3.</span> <span class="nav-text">行总数计算</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E6%95%B0%E8%B6%85%E4%B8%80%E4%BA%BF%E5%B0%B1%E6%85%A2%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">行数超一亿就慢了吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%A0%91%E6%89%BF%E8%BD%BD%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0%E9%87%8F-1"><span class="nav-number">5.</span> <span class="nav-text">B 树承载的记录数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E8%A1%A8%E8%A1%8C%E6%95%B0%E6%9C%80%E5%A4%A7%E5%A4%9A%E5%A4%A7%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">数据库单表行数最大多大？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">索引的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">页的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%A1%B5%E5%88%B0%E7%B4%A2%E5%BC%95"><span class="nav-number">2.2.</span> <span class="nav-text">从页到索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E6%A0%91%E6%89%BF%E8%BD%BD%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">B+树承载的记录数量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x-%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-number">3.1.</span> <span class="nav-text">x 怎么算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#y-%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">3.2.</span> <span class="nav-text">y 的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E6%80%BB%E6%95%B0%E8%AE%A1%E7%AE%97"><span class="nav-number">3.3.</span> <span class="nav-text">行总数计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E6%95%B0%E8%B6%85%E4%B8%80%E4%BA%BF%E5%B0%B1%E6%85%A2%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">行数超一亿就慢了吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E6%A0%91%E6%89%BF%E8%BD%BD%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0%E9%87%8F-1"><span class="nav-number">5.</span> <span class="nav-text">B 树承载的记录数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">8.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

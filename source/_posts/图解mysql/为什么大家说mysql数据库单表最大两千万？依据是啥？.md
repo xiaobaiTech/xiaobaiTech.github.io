@@ -37,7 +37,7 @@ categories: "图解mysql"
 
 <br>
 
-### 数据库单表行数最大多大？
+## 数据库单表行数最大多大？
 
 我们先看下单表行数理论最大值是多少。
 
@@ -86,7 +86,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-### 索引的结构
+## 索引的结构
 
 索引内部是用的 B+树，这个也是八股文老股了，大家估计也背得很熟了。
 
@@ -94,7 +94,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-#### 页的结构
+### 页的结构
 
 假设我们有这么一张 user 数据表。
 
@@ -126,7 +126,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 ![页结构](https://cdn.xiaobaidebug.top/image/%E9%A1%B5%E7%BB%93%E6%9E%84.png)<br>
 
-#### 从页到索引
+### 从页到索引
 
 如果想查一条 record，我们可以把表空间里每一页都捞出来，再把里面的 record 捞出来挨个判断是不是我们要找的。
 
@@ -160,7 +160,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-### B+树承载的记录数量
+## B+树承载的记录数量
 
 从上面的结构里可以看出 B+树的**最末级叶子结点**里放了 record 数据。而**非叶子结点**里则放了用来加速查询的索引数据。
 
@@ -183,7 +183,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-#### x 怎么算
+### x 怎么算
 
 我们回去看数据页的结构。
 
@@ -201,7 +201,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-#### y 的计算
+### y 的计算
 
 叶子节点和非叶子节点的数据结构是一样的，所以也假设剩下`15kb`可以发挥。
 
@@ -209,7 +209,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-#### 行总数计算
+### 行总数计算
 
 回到 `(x ^ (z-1)) * y ` 这个公式。
 
@@ -223,7 +223,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-### 行数超一亿就慢了吗？
+## 行数超一亿就慢了吗？
 
 上面假设单行数据用了 1kb，所以一个数据页能放个 15 行数据。
 
@@ -237,7 +237,7 @@ ERROR 1264 (22003): Out of range value for column 'id' at row 1
 
 <br>
 
-### B 树承载的记录数量
+## B 树承载的记录数量
 
 既然都聊到这里了，我们就顺着这个话题多聊一些吧。
 
@@ -269,7 +269,7 @@ B 树将行数据都存在非叶子节点上，假设每个数据页还是 16kb�
 
 <br>
 
-### 总结
+## 总结
 
 - B+树叶子和非叶子结点的数据页都是 16k，且数据结构一致，区别在于叶子节点放的是真实的行数据，而非叶子结点放的是主键和下一个页的地址。
 - B+树一般有两到三层，由于其高扇出，三层就能支持 2kw 以上的数据，且一次查询最多 1~3 次磁盘 IO，性能也还行。
@@ -277,11 +277,11 @@ B 树将行数据都存在非叶子节点上，假设每个数据页还是 16kb�
 - 索引结构不会影响单表最大行数，2kw 也只是推荐值，超过了这个值可能会导致 B+树层级更高，影响查询性能。
 - 单表最大值还受主键大小和磁盘大小限制。
 
-### 参考资料
+## 参考资料
 
 《MYSQL 内核：INNODB 存储引擎 卷 1》
 
-### 最后
+## 最后
 
 <br>
 
@@ -315,7 +315,7 @@ B 树将行数据都存在非叶子节点上，假设每个数据页还是 16kb�
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -330,8 +330,8 @@ B 树将行数据都存在非叶子节点上，假设每个数据页还是 16kb�
 
 ![](https://cdn.xiaobaidebug.top/image/006APoFYly1g5q9gn2jipg308w08wqdi.gif)
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

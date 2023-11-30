@@ -45,7 +45,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-06-14T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:21.144Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.668Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png">
 
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,7 +258,7 @@
 <p>这篇文章，我会尝试回答这几个问题。</p>
 <br>
 
-<h3 id="主键不自增行不行"><a href="#主键不自增行不行" class="headerlink" title="主键不自增行不行"></a>主键不自增行不行</h3><p>当然是可以的。比如我们可以把建表 sql 里的<code>AUTO_INCREMENT</code>去掉。</p>
+<h2 id="主键不自增行不行"><a href="#主键不自增行不行" class="headerlink" title="主键不自增行不行"></a>主键不自增行不行</h2><p>当然是可以的。比如我们可以把建表 sql 里的<code>AUTO_INCREMENT</code>去掉。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `id` <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
 
 <p>然后执行</p>
@@ -270,7 +270,7 @@
 
 <br>
 
-<h3 id="为什么要用自增主键"><a href="#为什么要用自增主键" class="headerlink" title="为什么要用自增主键"></a>为什么要用自增主键</h3><p>我们在数据库里保存的数据就跟 excel 表一样，一行行似的。</p>
+<h2 id="为什么要用自增主键"><a href="#为什么要用自增主键" class="headerlink" title="为什么要用自增主键"></a>为什么要用自增主键</h2><p>我们在数据库里保存的数据就跟 excel 表一样，一行行似的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/user%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E5%A7%8B%E7%8A%B6%E6%80%812.drawio.png" alt="user表"></p>
 <p>而在底层，这一行行数据，就是保存在一个个<strong>16k 大小的页</strong>里。</p>
 <p>每次都去遍历所有的行性能会不好，于是为了加速搜索，我们可以<strong>根据主键 id，从小到大排列这些行数据</strong>，将这些数据页用<strong>双向链表</strong>的形式组织起来，再将这些页里的部分信息提取出来放到一个新的 16kb 的数据页里，再加入<strong>层级的概念</strong>。于是，一个个数据页就被组织起来了，成为了一棵<strong>B+树索引</strong>。</p>
@@ -288,7 +288,7 @@
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B8%BB%E9%94%AEid%E4%B8%8D%E8%87%AA%E5%A2%9E%E7%9A%84%E6%83%85%E5%86%B5.drawio.png" alt="主键id不自增的情况"></p>
 <br>
 
-<h3 id="没有主键可以吗"><a href="#没有主键可以吗" class="headerlink" title="没有主键可以吗"></a>没有主键可以吗</h3><p>mysql 表如果没有主键索引，查个数据都得全表扫描，那既然它这么重要，我今天就不当人了，<strong>不声明主键，可以吗？</strong></p>
+<h2 id="没有主键可以吗"><a href="#没有主键可以吗" class="headerlink" title="没有主键可以吗"></a>没有主键可以吗</h2><p>mysql 表如果没有主键索引，查个数据都得全表扫描，那既然它这么重要，我今天就不当人了，<strong>不声明主键，可以吗？</strong></p>
 <p>嗯，你完全可以不声明主键。</p>
 <p>你确实可以在建表 sql 里写成这样。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>` (</span><br><span class="line">  `name` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;名字&#x27;</span></span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
@@ -296,11 +296,11 @@
 <p>看起来确实是没有主键的样子。然而实际上，mysql 的 innodb 引擎内部会帮你生成一个名为<code>ROW_ID</code>列，它是个 6 字节的隐藏列，你平时也看不到它，但实际上，它也是自增的。有了这层兜底机制保证，<strong>数据表肯定会有主键和主键索引</strong>。</p>
 <p>跟 ROW_ID 被隐藏的列还有<code>trx_id</code>字段，用于记录当前这一行数据行是被<strong>哪个事务</strong>修改的，和一个<code>roll_pointer</code>字段，这个字段是用来指向当前这个数据行的上一个版本，通过这个字段，可以为这行数据形成一条版本链，从而实现<strong>多版本并发控制（MVCC）</strong>。有没有很眼熟，这个在之前写的<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/SR0ZL1zAc_0QIQvpDCOANw">文章</a>里出现过。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%9A%90%E8%97%8F%E7%9A%84row_id%E5%88%97.drawio.png" alt="隐藏的row_id列"><br></p>
-<h3 id="有没有建议主键不自增的场景"><a href="#有没有建议主键不自增的场景" class="headerlink" title="有没有建议主键不自增的场景"></a>有没有建议主键不自增的场景</h3><p>前面提到了主键自增可以带来很多好处，事实上<strong>大部分场景下，我们都建议主键设为自增。</strong></p>
+<h2 id="有没有建议主键不自增的场景"><a href="#有没有建议主键不自增的场景" class="headerlink" title="有没有建议主键不自增的场景"></a>有没有建议主键不自增的场景</h2><p>前面提到了主键自增可以带来很多好处，事实上<strong>大部分场景下，我们都建议主键设为自增。</strong></p>
 <p>那有没有不建议主键自增的场景呢？</p>
 <br>
 
-<h4 id="mysql-分库分表下的-id"><a href="#mysql-分库分表下的-id" class="headerlink" title="mysql 分库分表下的 id"></a>mysql 分库分表下的 id</h4><p>聊到分库分表，那我就需要说明下，<strong>递增和自增的区别</strong>了，<strong>自增</strong>就是每次都+1，而<strong>递增</strong>则是新的 id 比上一个 id 要大就行了，具体大多少，没关系。</p>
+<h3 id="mysql-分库分表下的-id"><a href="#mysql-分库分表下的-id" class="headerlink" title="mysql 分库分表下的 id"></a>mysql 分库分表下的 id</h3><p>聊到分库分表，那我就需要说明下，<strong>递增和自增的区别</strong>了，<strong>自增</strong>就是每次都+1，而<strong>递增</strong>则是新的 id 比上一个 id 要大就行了，具体大多少，没关系。</p>
 <p>之前写过一篇<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/HShytuc9Sw3p3kwCfbRbXw">文章</a>提到过，mysql 在水平分库分表时，一般有两种方式。</p>
 <p>一种分表方式是通过<strong>对 id 取模进行分表</strong>，这种要求递增就好，不要求严格自增，因为取模后数据会被分散到多个分表中，就算 id 是严格自增的，在分散之后，都只能保证每个分表里 id 只能是递增的。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E6%A0%B9%E6%8D%AEid%E5%8F%96%E6%A8%A1%E5%88%86%E8%A1%A8.drawio.png" alt="根据id取模分表"></p>
@@ -314,7 +314,7 @@
 <p>有没有不依赖于其他第三方组件的方法呢？</p>
 <br>
 
-<h5 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h5><p>有，比如<strong>Twitter 开源的雪花算法。</strong></p>
+<h4 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h4><p>有，比如<strong>Twitter 开源的雪花算法。</strong></p>
 <p>雪花算法通过 64 位有特殊含义的数字来组成 id。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95.d4rawio.png" alt="雪花算法"></p>
 <p>首先<strong>第 0 位</strong>不用。</p>
@@ -331,7 +331,7 @@
 <p>有。这就是这篇文章的重点了。</p>
 <br>
 
-<h5 id="适合分库分表的-uuid-算法"><a href="#适合分库分表的-uuid-算法" class="headerlink" title="适合分库分表的 uuid 算法"></a>适合分库分表的 uuid 算法</h5><p>我们可以参考雪花算法的实现，设计成下面这样。注意下面的每一位，<strong>都是十进制</strong>，而不是二进制。</p>
+<h4 id="适合分库分表的-uuid-算法"><a href="#适合分库分表的-uuid-算法" class="headerlink" title="适合分库分表的 uuid 算法"></a>适合分库分表的 uuid 算法</h4><p>我们可以参考雪花算法的实现，设计成下面这样。注意下面的每一位，<strong>都是十进制</strong>，而不是二进制。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E9%80%82%E5%90%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84uuid%E7%AE%97%E6%B3%95.d43rawio.png" alt="适合分库分表的uuid算法"></p>
 <p>开头的<strong>12 位</strong>依然是时间，但并不是时间戳，雪花算法的时间戳精确到毫秒，我们用不上这么细，我们改为<code>yyMMddHHmmss</code>，注意开头的 yy 是两位，也就是这个方案能保证到 2099 年之前，id 都不会重复，能用到重复，那也是真·百年企业。同样由于最前面是时间，随着时间流逝，也能保证 id 趋势递增。</p>
 <p>接下来的<strong>10 位</strong>，用<strong>十进制</strong>的方式表示工作机器的 ip，就可以把 12 位的 ip 转为 10 位的数字，它可以保证全局唯一，只要服务起来了，也就知道自己的 ip 是多少了，不需要像雪花算法那样从别的地方去读取 worker id 了，又是一个小细节。</p>
@@ -348,7 +348,7 @@
 <p>数据库有那么多种，mysql 只是其中一种，那其他数据库也是要求主键自增吗？</p>
 <br>
 
-<h4 id="tidb-的主键-id-不建议自增"><a href="#tidb-的主键-id-不建议自增" class="headerlink" title="tidb 的主键 id 不建议自增"></a>tidb 的主键 id 不建议自增</h4><p>tidb 是一款分布式数据库，作为 mysql 分库分表场景下的替代产品，可以更好的对数据进行分片。</p>
+<h3 id="tidb-的主键-id-不建议自增"><a href="#tidb-的主键-id-不建议自增" class="headerlink" title="tidb 的主键 id 不建议自增"></a>tidb 的主键 id 不建议自增</h3><p>tidb 是一款分布式数据库，作为 mysql 分库分表场景下的替代产品，可以更好的对数据进行分片。</p>
 <p>它通过引入<strong>Range</strong>的概念进行数据表分片，比如第一个分片表的 id 在 0<del>2kw，第二个分片表的 id 在 2kw</del>4kw。这其实就是<strong>根据 id 范围进行数据库分表</strong>。</p>
 <p>它的语法几乎跟 mysql 一致，用起来大部分时候是无感的。</p>
 <p>但跟 mysql 有一点很不一样的就是，mysql 建议 id 自增，但<strong>tidb 却建议使用随机的 uuid</strong>。原因是如果 id 自增的话，根据范围分片的规则，一段时间内生成的 id 几乎都会落到同一个分片上，比如下图，从<code>3kw</code>开始的自增 uuid，几乎都落到<code>range 1</code>这个分片中，而其他表却几乎不会有写入，性能没有被利用起来。出现<strong>一表有难，多表围观</strong>的场面，这种情况又叫<strong>写热点</strong>问题。</p>
@@ -356,7 +356,7 @@
 <p>所以为了充分的利用多个分表的写入能力，tidb 建议我们写入时使用<strong>随机 id</strong>，这样数据就能被均匀分散到多个分片中。</p>
 <br>
 
-<h4 id="用户-id-不建议用自增-id"><a href="#用户-id-不建议用自增-id" class="headerlink" title="用户 id 不建议用自增 id"></a>用户 id 不建议用自增 id</h4><p>前面提到的不建议使用自增 id 的场景，都是技术原因导致的，而下面介绍的这个，单纯是因为业务。</p>
+<h3 id="用户-id-不建议用自增-id"><a href="#用户-id-不建议用自增-id" class="headerlink" title="用户 id 不建议用自增 id"></a>用户 id 不建议用自增 id</h3><p>前面提到的不建议使用自增 id 的场景，都是技术原因导致的，而下面介绍的这个，单纯是因为业务。</p>
 <p>举个例子吧。</p>
 <p>如果你能知道一个产品每个月，新增的用户数有多少，这个对你来说会是有用的信息吗？</p>
 <p>对程序员来说，可能这个信息价值不大。</p>
@@ -373,7 +373,7 @@
 <p>当然，<strong>主键保持自增，但是不暴露给前端，那也行，那前面的话，你当我没说过</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>建表 sql 里主键边上的<code>AUTO_INCREMENT</code>，可以让主键自增，去掉它是可以的，但这就需要你在 insert 的时候自己设置主键的值。</p>
 </li>
 <li><p>建表 sql 里的 <code>PRIMARY KEY</code> 是用来声明主键的，如果去掉，那也能建表成功，但 mysql 内部会给你偷偷建一个 <code>ROW_ID</code>的隐藏列作为主键。</p>
@@ -387,7 +387,7 @@
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>我比较记仇，最近有不少兄弟们在评论区叫我 diao 毛。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我比较记仇，最近有不少兄弟们在评论区叫我 diao 毛。</p>
 <p><strong>我都记住了。</strong></p>
 <p>但是，只要兄弟们还能给右下角的<strong>点赞和在看</strong>来上那么一下的话。</p>
 <p>我觉得，<strong>这口气，也不是不能忍。</strong></p>
@@ -397,7 +397,7 @@
 <p>我是小白，我们下期见。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -407,10 +407,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -532,7 +532,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%94%AE%E4%B8%8D%E8%87%AA%E5%A2%9E%E8%A1%8C%E4%B8%8D%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">主键不自增行不行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E8%87%AA%E5%A2%9E%E4%B8%BB%E9%94%AE"><span class="nav-number">2.</span> <span class="nav-text">为什么要用自增主键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E4%B8%BB%E9%94%AE%E5%8F%AF%E4%BB%A5%E5%90%97"><span class="nav-number">3.</span> <span class="nav-text">没有主键可以吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E5%BB%BA%E8%AE%AE%E4%B8%BB%E9%94%AE%E4%B8%8D%E8%87%AA%E5%A2%9E%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">有没有建议主键不自增的场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%B8%8B%E7%9A%84-id"><span class="nav-number">4.1.</span> <span class="nav-text">mysql 分库分表下的 id</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.1.</span> <span class="nav-text">雪花算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84-uuid-%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.2.</span> <span class="nav-text">适合分库分表的 uuid 算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tidb-%E7%9A%84%E4%B8%BB%E9%94%AE-id-%E4%B8%8D%E5%BB%BA%E8%AE%AE%E8%87%AA%E5%A2%9E"><span class="nav-number">4.2.</span> <span class="nav-text">tidb 的主键 id 不建议自增</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-id-%E4%B8%8D%E5%BB%BA%E8%AE%AE%E7%94%A8%E8%87%AA%E5%A2%9E-id"><span class="nav-number">4.3.</span> <span class="nav-text">用户 id 不建议用自增 id</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">6.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%94%AE%E4%B8%8D%E8%87%AA%E5%A2%9E%E8%A1%8C%E4%B8%8D%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">主键不自增行不行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E8%87%AA%E5%A2%9E%E4%B8%BB%E9%94%AE"><span class="nav-number">2.</span> <span class="nav-text">为什么要用自增主键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E4%B8%BB%E9%94%AE%E5%8F%AF%E4%BB%A5%E5%90%97"><span class="nav-number">3.</span> <span class="nav-text">没有主键可以吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E5%BB%BA%E8%AE%AE%E4%B8%BB%E9%94%AE%E4%B8%8D%E8%87%AA%E5%A2%9E%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">有没有建议主键不自增的场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%B8%8B%E7%9A%84-id"><span class="nav-number">4.1.</span> <span class="nav-text">mysql 分库分表下的 id</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.1.</span> <span class="nav-text">雪花算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84-uuid-%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.2.</span> <span class="nav-text">适合分库分表的 uuid 算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tidb-%E7%9A%84%E4%B8%BB%E9%94%AE-id-%E4%B8%8D%E5%BB%BA%E8%AE%AE%E8%87%AA%E5%A2%9E"><span class="nav-number">4.2.</span> <span class="nav-text">tidb 的主键 id 不建议自增</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-id-%E4%B8%8D%E5%BB%BA%E8%AE%AE%E7%94%A8%E8%87%AA%E5%A2%9E-id"><span class="nav-number">4.3.</span> <span class="nav-text">用户 id 不建议用自增 id</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">6.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

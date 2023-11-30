@@ -7,7 +7,7 @@ categories: "图解网络"
 
 ![](https://cdn.xiaobaidebug.top/image/%E7%9B%AE%E5%BD%95.png)
 
-### 什么是 TCP 分段和 IP 分片
+## 什么是 TCP 分段和 IP 分片
 
 我们知道网络就像一根管子，而管子吧，就会有粗细。
 
@@ -39,14 +39,14 @@ categories: "图解网络"
 
 那**MSS 和 MTU 是什么关系**呢？这个在[之前的文章](https://mp.weixin.qq.com/s/0H8WL6QeZ2VbO1hHPkn8Ug)里简单提到过。这里单独拿出来。
 
-### MSS 是什么
+## MSS 是什么
 
 **MSS：Maximum Segment Size** 。 TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和 TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。
 假设 MTU= 1500 byte，那么 **MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte**，如果应用层有 **2000 byte** 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。
 
 ![MSS分包](https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif)
 
-#### 如何查看 MSS？
+### 如何查看 MSS？
 
 我们都知道 TCP 三次握手，而`MSS`会在三次握手的过程中传递给对方，用于通知对端本地最大可以接收的 TCP 报文数据大小（不包含 TCP 和 IP 报文首部）。
 
@@ -56,11 +56,11 @@ categories: "图解网络"
 
 > 另外，一般情况下 MSS + 20（TCP 头）+ 20（IP 头）= MTU，上面抓包的图里对应的 MTU 分别是 1372+40 和 1420+40。 同一个路径上，**MTU 不一定是对称的**，也就是说 A 到 B 和 B 到 A，两条路径上的 MTU 可以是不同的，对应的 MSS 也一样。
 
-#### 三次握手中协商了 MSS 就不会改变了吗？
+### 三次握手中协商了 MSS 就不会改变了吗？
 
 当然不是，每次执行 TCP 发送消息的函数时，会重新计算一次 MSS，再进行分段操作。
 
-#### 对端不传 MSS 会怎么样？
+### 对端不传 MSS 会怎么样？
 
 我们再看 TCP 的报头。
 
@@ -78,14 +78,14 @@ categories: "图解网络"
 
 前面提到了 IP 会切片，那会切片，也就会重组，而这个 576 正好是 IP 最小重组缓冲区的大小。
 
-### MTU 是什么
+## MTU 是什么
 
 **MTU: Maximum Transmit Unit**，最大传输单元。 其实这个是由**数据链路层**提供，为了告诉上层 IP 层，自己的传输能力是多大。IP 层就会根据它进行数据包切分。一般 MTU=**1500 Byte**。
 假设 IP 层有 <= `1500` byte 需要发送，只需要一个 IP 包就可以完成发送任务；假设 IP 层有 > `1500` byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同，同时为了分片后能在接收端把切片组装起来，还需要在分片后的 IP 包里加上各种信息。比如这个分片在原来的 IP 包里的偏移 offset。
 
 ![MTU分包](https://cdn.xiaobaidebug.top/image/mtu%E5%88%86%E5%8C%85.gif)
 
-#### 如何查看 MTU
+### 如何查看 MTU
 
 在`mac`控制台输入 `ifconfig`命令，可以看到 MTU 的值为多大。
 
@@ -105,7 +105,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 ![MSS和MTU的区别](https://cdn.xiaobaidebug.top/image/MSS和MTU的区别2.png)
 
-#### 为什么 MTU 一般是 1500
+### 为什么 MTU 一般是 1500
 
 这其实是由传输效率决定的。首先，虽然我们平时用的网络感觉挺稳定的，但其实这是因为 TCP 在背地里做了各种重传等保证了传输的可靠，其实背地里线路是动不动就丢包的，而越大的包，发生丢包的概率就越大。
 
@@ -117,7 +117,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 所以，包越小越不容易丢包，包越大，传输效率又越高，因此权衡之下，选了`1500`。
 
-### 为什么 IP 层会分片，TCP 还要分段
+## 为什么 IP 层会分片，TCP 还要分段
 
 由于本身 IP 层就会做分片这件事情。**就算 TCP 不分段**，到了 IP 层，数据包也会被分片，数据也能**正常传输**。
 
@@ -137,7 +137,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 说白了，**数据在 TCP 分段，就是为了在 IP 层不需要分片，同时发生重传的时候只重传分段后的小份数据**。
 
-### TCP 分段了，IP 层就一定不会分片了吗
+## TCP 分段了，IP 层就一定不会分片了吗
 
 上面提到了，在发送端，TCP 分段后，IP 层就不会再分片了。
 
@@ -149,7 +149,7 @@ p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
 
 因此，就算 TCP 分段过后，在链路上的其他节点的 IP 层也是有可能再分片的，而且哪怕数据被第一次 IP 分片过了，也是有可能被其他机器的 IP 层进行二次、三次、四次....分片的。
 
-### IP 层怎么做到不分片
+## IP 层怎么做到不分片
 
 上面提到的 IP 层在传输过程中**因为各个节点间 MTU**可能不同，导致数据是可能被多次分片的。而且每次分片都要加上各种信息便于在接收端进行分片重组。那么 IP 层是否可以做到不分片？
 
@@ -191,7 +191,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 
 ![获得pmtu后的TCP重传](https://cdn.xiaobaidebug.top/image/%E8%8E%B7%E5%BE%97pmtu%E5%90%8E%E7%9A%84TCP%E9%87%8D%E4%BC%A0.gif)
 
-### 总结
+## 总结
 
 - 数据在 TCP 分段，在 IP 层就不需要分片，同时发生重传的时候只重传分段后的小份数据
 - TCP 分段时使用 MSS，IP 分片时使用 MTU
@@ -200,7 +200,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 
 - 建立连接后，路径上节点的 MTU 值改变时，可以通过 PMTU 发现更新发送端 MTU 的值。这种情况下，PMTU 发现通过浪费 N 次发送机会来换取的 PMTU，TCP 因为有重传可以保证可靠性，在 UDP 就相当于消息直接丢了。
 
-### 文章推荐：
+## 文章推荐：
 
 - [动图图解！GMP 模型里为什么要有 P？背后的原因让人暖心](https://mp.weixin.qq.com/s/O_GPwa71zqcpIkNdlkWYnQ)
 
@@ -213,7 +213,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 - [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/PwIbKDTi0uSxhUWC56sJYg)
 - [硬核图解！30 张图带你搞懂！路由器，集线器，交换机，网桥，光猫有啥区别？](https://mp.weixin.qq.com/s/BJqp72EyEMahxi2XOfSrBQ)
 
-### 最后
+## 最后
 
 画动图，太难了。。。看完求个赞，下次图会动得更凶。
 
@@ -225,7 +225,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 
 我是小白，我们下期见。
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)

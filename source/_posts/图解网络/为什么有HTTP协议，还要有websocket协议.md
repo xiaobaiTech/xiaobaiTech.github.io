@@ -51,7 +51,7 @@ categories: "图解网络"
 
 <br>
 
-### 使用 HTTP 不断轮询
+## 使用 HTTP 不断轮询
 
 其实问题的痛点在于，**怎么样才能在用户不做任何操作的情况下，网页能收到消息并发生变更。**
 
@@ -82,7 +82,7 @@ categories: "图解网络"
 
 <br>
 
-### 长轮询
+## 长轮询
 
 我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3s，规定时间内没返回，就认为是超时。
 
@@ -116,7 +116,7 @@ categories: "图解网络"
 
 <br>
 
-### websocket 是什么
+## websocket 是什么
 
 我们知道 TCP 连接的两端，**同一时间里**，**双方**都可以**主动**向对方发送数据。这就是所谓的**全双工**。
 
@@ -138,7 +138,7 @@ categories: "图解网络"
 
 <br>
 
-### 怎么建立 websocket 连接
+## 怎么建立 websocket 连接
 
 我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是**HTTP 协议**，一会打开网页游戏，这时候就得切换成我们新介绍的**websocket 协议**。
 
@@ -180,7 +180,7 @@ Connection: Upgrade\r\n
 
 <br>
 
-### websocket 抓包
+## websocket 抓包
 
 我们可以用 wireshark 抓个包，实际看下数据包的情况。
 
@@ -208,7 +208,7 @@ Connection: Upgrade\r\n
 
 <br>
 
-### websocket 的消息格式
+## websocket 的消息格式
 
 上面提到在完成协议升级之后，两端就会用 webscoket 的数据格式进行通信。
 
@@ -266,7 +266,7 @@ HTTP 协议和大部分 RPC 协议，以及我们今天介绍的 websocket 协�
 
 <br>
 
-### websocket 的使用场景
+## websocket 的使用场景
 
 websocket 完美继承了 TCP 协议的**全双工**能力，并且还贴心的提供了解决粘包的方案。它适用于**需要服务器和客户端（浏览器）频繁交互**的大部分场景。比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。
 
@@ -276,7 +276,7 @@ websocket 完美继承了 TCP 协议的**全双工**能力，并且还贴心的�
 
 <br>
 
-### 总结
+## 总结
 
 - TCP 协议本身是**全双工**的，但我们最常用的 HTTP1.1，虽然是基于 TCP 的协议，但它是**半双工**的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的 websocket 协议。
 - 在 HTTP1.1 里。只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用**定时轮询或者长轮询**的方式实现**服务器推送**(comet)的效果。
@@ -288,7 +288,7 @@ websocket 完美继承了 TCP 协议的**全双工**能力，并且还贴心的�
 
 <br>
 
-### 最后
+## 最后
 
 最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。
 
@@ -308,7 +308,7 @@ websocket 完美继承了 TCP 协议的**全双工**能力，并且还贴心的�
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -325,8 +325,8 @@ websocket 完美继承了 TCP 协议的**全双工**能力，并且还贴心的�
 
 <br>
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

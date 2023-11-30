@@ -69,7 +69,7 @@ select count(*) from sms where state = 0;
 
 <br>
 
-### count()的原理
+## count()的原理
 
 count()方法的目的是计算当前 sql 语句查询得到的**非 NULL 的行数**。
 
@@ -95,7 +95,7 @@ count()方法的目的是计算当前 sql 语句查询得到的**非 NULL 的行
 
 <br>
 
-#### **为什么 innodb 不能像 myisam 那样实现 count()方法**
+### **为什么 innodb 不能像 myisam 那样实现 count()方法**
 
 myisam 和 innodb 这两个引擎，有几个比较明显的区别，这个是八股文常考了。
 
@@ -119,7 +119,7 @@ innodb 引擎通过 MVCC 实现了**可重复隔离级别**，事务开启后，
 
 <br>
 
-### 各种 count()方法的原理
+## 各种 count()方法的原理
 
 count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该看过，比如放个星号\*，放个 1，放个索引列啥的。
 
@@ -129,19 +129,19 @@ count()的括号里，可以放各种奇奇怪怪的东西，想必大家应该�
 
 <br>
 
-#### count(\*)
+### count(\*)
 
 server 层拿到 innodb 返回的行数据，**不对里面的行数据做任何解析和判断**，默认取出的值肯定都不是 null，直接行数+1。
 
 <br>
 
-#### count(1)
+### count(1)
 
 server 层拿到 innodb 返回的行数据，每行放个 1 进去，默认不可能为 null，直接行数+1.
 
 <br>
 
-#### count(某个列字段)
+### count(某个列字段)
 
 由于指明了要 count 某个字段，innodb 在取数据的时候，会把这个字段**解析出来**返回给 server 层，所以会**比 count(1)和 count(\*)多了个解析字段出来的流程。**
 
@@ -167,7 +167,7 @@ count(*) ≈ count(1) > count(主键id) > count(普通索引列) > count(未加�
 
 <br>
 
-### 允许粗略估计行数的场景
+## 允许粗略估计行数的场景
 
 我们回过头来细品下文章开头的需求，我们只是希望知道数据库里还有多少短信是堆积在那没发的，具体是 1k 还是 2k 其实都是差不多量级，等到了百万以上，具体数值已经不重要了，我们知道它现在堆积得很离谱，就够了。 因此这个场景，其实是允许使用**比较粗略**的估计的。
 
@@ -187,7 +187,7 @@ count(*) ≈ count(1) > count(主键id) > count(普通索引列) > count(未加�
 
 <br>
 
-### 必须精确估计行数的场景
+## 必须精确估计行数的场景
 
 这种场景就比较头疼了，但也不是不能做。
 
@@ -219,7 +219,7 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-#### 实时性要求较高的场景
+### 实时性要求较高的场景
 
 如果你对这个 cnt 计算结果的实时性要求很高，那你需要**将更新 cnt 的 sql 加入到对应变更行数的事务中**。
 
@@ -233,7 +233,7 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-#### 实时性没那么高的场景
+### 实时性没那么高的场景
 
 如果实时性要求不高的话，比如可以一天一次，那你可以通过全表扫描后做计算。
 
@@ -249,7 +249,7 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-### 总结
+## 总结
 
 - mysql 用 count 方法**查全表数据**，在不同的存储引擎里实现不同，myisam 有专门字段记录全表的行数，直接读这个字段就好了。而 innodb 则需要一行行去算。
 
@@ -264,13 +264,13 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-### 参考资料
+## 参考资料
 
 《丁奇 mysql45 讲》
 
 <br>
 
-### 最后
+## 最后
 
 兄弟们，最近有点没出息，沉迷在刘亦菲的新剧里，都快忘了写文这件事了。
 
@@ -288,7 +288,7 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-###### 别说了，一起在知识的海洋里呛水吧
+##### 别说了，一起在知识的海洋里呛水吧
 
 **点击**下方名片，关注公众号:【小白 debug】
 ![](https://cdn.xiaobaidebug.top/1696069689495.png)
@@ -305,8 +305,8 @@ select cnt from count_table where cnt_what = "未发送的短信数量";
 
 <br>
 
-### 文章推荐：
+## 文章推荐：
 
-- [程序员防猝死指南](https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g)
-- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA)
-- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w)
+- [既然有 HTTP 协议，为什么还要有 RPC](https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/)
+- [TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解](https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/)
+- [动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？](https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/)

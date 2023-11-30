@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/image-20220522162616202.png">
 <meta property="og:image" content="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif">
 <meta property="article:published_time" content="2022-10-17T14:57:55.000Z">
-<meta property="article:modified_time" content="2023-10-06T04:07:21.245Z">
+<meta property="article:modified_time" content="2023-11-30T23:46:45.304Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaobaidebug.top/1663680963848.png">
 
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 12:07:21" itemprop="dateModified" datetime="2023-10-06T12:07:21+08:00">2023-10-06</time>
+                <time title="修改时间：2023-12-01 07:46:45" itemprop="dateModified" datetime="2023-12-01T07:46:45+08:00">2023-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,7 +252,7 @@
 <p>我们今天就来聊下这个话题。</p>
 <br>
 
-<h3 id="使用-socket-进行数据传输"><a href="#使用-socket-进行数据传输" class="headerlink" title="使用 socket 进行数据传输"></a>使用 socket 进行数据传输</h3><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
+<h2 id="使用-socket-进行数据传输"><a href="#使用-socket-进行数据传输" class="headerlink" title="使用 socket 进行数据传输"></a>使用 socket 进行数据传输</h2><p>作为一个程序员，假设我们需要在 A 电脑的进程发一段数据到 B 电脑的进程，我们一般会在代码里使用 socket 进行编程。</p>
 <p>socket 就像是一个<strong>电话或者邮箱</strong>（邮政的信箱）。当你想要发送消息的时候，拨通电话或者将信息塞到邮箱里，socket 内核会自动完成将数据传给对方的这个过程。</p>
 <p>基于 socket 我们可以选择使用 TCP 或 UDP 协议进行通信。</p>
 <p>对于 TCP 这样的可靠性协议，每次消息发出后都能明确知道对方收没收到，就<strong>像打电话一样</strong>，只要”喂喂”两下就能知道对方有没有在听。</p>
@@ -274,7 +274,7 @@
 <p>如果想要通过这个 socket 发消息，只需要操作这个 fd 就行了，比如执行 <code>send(fd, msg, ...)</code>，内核就会通过这个 fd 句柄找到 socket 然后进行发数据的操作。</p>
 <p><strong>如果一切顺利</strong>，此时对方执行接收消息的操作，也就是 <code>recv(fd, msg, ...)</code>，就能拿到你发的消息。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663602070263.gif" alt="udp发送接收过程"></p>
-<h3 id="对于异常情况的处理"><a href="#对于异常情况的处理" class="headerlink" title="对于异常情况的处理"></a>对于异常情况的处理</h3><p><strong>但如果不顺利呢？</strong></p>
+<h2 id="对于异常情况的处理"><a href="#对于异常情况的处理" class="headerlink" title="对于异常情况的处理"></a>对于异常情况的处理</h2><p><strong>但如果不顺利呢？</strong></p>
 <p>比如消息发到一半，丢包了呢?</p>
 <blockquote>
 <p>丢包的原因有很多，之前写过的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7126710506936598558">《用了 TCP 协议，就一定不会丢包吗？》</a>有详细聊到过，这里就不再展开。</p>
@@ -285,29 +285,29 @@
 <p>UDP 表示，”哦，是吗？然后呢？关我 x 事”</p>
 <p>TCP 态度就截然相反了，”啊？那可不行，是不是我发太快了呢？是不是链路太堵被别人影响到了呢？不过你放心，我肯定给你补发”</p>
 <p>TCP 老实人石锤了。我们来看下这个老实人在背后都默默做了哪些事情。</p>
-<h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>对于 TCP，它会给发出的消息打上一个<strong>编号（sequence）</strong>，接收方收到后回一个**确认(ack)**。发送方可以通过<code>ack</code>的数值知道接收方收到了哪些<code>sequence</code>的包。</p>
+<h3 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h3><p>对于 TCP，它会给发出的消息打上一个<strong>编号（sequence）</strong>，接收方收到后回一个**确认(ack)**。发送方可以通过<code>ack</code>的数值知道接收方收到了哪些<code>sequence</code>的包。</p>
 <p>如果长时间等不到对方的确认，TCP 就会重新发一次消息，这就是所谓的<strong>重传机制</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597929404.png" alt="TCP重传"></p>
 <br>
 
-<h4 id="流量控制机制"><a href="#流量控制机制" class="headerlink" title="流量控制机制"></a>流量控制机制</h4><p>但重传这件事本身对性能影响是比较严重的，所以是<strong>下下策</strong>。</p>
+<h3 id="流量控制机制"><a href="#流量控制机制" class="headerlink" title="流量控制机制"></a>流量控制机制</h3><p>但重传这件事本身对性能影响是比较严重的，所以是<strong>下下策</strong>。</p>
 <p>于是 TCP 就需要思考有没有办法可以尽量<strong>避免重传</strong>。</p>
 <p>因为数据发送方和接收方处理数据能力可能不同，因此如果可以根据双方的能力去调整发送的数据量就好了，于是就有了<strong>发送和接收窗口</strong>，基本上从名字就能看出它的作用，比如<strong>接收窗口的大小</strong>就是指，接收方当前<strong>能接收的数据量大小</strong>，<strong>发送窗口的大小</strong>就指发送方当前能发的数据量大小。TCP 根据窗口的大小去控制自己发送的数据量，这样就能大大减少丢包的概率。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597968469.png" alt="流量控制机制"></p>
 <br>
 
-<h4 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h4><p>接收方的接收到数据之后，会不断处理，<strong>处理能力也不是一成不变的</strong>，有时候处理的快些，那就可以收多点数据，处理的慢点那就希望对方能少发点数据。毕竟发多了就有可能处理不过来导致丢包，丢包会导致重传，这可是下下策。因此我们需要动态的去调节这个接收窗口的大小，于是就有了<strong>滑动窗口机制</strong>。</p>
+<h3 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h3><p>接收方的接收到数据之后，会不断处理，<strong>处理能力也不是一成不变的</strong>，有时候处理的快些，那就可以收多点数据，处理的慢点那就希望对方能少发点数据。毕竟发多了就有可能处理不过来导致丢包，丢包会导致重传，这可是下下策。因此我们需要动态的去调节这个接收窗口的大小，于是就有了<strong>滑动窗口机制</strong>。</p>
 <p>看到这里大家可能就有点迷了，<strong>流量控制和滑动窗口机制貌似很像，它们之间是啥关系？</strong>我总结一下。其实现在 TCP 是<strong>通过滑动窗口机制来实现流量控制机制的</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663597995829.png" alt="滑动窗口机制"></p>
 <br>
 
-<h4 id="拥塞控制机制"><a href="#拥塞控制机制" class="headerlink" title="拥塞控制机制"></a>拥塞控制机制</h4><p>但这还不够，有时候发生丢包，<strong>并不是因为发送方和接收方的处理能力问题导致的</strong>。而是跟<strong>网络环境</strong>有关，大家可以将网络想象为一条公路。马路上可能堵满了别人家的车，只留下一辆车的空间。那就算你家有 5 辆车，目的地也正好有 5 个停车位，你也没办法同时全部一起上路。于是 TCP 希望能感知到外部的网络环境，根据网络环境及时调整自己的发包数量，比如马路只够两辆车跑，那我就只发两辆车。但外部环境这么复杂，TCP 是怎么感知到的呢？</p>
+<h3 id="拥塞控制机制"><a href="#拥塞控制机制" class="headerlink" title="拥塞控制机制"></a>拥塞控制机制</h3><p>但这还不够，有时候发生丢包，<strong>并不是因为发送方和接收方的处理能力问题导致的</strong>。而是跟<strong>网络环境</strong>有关，大家可以将网络想象为一条公路。马路上可能堵满了别人家的车，只留下一辆车的空间。那就算你家有 5 辆车，目的地也正好有 5 个停车位，你也没办法同时全部一起上路。于是 TCP 希望能感知到外部的网络环境，根据网络环境及时调整自己的发包数量，比如马路只够两辆车跑，那我就只发两辆车。但外部环境这么复杂，TCP 是怎么感知到的呢？</p>
 <p>TCP 会先慢慢试探的发数据，不断加码数据量，越发越多，先发一个，再发 2 个，4 个…。直到出现丢包，这样 TCP 就知道现在当前网络大概吃得消几个包了，这既是所谓的<strong>拥塞控制机制</strong>。</p>
 <p>不少人会疑惑流量控制和拥塞控制的关系。我这里小小的总结下。<strong>流量控制</strong>针对的是<strong>单个连接</strong>数据处理能力的控制，<strong>拥塞控制</strong>针对的是<strong>整个网络环境</strong>数据处理能力的控制。</p>
 <p><img src="https://cdn.xiaobaidebug.top/1663598420295.png" alt="1663598420295"></p>
 <br>
 
-<h4 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h4><p>但上面提到的都是怎么<strong>降低</strong>重传的概率，似乎重传这个事情就是无法避免的，<strong>那如果确实发生了，有没有办法降低它带来的影响呢？</strong></p>
+<h3 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h3><p>但上面提到的都是怎么<strong>降低</strong>重传的概率，似乎重传这个事情就是无法避免的，<strong>那如果确实发生了，有没有办法降低它带来的影响呢？</strong></p>
 <p>有。当我们需要发送一个超大的数据包时，如果这个数据包丢了，那就得重传同样大的数据包。但如果我能将其分成一小段一小段，那就算真丢了，那我也就只需要重传那一小段就好了，大大减小了重传的压力，这就是 TCP 的<strong>分段机制</strong>。</p>
 <p>而这个所谓的一小段的长度，在传输层叫<strong>MSS</strong>（<strong>Maximum Segment Size</strong>），数据包长度大于 MSS 则会分成 N 个小于等于 MSS 的包。</p>
 <p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%88%86%E5%8C%85.gif" alt="MSS分包"></p>
@@ -317,12 +317,12 @@
 <p><img src="https://cdn.xiaobaidebug.top/image/MSS%E5%92%8CMTU%E7%9A%84%E5%8C%BA%E5%88%AB2.png" alt="MSS和MTU的区别"></p>
 <br>
 
-<h4 id="乱序重排机制"><a href="#乱序重排机制" class="headerlink" title="乱序重排机制"></a>乱序重排机制</h4><p>既然数据包会被分段，链路又这么复杂还会丢包，那数据包乱序也就显得不奇怪了。比如发数据包 1,2,3。1 号数据包走了其他网络路径，2 和 3 数据包先到，1 数据包后到，于是数据包顺序就成了 2,3,1。这一点 TCP 也考虑到了，依靠数据包的<code>sequence</code>，接收方就能知道数据包的先后顺序。</p>
+<h3 id="乱序重排机制"><a href="#乱序重排机制" class="headerlink" title="乱序重排机制"></a>乱序重排机制</h3><p>既然数据包会被分段，链路又这么复杂还会丢包，那数据包乱序也就显得不奇怪了。比如发数据包 1,2,3。1 号数据包走了其他网络路径，2 和 3 数据包先到，1 数据包后到，于是数据包顺序就成了 2,3,1。这一点 TCP 也考虑到了，依靠数据包的<code>sequence</code>，接收方就能知道数据包的先后顺序。</p>
 <p>后发的数据包先到是吧，那就先放到专门的<strong>乱序队列</strong>中，等数据都到齐后，重新整理好乱序队列的数据包顺序后再给到用户，这就是<strong>乱序重排机制</strong>。</p>
 <p><img src="https://cdn.xiaobaidebug.top/%E4%B9%B1%E5%BA%8F%E9%98%9F%E5%88%97%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E5%8C%85%E7%9A%84%E5%88%B0%E6%9D%A5.drawio.png" alt="乱序队列等待数据包的到来"></p>
 <br>
 
-<h4 id="连接机制"><a href="#连接机制" class="headerlink" title="连接机制"></a>连接机制</h4><p>前面提到，UDP 是无连接的，而 TCP 是面向连接的。</p>
+<h3 id="连接机制"><a href="#连接机制" class="headerlink" title="连接机制"></a>连接机制</h3><p>前面提到，UDP 是无连接的，而 TCP 是面向连接的。</p>
 <p>这里提到的<strong>连接</strong>到底是啥？</p>
 <p>TCP 通过上面提到的各种机制实现了数据的可靠性。这些机制背后是通过一个个数据结构来实现的逻辑。而为了实现这套逻辑，操作系统内核需要在两端代码里维护一套复杂的状态机（三次握手，四次挥手，RST，closing 等异常处理机制），<strong>这套状态机其实就是所谓的”连接”<strong>。这其实就是 TCP 的</strong>连接机制</strong>，而 UDP 用不上这套状态机，因此它是”无连接”的。</p>
 <br>
@@ -334,7 +334,7 @@
 <p>不信你改用 UDP 试试，丢包那就是真丢了，丢到你怀疑人生。</p>
 <br>
 
-<h3 id="用-UDP-就一定比用-TCP-快吗？"><a href="#用-UDP-就一定比用-TCP-快吗？" class="headerlink" title="用 UDP 就一定比用 TCP 快吗？"></a>用 UDP 就一定比用 TCP 快吗？</h3><p>这时候 UDP 就不服了：”<strong>正因为没有这些复杂的 TCP 可靠性机制，所以我很快啊</strong>“</p>
+<h2 id="用-UDP-就一定比用-TCP-快吗？"><a href="#用-UDP-就一定比用-TCP-快吗？" class="headerlink" title="用 UDP 就一定比用 TCP 快吗？"></a>用 UDP 就一定比用 TCP 快吗？</h2><p>这时候 UDP 就不服了：”<strong>正因为没有这些复杂的 TCP 可靠性机制，所以我很快啊</strong>“</p>
 <p>嗯，这也是大部分人认为 UDP 比 TCP 快的原因。</p>
 <p><strong>实际上大部分情况下也确实是这样的。这话没毛病。</strong></p>
 <br>
@@ -362,7 +362,7 @@
 <p>当然，解决起来也不复杂。这里的关键点在于是否实现了数据分段机制，<strong>使用 UDP 的应用层如果也实现了分段机制的话，那就不会出现上述的问题了</strong>。</p>
 <br>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>TCP 为了实现可靠性，引入了重传机制、流量控制、滑动窗口、拥塞控制、分段以及乱序重排机制。而 UDP 则没有实现，因此一般来说 TCP 比 UDP 慢。</li>
 <li>TCP 是面向连接的协议，而 UDP 是无连接的协议。这里的”<strong>连接</strong>“其实是，操作系统内核在两端代码里维护的一套复杂状态机。</li>
 <li>大部分项目，会在基于 UDP 的基础上，模仿 TCP，实现不同程度的可靠性机制。比如王者农药用的 KCP 其实就在基于 UDP 在应用层里实现了一套<strong>重传</strong>机制。</li>
@@ -370,7 +370,7 @@
 </ul>
 <br>
 
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近原创更文的阅读量稳步下跌，思前想后，夜里辗转反侧。</p>
 <p>我有个不成熟的请求。</p>
 <img src="https://cdn.xiaobaidebug.top/image-20220522162506224.png" alt="" style="zoom:20%;" />
 
@@ -384,7 +384,7 @@
 <p>你说是吧，易峰。</p>
 <br>
 
-<h6 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h6><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
+<h5 id="别说了，一起在知识的海洋里呛水吧"><a href="#别说了，一起在知识的海洋里呛水吧" class="headerlink" title="别说了，一起在知识的海洋里呛水吧"></a>别说了，一起在知识的海洋里呛水吧</h5><p><strong>点击</strong>下方名片，关注公众号:【小白 debug】<br><img src="https://cdn.xiaobaidebug.top/1696069689495.png"></p>
 <br>
 
 <p>不满足于在留言区说骚话？</p>
@@ -394,10 +394,10 @@
 <p><img src="https://cdn.xiaobaidebug.top/006APoFYly1g5q9gn2jipg308w08wqdi.gif"></p>
 <br>
 
-<h3 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PP80aD-GQp7VtgyfHj392g">程序员防猝死指南</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0-YBxU1cSbDdzcZEZjmQYA">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/YpQGsRyyrGNDu1cOuMy83w">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
+<h2 id="文章推荐："><a href="#文章推荐：" class="headerlink" title="文章推荐："></a>文章推荐：</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2022/07/19/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E6%97%A2%E7%84%B6%E6%9C%89HTTP%E5%8D%8F%E8%AE%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89RPC%E5%8D%8F%E8%AE%AE%EF%BC%9F/">既然有 HTTP 协议，为什么还要有 RPC</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/03/26/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/TCP%E7%B2%98%E5%8C%85%EF%BC%81%E6%95%B0%E6%8D%AE%E5%8C%85%EF%BC%9A%E6%88%91%E5%8F%AA%E6%98%AF%E7%8A%AF%E4%BA%86%E6%AF%8F%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8C%85%E9%83%BD%E4%BC%9A%E7%8A%AF%E7%9A%84%E9%94%99%EF%BC%8C%E7%A1%AC%E6%A0%B8%E5%9B%BE%E8%A7%A3/">TCP 粘包 数据包：我只是犯了每个数据包都会犯的错 |硬核图解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.xiaobaidebug.top/2021/05/25/%E5%9B%BE%E8%A7%A3%E7%BD%91%E7%BB%9C/%E5%8A%A8%E5%9B%BE%E5%9B%BE%E8%A7%A3%EF%BC%81%E6%97%A2%E7%84%B6IP%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%B1%82%E4%B9%9F%E8%BF%98%E8%A6%81%E5%88%86%E6%AE%B5%EF%BC%9F/">动图图解！既然 IP 层会分片，为什么 TCP 层也还要分段？</a></li>
 </ul>
 
     </div>
@@ -516,7 +516,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-socket-%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">1.</span> <span class="nav-text">使用 socket 进行数据传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">对于异常情况的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="nav-number">2.1.</span> <span class="nav-text">重传机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">流量控制机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%BA%E5%88%B6"><span class="nav-number">2.3.</span> <span class="nav-text">滑动窗口机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.4.</span> <span class="nav-text">拥塞控制机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.5.</span> <span class="nav-text">分段机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E9%87%8D%E6%8E%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">乱序重排机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.7.</span> <span class="nav-text">连接机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-UDP-%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94%E7%94%A8-TCP-%E5%BF%AB%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">用 UDP 就一定比用 TCP 快吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-socket-%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">1.</span> <span class="nav-text">使用 socket 进行数据传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">对于异常情况的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="nav-number">2.1.</span> <span class="nav-text">重传机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">流量控制机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%BA%E5%88%B6"><span class="nav-number">2.3.</span> <span class="nav-text">滑动窗口机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.4.</span> <span class="nav-text">拥塞控制机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.5.</span> <span class="nav-text">分段机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%B1%E5%BA%8F%E9%87%8D%E6%8E%92%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">乱序重排机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.7.</span> <span class="nav-text">连接机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8-UDP-%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%AF%94%E7%94%A8-TCP-%E5%BF%AB%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">用 UDP 就一定比用 TCP 快吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%AB%E8%AF%B4%E4%BA%86%EF%BC%8C%E4%B8%80%E8%B5%B7%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%9A%84%E6%B5%B7%E6%B4%8B%E9%87%8C%E5%91%9B%E6%B0%B4%E5%90%A7"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">别说了，一起在知识的海洋里呛水吧</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">文章推荐：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
